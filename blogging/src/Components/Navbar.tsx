@@ -8,7 +8,7 @@ const Navbar = () => {
             <header>
                 <nav className='navbar flex items-center justify-between p-2'>
                     <main className='logo'>
-                        <h1 className='text-2xl font-[600]'>Potato trails</h1>
+                        <h1 className='text-2xl font-black'>Potato trails</h1>
                     </main>
                     <section className='links'>
                         <ul className='flex items-center justify-center gap-10'>
@@ -16,7 +16,7 @@ const Navbar = () => {
                                 <a href="/">Home</a>
                             </li>
                             <li className='font-[400] text-sm hover:text-blue-500 transition-colors duration-300'>
-                                <a href="/about">Blogs</a>
+                                <a href="#blogs">Blogs</a>
                             </li>
                             <li className='font-[400] text-sm hover:text-blue-500 transition-colors duration-300'>
                                 <a href="/contact">Photos</a>
