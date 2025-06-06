@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const {Schema} = mongoose;
 
-const adminSchema = new Schema({
+const userSchema = new Schema({
     name:{
         type: String,
         required: true  
@@ -20,9 +20,8 @@ const adminSchema = new Schema({
         enum: ['admin','superAdmin','user'],
         default: 'user'
     },
-
 },{
     timestamps: true
 })
-const Admin = mongoose.model('Admin', adminSchema);
+const Admin = mongoose.model('User', userSchema);
 module.exports = Admin;
