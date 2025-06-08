@@ -4,38 +4,63 @@ const validateId = require("../Helpers/validateId");
 const Blog = require("../Database/Models/blogSchema");
 
 const createBlog = async (req, res) => {
-    try {
-        const { title, content,excerpt } = req.body;
-        const author = req.user.id;
-        if (!title || !content || !author || !excerpt) {
-            return res.status(400).json({ message: 'All fields required!' });
-        }
-        if (!req.file) {
-            return res.status(400).json({ message: 'Cover image is required' });
-        }
-        if (!validateId(author)) {
-            return res.status(400).json({ message: 'Invalid author ID' });
-        }
-        const result = await cloudinary.uploader.upload(req.file.path, {
-            folder: 'blog_images',
-        });
-        fs.unlinkSync(req.file.path);
+  try {
+    const { title, content, excerpt } = req.body;
+    const author = req.user.id;
 
-        // Create new blog post
-        const newBlog = new Blog({
-            title,
-            content,
-            author,
-            excerpt,
-            coverImage: result.secure_url,
-        });
-        await newBlog.save();
-        res.status(201).json({ message: 'Blog created successfully', blog: newBlog });
-    } catch (error) {
-        console.error('Error creating blog:', error);
-        res.status(500).json({ message: 'Server error', error: error.message });
+    if (!title || !content || !author || !excerpt) {
+      return res.status(400).json({ message: "All fields required!" });
     }
-}
+
+    if (!validateId(author)) {
+      return res.status(400).json({ message: "Invalid author ID" });
+    }
+
+    // Check cover image (single file)
+    if (!req.files?.coverImage || req.files.coverImage.length === 0) {
+      return res.status(400).json({ message: "Cover image is required" });
+    }
+
+    // Upload cover image
+    const coverImageFile = req.files.coverImage[0];
+    const coverImageResult = await cloudinary.uploader.upload(coverImageFile.path, {
+      folder: "blog_images/cover",
+    });
+    fs.unlinkSync(coverImageFile.path);
+
+    // Upload additional blog images (optional)
+    const imageFiles = req.files.images || [];
+    const uploadedImages = [];
+
+    for (const file of imageFiles) {
+      const result = await cloudinary.uploader.upload(file.path, {
+        folder: "blog_images/content",
+      });
+      uploadedImages.push(result.secure_url);
+      fs.unlinkSync(file.path);
+    }
+
+    // Create and save blog
+    const newBlog = new Blog({
+      title,
+      content,
+      excerpt,
+      author,
+      coverImage: coverImageResult.secure_url,
+      images: uploadedImages,
+    });
+
+    await newBlog.save();
+
+    res.status(201).json({
+      message: "Blog created successfully",
+      blog: newBlog,
+    });
+  } catch (error) {
+    console.error("Error creating blog:", error);
+    res.status(500).json({ message: "Server error", error: error.message });
+  }
+};
 
 const deleteBlog = async (req, res) => {
     try {
