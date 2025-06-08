@@ -6,6 +6,7 @@ const { seedSuperAdmin } = require('./Seeding/superAdminSeed')
 const userRoutes = require('./Routes/userRoutes')
 const cookieParser = require('cookie-parser')
 const cloudinaryConfig = require('./Cloudinary/Config')
+const cors = require('cors')
 //connect to the database
 dbConnect()
 //seed the super admin user
@@ -16,12 +17,16 @@ cloudinaryConfig()
 
 app.use(express.json())
 app.use(cookieParser())
+app.use(cors({
+    origin: 'http://localhost:3000',
+    credentials: true,
+}))
 
 app.get('/', (req, res) => {
     res.json({ message: 'Its working' })
 })
 
-app.use('/api',userRoutes)
+app.use('/api', userRoutes)
 
 const port = process.env.PORT || 3000
 app.listen(port, () => {

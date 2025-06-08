@@ -11,12 +11,17 @@ const blogSchema = new Schema({
         required: true,
         trim: true
     },
-    coverImage:{
+    coverImage: {
         type: String,
         required: false,
     },
-    author:{
-        type: Schema.Types.ObjectId,
+    excerpt: { // short description of the blog
+        type: String,
+        trim: true,
+        maxlength: 150,
+    },
+    author: {
+        type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
         required: true
     }

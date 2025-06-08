@@ -14,7 +14,7 @@ router.post('/register',authenticateToken,loginLimiter, registeruser);
 router.post('/createBlog',upload.single('image'),authenticateToken,createBlog);
 router.delete('/deleteBlog/:id',authenticateToken,deleteBlog);
 router.put('/updateBlog/:id',authenticateToken,updateBlog);
-router.get('/getBlogs', authenticateToken,getBlogs);
+router.get('/getBlogs',getBlogs);
 
 
 

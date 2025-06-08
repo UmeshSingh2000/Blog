@@ -5,9 +5,10 @@ const Blog = require("../Database/Models/blogSchema");
 
 const createBlog = async (req, res) => {
     try {
-        const { title, content, author } = req.body;
-        if (!title || !content || !author) {
-            return res.status(400).json({ message: 'Title, content and author  are required' });
+        const { title, content,excerpt } = req.body;
+        const author = req.user.id;
+        if (!title || !content || !author || !excerpt) {
+            return res.status(400).json({ message: 'All fields required!' });
         }
         if (!req.file) {
             return res.status(400).json({ message: 'Cover image is required' });
@@ -25,6 +26,7 @@ const createBlog = async (req, res) => {
             title,
             content,
             author,
+            excerpt,
             coverImage: result.secure_url,
         });
         await newBlog.save();
