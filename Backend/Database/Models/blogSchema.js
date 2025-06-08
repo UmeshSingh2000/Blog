@@ -20,6 +20,12 @@ const blogSchema = new Schema({
         trim: true,
         maxlength: 150,
     },
+    images:[
+        {
+            type: String,
+            required: false
+        }
+    ],
     author: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
