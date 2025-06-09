@@ -7,6 +7,7 @@ const userRoutes = require('./Routes/userRoutes')
 const cookieParser = require('cookie-parser')
 const cloudinaryConfig = require('./Cloudinary/Config')
 const cors = require('cors')
+const authenticateToken = require('./Middlewares/authenticateToken')
 //connect to the database
 dbConnect()
 //seed the super admin user
@@ -24,6 +25,13 @@ app.use(cors({
 
 app.get('/', (req, res) => {
     res.json({ message: 'Its working' })
+})
+
+app.get('/api/auth/check',authenticateToken,(req,res)=>{
+    res.status(200).json({
+        message: 'You are authenticated',
+        user: req.user
+    })
 })
 
 app.use('/api', userRoutes)

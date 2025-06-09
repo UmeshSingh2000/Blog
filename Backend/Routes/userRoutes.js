@@ -8,13 +8,25 @@ const { createBlog, deleteBlog, updateBlog, getBlogs } = require('../Controllers
 const upload = multer({ dest: 'uploads/' });
 
 
-router.post('/login',loginLimiter, loginUser);
-router.post('/register',authenticateToken,loginLimiter, registeruser);
+router.post('/login', loginUser);
+router.get('/logout', authenticateToken, (req, res) => {
+    res.clearCookie('token');
+    res.status(200).json({ message: 'Logged out successfully' });
+});
+router.post('/register', authenticateToken, loginLimiter, registeruser);
 
-router.post('/createBlog',upload.single('image'),authenticateToken,createBlog);
-router.delete('/deleteBlog/:id',authenticateToken,deleteBlog);
-router.put('/updateBlog/:id',authenticateToken,updateBlog);
-router.get('/getBlogs',getBlogs);
+router.post(
+    '/createBlog',
+    upload.fields([
+        { name: 'coverImage', maxCount: 1 },
+        { name: 'images', maxCount: 10 }, // adjust as needed
+    ]),
+    authenticateToken,
+    createBlog
+);
+router.delete('/deleteBlog/:id', authenticateToken, deleteBlog);
+router.put('/updateBlog/:id', authenticateToken, updateBlog);
+router.get('/getBlogs', getBlogs);
 
 
 

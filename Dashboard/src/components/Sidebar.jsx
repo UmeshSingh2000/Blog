@@ -1,5 +1,5 @@
 import React from "react"
-import { Home, Users, Settings, PenLine } from "lucide-react"
+import { Home, Users, Settings, PenLine, Lock } from "lucide-react"
 
 const Sidebar = ({ setPage }) => {
   const menu = [
@@ -11,6 +11,7 @@ const Sidebar = ({ setPage }) => {
         key: "create-blog",
     },
     { name: "Settings", icon: <Settings className="w-4 h-4" />, key: "settings" },
+    { name: "Logout", icon: <Lock className="w-4 h-4" />, key: "logout"}
   ]
 
   return (

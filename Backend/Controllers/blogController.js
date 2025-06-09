@@ -5,10 +5,24 @@ const Blog = require("../Database/Models/blogSchema");
 
 const createBlog = async (req, res) => {
   try {
-    const { title, content, excerpt } = req.body;
+    const { sections } = req.body;
     const author = req.user.id;
 
-    if (!title || !content || !author || !excerpt) {
+    if (!sections) {
+      return res.status(400).json({ message: "Sections are required" });
+    }
+
+    const parsedSections = JSON.parse(sections);
+    
+    const titleSection = parsedSections.find(s => s.type === "title");
+    const contentSection = parsedSections.find(s => s.type === "content");
+    const excerptSection = parsedSections.find(s => s.type === "excerpt");
+
+    const title = titleSection?.value;
+    const content = contentSection?.value;
+    const excerpt = excerptSection?.value;
+
+    if (!title || !content || !excerpt || !author) {
       return res.status(400).json({ message: "All fields required!" });
     }
 
