@@ -129,7 +129,7 @@ const updateBlog = async (req, res) => {
 
 const getBlogs = async (req, res) => {
     try {
-        const blogs = await Blog.find().populate('author', 'name email');
+        const blogs = await Blog.find().populate('author', 'name email').select('-__v -createdAt -updatedAt -content');
         if (!blogs || blogs.length === 0) {
             return res.status(404).json({ message: 'No blogs found' });
         }
@@ -140,9 +140,27 @@ const getBlogs = async (req, res) => {
     }
 }
 
+const getBlogById = async(req,res)=>{
+    try {
+        const { id } = req.params;
+        if (!validateId(id)) {
+            return res.status(400).json({ message: 'Invalid blog ID' });
+        }
+        const blog = await Blog.findById(id).populate('author', 'name email');
+        if (!blog) {
+            return res.status(404).json({ message: 'Blog not found' });
+        }
+        res.status(200).json({ message: 'Blog retrieved successfully', blog });
+    } catch (error) {
+        console.error('Error retrieving blog:', error);
+        res.status(500).json({ message: 'Server error', error: error.message });
+    }
+}
+
 module.exports = {
     createBlog,
     deleteBlog,
     updateBlog,
-    getBlogs
+    getBlogs,
+    getBlogById
 }

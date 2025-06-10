@@ -3,23 +3,15 @@ import Image from 'next/image';
 import defaultUser from '../../public/default User.png'
 
 interface Blog {
-    title: string,
-    _id: string,
-    content: [
-        {
-            type: string,
-            value:string
-        }
-    ],
-    author: {
-        _id: string,
-        name: string,
-        email: string,
-    },
-    excerpt: string;
-    coverImage: string,
-    createdAt: string,
-    updatedAt: string
+  title: string;
+  _id: string;
+  author: {
+    _id: string;
+    name: string;
+    email: string;
+  };
+  excerpt: string;
+  coverImage: string;
 }
 interface CardProps {
     blog: Blog;
