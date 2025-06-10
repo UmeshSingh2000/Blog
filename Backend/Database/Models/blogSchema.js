@@ -1,31 +1,35 @@
 const mongoose = require('mongoose');
 const { Schema } = mongoose;
+
+const contentBlockSchema = new Schema({
+    type: {
+        type: String,
+        enum: ['content', 'image'], // you can add more types if needed
+        required: true
+    },
+    value: {
+        type: String,
+        required: true,
+        trim: true
+    }
+}, { _id: false });
+
 const blogSchema = new Schema({
     title: {
         type: String,
         required: true,
         trim: true
     },
-    content: {
-        type: String,
-        required: true,
-        trim: true
-    },
+    content: [contentBlockSchema], // ordered content blocks
     coverImage: {
         type: String,
-        required: false,
+        required: false
     },
-    excerpt: { // short description of the blog
+    excerpt: {
         type: String,
         trim: true,
-        maxlength: 150,
+        maxlength: 150
     },
-    images:[
-        {
-            type: String,
-            required: false
-        }
-    ],
     author: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
@@ -34,5 +38,6 @@ const blogSchema = new Schema({
 }, {
     timestamps: true
 });
+
 const Blog = mongoose.model('Blog', blogSchema);
 module.exports = Blog;

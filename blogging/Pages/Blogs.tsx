@@ -3,10 +3,16 @@ import Card from '@/Components/Card'
 import Loader from '@/Components/Loader/Loader';
 import axios from 'axios'
 import React, { useEffect, useState } from 'react'
+import toast from 'react-hot-toast';
 interface Blog {
     title: string,
     _id: string,
-    content: string,
+    content: [
+        {
+            type: string,
+            value:string
+        }
+    ],
     author: {
         _id: string,
         name: string,
@@ -19,12 +25,16 @@ interface Blog {
 }
 const Blogs = () => {
     const [loading, setLoading] = useState<boolean>(false)
+    const [error, setError] = useState<string | null>(null)
     const [blogs, setBlogs] = useState<Blog[]>([])
     const fetchBlogs = async () => {
         try {
             setLoading(true);
             const response = await axios.get<{ blogs?: Blog[] }>('http://localhost:5000/api/getBlogs', {
                 withCredentials: true,
+            })
+            toast.success('Blogs fetched successfully!', {
+                position: "top-right"
             })
             const blogs = response.data.blogs ?? [];
 
@@ -33,11 +43,24 @@ const Blogs = () => {
             }
         }
         catch (error) {
-            console.error('Error fetching blogs:', error);
+            if (axios.isAxiosError(error)) {
+                if (error.response?.status === 404) {
+                    toast.error('No blogs found.',{
+                        position: "top-right"
+                    });
+                } else {
+                    toast.error('An error occurred while fetching blogs.',{
+                        position: "top-right"
+                    });
+                }
+            } else {
+                toast.error('An unexpected error occurred.',{
+                    position: "top-right"
+                });
+            }
         }
         finally {
             setLoading(false);
-
         }
     }
     useEffect(() => {
@@ -54,6 +77,7 @@ const Blogs = () => {
                 <p className='italic text-lg font-extralight'>Curated adventures, untold tales, and breathtaking escapes. Dive into our stories from the road.</p>
             </div>
             <hr />
+            {error && <div className='text-red-500 text-center mt-4'>{error}</div>}
             {
                 loading ? <div className='absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2'>
                     <Loader />

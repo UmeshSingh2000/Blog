@@ -9,7 +9,7 @@ const upload = multer({ dest: 'uploads/' });
 
 
 router.post('/login', loginUser);
-router.get('/logout', authenticateToken, (req, res) => {
+router.get('/logout', (req, res) => {
     res.clearCookie('token');
     res.status(200).json({ message: 'Logged out successfully' });
 });

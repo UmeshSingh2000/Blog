@@ -3,18 +3,23 @@ import Image from 'next/image';
 import defaultUser from '../../public/default User.png'
 
 interface Blog {
-    _id: string,
     title: string,
-    content: string,
+    _id: string,
+    content: [
+        {
+            type: string,
+            value:string
+        }
+    ],
     author: {
         _id: string,
         name: string,
-        email:string,
-    };
-    excerpt: string,
+        email: string,
+    },
+    excerpt: string;
     coverImage: string,
     createdAt: string,
-    updatedAt: string,
+    updatedAt: string
 }
 interface CardProps {
     blog: Blog;
@@ -23,7 +28,7 @@ const Card: React.FC<CardProps> = ({blog}) => {
     return (
         <div className="max-w-sm rounded-xl overflow-hidden shadow bg-white mt-2 cursor-pointer hover:shadow-lg transition-shadow duration-300">
             <Image
-                src={blog.coverImage}
+                src={blog.coverImage || defaultUser}
                 alt="Waterfall"
                 className="w-full h-56 object-cover rounded-t-xl"
                 width={500}

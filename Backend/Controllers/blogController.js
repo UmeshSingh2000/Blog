@@ -13,24 +13,22 @@ const createBlog = async (req, res) => {
     }
 
     const parsedSections = JSON.parse(sections);
-    
+
     const titleSection = parsedSections.find(s => s.type === "title");
-    const contentSection = parsedSections.find(s => s.type === "content");
     const excerptSection = parsedSections.find(s => s.type === "excerpt");
 
-    const title = titleSection?.value;
-    const content = contentSection?.value;
-    const excerpt = excerptSection?.value;
+    const title = titleSection?.value?.trim();
+    const excerpt = excerptSection?.value?.trim();
 
-    if (!title || !content || !excerpt || !author) {
-      return res.status(400).json({ message: "All fields required!" });
+    if (!title || !excerpt || !author) {
+      return res.status(400).json({ message: "Title, excerpt, and author are required" });
     }
 
     if (!validateId(author)) {
       return res.status(400).json({ message: "Invalid author ID" });
     }
 
-    // Check cover image (single file)
+    // Validate cover image
     if (!req.files?.coverImage || req.files.coverImage.length === 0) {
       return res.status(400).json({ message: "Cover image is required" });
     }
@@ -42,39 +40,54 @@ const createBlog = async (req, res) => {
     });
     fs.unlinkSync(coverImageFile.path);
 
-    // Upload additional blog images (optional)
+    // Upload content images and map updated content blocks
     const imageFiles = req.files.images || [];
-    const uploadedImages = [];
+    const uploadedImageMap = {}; // key: original filename, value: uploaded URL
 
     for (const file of imageFiles) {
       const result = await cloudinary.uploader.upload(file.path, {
         folder: "blog_images/content",
       });
-      uploadedImages.push(result.secure_url);
+      uploadedImageMap[file.originalname] = result.secure_url;
       fs.unlinkSync(file.path);
     }
 
-    // Create and save blog
+    // Construct content array with resolved image URLs
+    const content = parsedSections
+      .filter(s => s.type === "content" || s.type === "image")
+      .map(block => {
+        if (block.type === "image") {
+          const imageUrl = uploadedImageMap[block.value]; // `value` is original file name
+          if (!imageUrl) {
+            throw new Error(`Missing uploaded URL for image: ${block.value}`);
+          }
+          return { type: "image", value: imageUrl };
+        } else {
+          return { type: "content", value: block.value.trim() };
+        }
+      });
+
+    // Create blog
     const newBlog = new Blog({
       title,
-      content,
       excerpt,
+      content,
       author,
-      coverImage: coverImageResult.secure_url,
-      images: uploadedImages,
+      coverImage: coverImageResult.secure_url
     });
 
     await newBlog.save();
 
     res.status(201).json({
       message: "Blog created successfully",
-      blog: newBlog,
+      blog: newBlog
     });
   } catch (error) {
     console.error("Error creating blog:", error);
     res.status(500).json({ message: "Server error", error: error.message });
   }
 };
+
 
 const deleteBlog = async (req, res) => {
     try {

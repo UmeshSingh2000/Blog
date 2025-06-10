@@ -18,16 +18,30 @@ cloudinaryConfig()
 
 app.use(express.json())
 app.use(cookieParser())
+
+const allowedOrigins = [
+    'http://localhost:3000',
+    'http://localhost:5173'
+];
+
 app.use(cors({
-    origin: 'http://localhost:5173',
+    origin: function (origin, callback) {
+        // allow requests with no origin (like mobile apps or curl)
+        if (!origin) return callback(null, true);
+        if (allowedOrigins.includes(origin)) {
+            return callback(null, true);
+        } else {
+            return callback(new Error('Not allowed by CORS'));
+        }
+    },
     credentials: true,
-}))
+}));
 
 app.get('/', (req, res) => {
     res.json({ message: 'Its working' })
 })
 
-app.get('/api/auth/check',authenticateToken,(req,res)=>{
+app.get('/api/auth/check', authenticateToken, (req, res) => {
     res.status(200).json({
         message: 'You are authenticated',
         user: req.user
