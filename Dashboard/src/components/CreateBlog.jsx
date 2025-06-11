@@ -59,44 +59,44 @@ const CreateBlogInteractive = () => {
   }
 
   const handleSubmit = async () => {
-    const formData = new FormData();
+    const formData = new FormData()
     if (coverImage) {
-      formData.append("coverImage", coverImage);
+      formData.append("coverImage", coverImage)
     }
 
-    const sectionsData = [];
+    const sectionsData = []
 
     for (const section of sections) {
       if (section.type === "image" && section.file) {
-        formData.append("images", section.file, section.file.name);
-        sectionsData.push({ type: "image", value: section.file.name });
+        formData.append("images", section.file, section.file.name)
+        sectionsData.push({ type: "image", value: section.file.name })
       } else {
-        sectionsData.push({ type: section.type, value: section.value });
+        sectionsData.push({ type: section.type, value: section.value })
       }
     }
 
-    formData.append("sections", JSON.stringify(sectionsData));
+    formData.append("sections", JSON.stringify(sectionsData))
 
     try {
-      setLoading(true);
+      setLoading(true)
       const response = await axios.post(`${api}/createBlog`, formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
         withCredentials: true,
-      });
+      })
 
-      console.log("Blog created:", response.data);
-      toast.success("Blog submitted successfully!");
+      console.log("Blog created:", response.data)
+      toast.success("Blog submitted successfully!")
     } catch (error) {
-      console.log("Submit error:", error.response?.data || error.message);
-      toast.error("Failed to submit blog. Please try again.");
+      console.log("Submit error:", error.response?.data || error.message)
+      toast.error("Failed to submit blog. Please try again.")
     } finally {
-      setLoading(false);
-      setSections([]);
-      setCoverImage(null);
+      setLoading(false)
+      setSections([])
+      setCoverImage(null)
     }
-  };
+  }
 
   const hasTitle = sections.some((s) => s.type === "title")
   const hasExcerpt = sections.some((s) => s.type === "excerpt")
@@ -184,6 +184,59 @@ const CreateBlogInteractive = () => {
                         {section.type === "content" && (
                           <>
                             <Label>Content</Label>
+
+                            {/* Formatting buttons */}
+                            <div className="flex flex-wrap gap-2 mb-2">
+                              <Button
+                                type="button"
+                                variant="outline"
+                                onClick={() =>
+                                  handleChange(
+                                    section.id,
+                                    section.value + "\n# Heading 1"
+                                  )
+                                }
+                              >
+                                H1
+                              </Button>
+                              <Button
+                                type="button"
+                                variant="outline"
+                                onClick={() =>
+                                  handleChange(
+                                    section.id,
+                                    section.value + "\n## Heading 2"
+                                  )
+                                }
+                              >
+                                H2
+                              </Button>
+                              <Button
+                                type="button"
+                                variant="outline"
+                                onClick={() =>
+                                  handleChange(
+                                    section.id,
+                                    section.value + " **bold**"
+                                  )
+                                }
+                              >
+                                Bold
+                              </Button>
+                              <Button
+                                type="button"
+                                variant="outline"
+                                onClick={() =>
+                                  handleChange(
+                                    section.id,
+                                    section.value + " *italic*"
+                                  )
+                                }
+                              >
+                                Italic
+                              </Button>
+                            </div>
+
                             <Textarea
                               rows={8}
                               placeholder="Write your blog content..."

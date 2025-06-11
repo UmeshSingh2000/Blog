@@ -3,6 +3,7 @@ import React from 'react'
 import dynamic from 'next/dynamic'
 import Blogs from '../../Pages/Blogs'
 import { Toaster } from 'react-hot-toast'
+import Footer from '@/Components/Footer'
 
 const page = () => {
   return (
@@ -16,6 +17,7 @@ const page = () => {
           </div>
         </section>
         <Blogs />
+        <Footer />
       </main>
     </>
   )
