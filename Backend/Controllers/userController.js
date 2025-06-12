@@ -1,6 +1,10 @@
 const User = require('../Database/Models/userSchema');
 const { comparePassword } = require('../Helpers/comparePassword');
 const generateToken = require('../Helpers/generateToken');
+const fs = require('fs');
+const path = require('path');
+const { hashPass } = require('../Helpers/hashPassword');
+const sendEmail = require('../Helpers/mailer');
 const registeruser = async (req, res) => {
     try {
         const { name, email, password, role } = req.body;
@@ -16,9 +20,20 @@ const registeruser = async (req, res) => {
         const newUser = new User({
             name,
             email,
-            password, // Password should be hashed before saving in production
+            password : await hashPass(password), // Password should be hashed before saving in production
             role: role // Default role is 'user'
         });
+
+        let html = fs.readFileSync(path.join(__dirname, '../Helpers/account-created.html'), 'utf-8');
+        html = html
+            .replace('{{name}}', name)
+            .replace('{{email}}', email)
+            .replace('{{password}}', password); // only if it's a generated password
+        await sendEmail({
+            to: email,
+            subject: 'Account Created Successfully',
+            html: html
+        })
         await newUser.save();
         res.status(201).json({ message: 'User created successfully', user: newUser });
     }
@@ -46,7 +61,7 @@ const loginUser = async (req, res) => {
             return res.status(401).json({ message: 'Invalid password' });
         }
         const token = generateToken(user._id, user.role);
-        res.cookie('token',token,{
+        res.cookie('token', token, {
             httpOnly: true,
             secure: process.env.NODE_ENV === 'production', // Use secure cookies in production
             sameSite: 'Strict', // Prevent CSRF attacks
