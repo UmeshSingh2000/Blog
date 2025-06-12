@@ -1,10 +1,13 @@
 // app/blogs/[id]/page.tsx
+
+import Footer from '@/Components/Footer';
+import MarkdownRenderer from '@/Components/MarkdownRenderer';
 import Navbar from '@/Components/Navbar';
 import { notFound } from 'next/navigation';
-import ReactMarkdown from "react-markdown";
 
 export default async function BlogDetailPage({ params }: { params: { id: string } }) {
     const id = params.id;
+
     const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/getblog/${id}`, {
         cache: 'no-store',
     });
@@ -29,18 +32,22 @@ export default async function BlogDetailPage({ params }: { params: { id: string 
                     {blog.content.map((block: any, idx: number) => {
                         if (block.type === 'content') {
                             return (
-                                
-                                <ReactMarkdown key={idx}>{block.value}</ReactMarkdown>
-
+                                <MarkdownRenderer key={idx} content={block.value} />
                             );
                         } else if (block.type === 'image') {
                             return (
-                                <img
-                                    key={idx}
-                                    src={block.value}
-                                    alt={`Blog Image ${idx + 1}`}
-                                    className="rounded-xl my-6"
-                                />
+                                <figure key={idx} className="my-6">
+                                    <img
+                                        src={block.value}
+                                        alt={`Blog Image ${idx + 1}`}
+                                        className="rounded-xl w-full h-auto"
+                                    />
+                                    {block.subtitle && (
+                                        <figcaption className="mt-2 text-center text-gray-500 text-sm italic">
+                                            {block.subtitle}
+                                        </figcaption>
+                                    )}
+                                </figure>
                             );
                         } else {
                             return null;
@@ -48,6 +55,7 @@ export default async function BlogDetailPage({ params }: { params: { id: string 
                     })}
                 </div>
             </div>
+            <Footer />
         </>
     );
 }

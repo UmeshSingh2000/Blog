@@ -4,13 +4,26 @@ const { Schema } = mongoose;
 const contentBlockSchema = new Schema({
     type: {
         type: String,
-        enum: ['content', 'image'], // you can add more types if needed
+        enum: ['content', 'image'],
         required: true
     },
     value: {
         type: String,
         required: true,
         trim: true
+    },
+    subtitle: {
+        type: String,
+        trim: true,
+        maxlength: 200,
+        validate: {
+            validator: function (value) {
+                // Only allow subtitle if type is 'image'
+                if (this.type === 'image') return true;
+                return value === undefined || value === null || value === '';
+            },
+            message: 'Subtitle is only allowed when type is "image".'
+        }
     }
 }, { _id: false });
 
@@ -20,10 +33,9 @@ const blogSchema = new Schema({
         required: true,
         trim: true
     },
-    content: [contentBlockSchema], // ordered content blocks
+    content: [contentBlockSchema],
     coverImage: {
-        type: String,
-        required: false
+        type: String
     },
     excerpt: {
         type: String,

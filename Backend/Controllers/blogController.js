@@ -40,9 +40,9 @@ const createBlog = async (req, res) => {
     });
     fs.unlinkSync(coverImageFile.path);
 
-    // Upload content images and map updated content blocks
+    // Upload content images and store mapping
     const imageFiles = req.files.images || [];
-    const uploadedImageMap = {}; // key: original filename, value: uploaded URL
+    const uploadedImageMap = {}; // { originalFileName: uploadedURL }
 
     for (const file of imageFiles) {
       const result = await cloudinary.uploader.upload(file.path, {
@@ -52,22 +52,30 @@ const createBlog = async (req, res) => {
       fs.unlinkSync(file.path);
     }
 
-    // Construct content array with resolved image URLs
+    // Construct content array
     const content = parsedSections
       .filter(s => s.type === "content" || s.type === "image")
       .map(block => {
         if (block.type === "image") {
-          const imageUrl = uploadedImageMap[block.value]; // `value` is original file name
+          const imageUrl = uploadedImageMap[block.value]; // `value` holds original filename
           if (!imageUrl) {
             throw new Error(`Missing uploaded URL for image: ${block.value}`);
           }
-          return { type: "image", value: imageUrl };
+
+          return {
+            type: "image",
+            value: imageUrl,
+            subtitle: block.subtitle?.trim() || "" // optional subtitle
+          };
         } else {
-          return { type: "content", value: block.value.trim() };
+          return {
+            type: "content",
+            value: block.value.trim()
+          };
         }
       });
 
-    // Create blog
+    // Create and save blog
     const newBlog = new Blog({
       title,
       excerpt,
@@ -87,6 +95,7 @@ const createBlog = async (req, res) => {
     res.status(500).json({ message: "Server error", error: error.message });
   }
 };
+
 
 
 const deleteBlog = async (req, res) => {

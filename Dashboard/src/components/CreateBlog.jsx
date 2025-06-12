@@ -31,13 +31,28 @@ const CreateBlogInteractive = () => {
   const handleAddSection = (type) => {
     setSections((prev) => [
       ...prev,
-      { id: Date.now().toString(), type, value: "", file: null },
+      {
+        id: Date.now().toString(),
+        type,
+        value: "",
+        file: null,
+        ...(type === "image" ? { subtitle: "" } : {}),
+      },
     ])
   }
 
-  const handleChange = (id, value, file = null) => {
+  const handleChange = (id, value, file = null, subtitle = null) => {
     setSections((prev) =>
-      prev.map((s) => (s.id === id ? { ...s, value, file } : s))
+      prev.map((s) =>
+        s.id === id
+          ? {
+              ...s,
+              value: value !== undefined ? value : s.value,
+              file: file !== null ? file : s.file,
+              ...(subtitle !== null ? { subtitle } : {}),
+            }
+          : s
+      )
     )
   }
 
@@ -58,6 +73,44 @@ const CreateBlogInteractive = () => {
     setSections(reordered)
   }
 
+  const applyFormatting = (id, type) => {
+    const textarea = document.getElementById(id)
+    if (!textarea) return
+
+    const start = textarea.selectionStart
+    const end = textarea.selectionEnd
+    const selected = textarea.value.slice(start, end)
+    let formatted = selected
+
+    switch (type) {
+      case "h1":
+        formatted = `# ${selected}`
+        break
+      case "h2":
+        formatted = `## ${selected}`
+        break
+      case "bold":
+        formatted = `**${selected}**`
+        break
+      case "italic":
+        formatted = `*${selected}*`
+        break
+    }
+
+    const updatedValue =
+      textarea.value.slice(0, start) +
+      formatted +
+      textarea.value.slice(end)
+
+    handleChange(id, updatedValue)
+
+    setTimeout(() => {
+      textarea.focus()
+      textarea.selectionStart = start
+      textarea.selectionEnd = start + formatted.length
+    }, 0)
+  }
+
   const handleSubmit = async () => {
     const formData = new FormData()
     if (coverImage) {
@@ -69,9 +122,16 @@ const CreateBlogInteractive = () => {
     for (const section of sections) {
       if (section.type === "image" && section.file) {
         formData.append("images", section.file, section.file.name)
-        sectionsData.push({ type: "image", value: section.file.name })
+        sectionsData.push({
+          type: "image",
+          value: section.file.name,
+          subtitle: section.subtitle || "",
+        })
       } else {
-        sectionsData.push({ type: section.type, value: section.value })
+        sectionsData.push({
+          type: section.type,
+          value: section.value,
+        })
       }
     }
 
@@ -86,10 +146,8 @@ const CreateBlogInteractive = () => {
         withCredentials: true,
       })
 
-      console.log("Blog created:", response.data)
       toast.success("Blog submitted successfully!")
     } catch (error) {
-      console.log("Submit error:", error.response?.data || error.message)
       toast.error("Failed to submit blog. Please try again.")
     } finally {
       setLoading(false)
@@ -146,8 +204,6 @@ const CreateBlogInteractive = () => {
                         <button
                           onClick={() => handleDelete(section.id)}
                           className="absolute top-2 right-2 text-red-600 hover:text-red-800 font-bold"
-                          aria-label="Delete section"
-                          title="Delete section"
                         >
                           ✕
                         </button>
@@ -161,18 +217,16 @@ const CreateBlogInteractive = () => {
                               onChange={(e) =>
                                 handleChange(section.id, e.target.value)
                               }
-                              required
                             />
                           </>
                         )}
 
                         {section.type === "excerpt" && (
                           <>
-                            <Label>Excerpt (max 150 characters)</Label>
+                            <Label>Excerpt</Label>
                             <Textarea
                               rows={3}
                               maxLength={150}
-                              placeholder="Short blog summary"
                               value={section.value}
                               onChange={(e) =>
                                 handleChange(section.id, e.target.value)
@@ -184,67 +238,45 @@ const CreateBlogInteractive = () => {
                         {section.type === "content" && (
                           <>
                             <Label>Content</Label>
-
-                            {/* Formatting buttons */}
                             <div className="flex flex-wrap gap-2 mb-2">
                               <Button
                                 type="button"
                                 variant="outline"
-                                onClick={() =>
-                                  handleChange(
-                                    section.id,
-                                    section.value + "\n# Heading 1"
-                                  )
-                                }
+                                onClick={() => applyFormatting(section.id, "h1")}
                               >
                                 H1
                               </Button>
                               <Button
                                 type="button"
                                 variant="outline"
-                                onClick={() =>
-                                  handleChange(
-                                    section.id,
-                                    section.value + "\n## Heading 2"
-                                  )
-                                }
+                                onClick={() => applyFormatting(section.id, "h2")}
                               >
                                 H2
                               </Button>
                               <Button
                                 type="button"
                                 variant="outline"
-                                onClick={() =>
-                                  handleChange(
-                                    section.id,
-                                    section.value + " **bold**"
-                                  )
-                                }
+                                onClick={() => applyFormatting(section.id, "bold")}
                               >
                                 Bold
                               </Button>
                               <Button
                                 type="button"
                                 variant="outline"
-                                onClick={() =>
-                                  handleChange(
-                                    section.id,
-                                    section.value + " *italic*"
-                                  )
-                                }
+                                onClick={() => applyFormatting(section.id, "italic")}
                               >
                                 Italic
                               </Button>
                             </div>
 
                             <Textarea
+                              id={section.id}
                               rows={8}
                               placeholder="Write your blog content..."
                               value={section.value}
                               onChange={(e) =>
                                 handleChange(section.id, e.target.value)
                               }
-                              required
                             />
                           </>
                         )}
@@ -258,18 +290,36 @@ const CreateBlogInteractive = () => {
                               onChange={(e) =>
                                 handleChange(
                                   section.id,
-                                  e.target.value,
-                                  e.target.files[0]
+                                  section.value,
+                                  e.target.files[0],
+                                  section.subtitle
                                 )
                               }
                             />
                             {section.file && (
                               <img
                                 src={URL.createObjectURL(section.file)}
-                                alt="Image Preview"
+                                alt="Preview"
                                 className="mt-2 h-48 w-full rounded-md border object-cover"
                               />
                             )}
+
+                            <div className="mt-2">
+                              <Label>Image Subtitle</Label>
+                              <Input
+                                type="text"
+                                placeholder="Enter image subtitle"
+                                value={section.subtitle || ""}
+                                onChange={(e) =>
+                                  handleChange(
+                                    section.id,
+                                    section.value,
+                                    section.file,
+                                    e.target.value
+                                  )
+                                }
+                              />
+                            </div>
                           </>
                         )}
                       </div>

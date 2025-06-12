@@ -4,7 +4,7 @@ import { Home, Users, Settings, PenLine, Lock } from "lucide-react"
 const Sidebar = ({ setPage }) => {
   const menu = [
     { name: "Dashboard", icon: <Home className="w-4 h-4" />, key: "dashboard" },
-    { name: "Users", icon: <Users className="w-4 h-4" />, key: "users" },
+    { name: "blogs", icon: <Users className="w-4 h-4" />, key: "blogs" },
     {
         name: "Create Blog",
         icon: <PenLine className="w-4 h-4" />, // Replace with actual icon for Create Blog

@@ -2,10 +2,10 @@ import React, { useState } from "react"
 
 import Dashboard from "@/components/Dashboard"
 import Sidebar from "@/components/Sidebar"
-import Users from "@/components/Users"
 import Settings from "@/components/Settings"
 import CreateBlog from "@/components/CreateBlog"
 import axios from "axios"
+import Blogs from "@/components/Blogs"
 const URL = import.meta.env.VITE_BACKEND_URL
 
 const DashboardLayout = () => {
@@ -28,8 +28,8 @@ const DashboardLayout = () => {
         switch (page) {
             case "dashboard":
                 return <Dashboard />
-            case "users":
-                return <Users />
+            case "blogs":
+                return <Blogs />
             case "create-blog":
                 return <CreateBlog />
             case "settings":
