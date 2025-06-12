@@ -46,7 +46,11 @@ const blogSchema = new Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
         required: true
-    }
+    },
+    tags: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Tags'
+    }],
 }, {
     timestamps: true
 });
