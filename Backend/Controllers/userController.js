@@ -66,7 +66,8 @@ const loginUser = async (req, res) => {
             secure: process.env.NODE_ENV === 'production', // Use secure cookies in production
             sameSite: 'None', // Prevent CSRF attacks,
             Secure: true, // Use secure cookies in production
-            maxAge: 24 * 60 * 60 * 1000 // 1 day
+            maxAge: 24 * 60 * 60 * 1000, // 1 day
+            path: '/' // Ensure the cookie is accessible on all routes
         })
         // If password is valid, return user data (excluding password)
         res.status(200).json({ message: 'Login successful' });

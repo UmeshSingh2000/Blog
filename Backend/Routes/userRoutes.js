@@ -10,7 +10,12 @@ const upload = multer({ dest: 'uploads/' });
 
 router.post('/login', loginUser);
 router.get('/logout', (req, res) => {
-    res.clearCookie('token');
+    res.clearCookie('token', {
+  httpOnly: true,
+  secure: process.env.NODE_ENV === 'production',
+  sameSite: 'None',
+  path: '/', // match this!
+});
     res.status(200).json({ message: 'Logged out successfully' });
 });
 router.post('/register', authenticateToken, loginLimiter, registeruser);
