@@ -5,7 +5,12 @@ import MarkdownRenderer from '@/Components/MarkdownRenderer';
 import Navbar from '@/Components/Navbar';
 import { notFound } from 'next/navigation';
 
-export default async function BlogDetailPage({ params }: { params: { id: string } }) {
+interface BlogDetailPageProps {
+  params: {
+    id: string
+  }
+}
+export default async function BlogDetailPage({ params }: BlogDetailPageProps) {
     const id = params.id;
 
     const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/getblog/${id}`, {
