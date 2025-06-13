@@ -29,7 +29,8 @@ const Login = () => {
             })
             if (res.status === 200) {
                 toast.success("Login successful");
-                navigate('/dashboard')
+                // Redirect to the dashboard or home page
+                navigate('/dashboard');
             }
         }
         catch (error) {
