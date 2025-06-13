@@ -38,8 +38,15 @@ app.use(cors({
     }
 }));
 
-app.get('/', (req, res) => {
-    res.json({ message: 'Its working' })
+app.get('/', async (req, res) => {
+    try {
+        await fetch('https://keepalive-jmgo.onrender.com');
+        res.json({ message: 'Its working' })
+    }
+    catch (err) {
+        console.log(err)
+        res.status(500).json({ message: 'Internal Server Error' })
+    }
 })
 
 app.get('/api/auth/check', authenticateToken, (req, res) => {
