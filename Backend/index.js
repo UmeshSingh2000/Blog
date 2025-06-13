@@ -22,7 +22,8 @@ app.use(cookieParser())
 const allowedOrigins = [
     'http://localhost:3000',
     'http://localhost:5173',
-    'https://potatotrailsdashboard.vercel.app'
+    'https://potatotrailsdashboard.vercel.app',
+    'https://potatotrails.vercel.app'
 ];
 
 app.use(cors({
