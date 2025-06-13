@@ -1,26 +1,16 @@
-import React, { useState } from "react"
+import React, { useEffect, useState } from "react"
 import Dashboard from "@/components/Dashboard"
 import Sidebar from "@/components/Sidebar"
 import Settings from "@/components/Settings"
 import CreateBlog from "@/components/CreateBlog"
 import Blogs from "@/components/Blogs"
-import axios from "axios"
 import { Menu } from "lucide-react"
-
-const URL = import.meta.env.VITE_BACKEND_URL
+import { useNavigate } from "react-router-dom"
 
 const DashboardLayout = () => {
+    const navigate = useNavigate()
     const [page, setPage] = useState("dashboard")
     const [sidebarOpen, setSidebarOpen] = useState(false)
-
-    const logout = async () => {
-        try {
-            const res = await axios.get(`${URL}/logout`, { withCredentials: true })
-            if (res.status === 200) window.location.reload()
-        } catch (error) {
-            console.error("Logout failed:", error)
-        }
-    }
 
     const renderContent = () => {
         switch (page) {
@@ -28,10 +18,17 @@ const DashboardLayout = () => {
             case "blogs": return <Blogs />
             case "create-blog": return <CreateBlog />
             case "settings": return <Settings />
-            case "logout": logout(); return null
+            case "logout": return null
             default: return <Dashboard />
         }
     }
+
+    useEffect(()=>{
+        if(page==='logout'){
+            localStorage.removeItem("token")
+            navigate("/")
+        }
+    },[page,navigate])
 
     return (
         <div className="flex h-screen overflow-hidden">

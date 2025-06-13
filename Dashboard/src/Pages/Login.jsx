@@ -24,12 +24,11 @@ const Login = () => {
         }
         try {
             setLoading(true)
-            const res = await axios.post(`${api}/login`, userData, {
-                withCredentials: true
-            })
+            const res = await axios.post(`${api}/login`, userData)
             if (res.status === 200) {
                 toast.success("Login successful");
                 // Redirect to the dashboard or home page
+                localStorage.setItem('token', res.data.token)
                 navigate('/dashboard');
             }
         }

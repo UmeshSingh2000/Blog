@@ -46,11 +46,11 @@ const CreateBlogInteractive = () => {
       prev.map((s) =>
         s.id === id
           ? {
-              ...s,
-              value: value !== undefined ? value : s.value,
-              file: file !== null ? file : s.file,
-              ...(subtitle !== null ? { subtitle } : {}),
-            }
+            ...s,
+            value: value !== undefined ? value : s.value,
+            file: file !== null ? file : s.file,
+            ...(subtitle !== null ? { subtitle } : {}),
+          }
           : s
       )
     )
@@ -142,8 +142,8 @@ const CreateBlogInteractive = () => {
       const response = await axios.post(`${api}/createBlog`, formData, {
         headers: {
           "Content-Type": "multipart/form-data",
-        },
-        withCredentials: true,
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        }
       })
 
       toast.success("Blog submitted successfully!")

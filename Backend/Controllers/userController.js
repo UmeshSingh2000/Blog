@@ -49,7 +49,7 @@ const loginUser = async (req, res) => {
         const { email, password } = req.body;
         // Validate input
         if (!email || !password) {
-            return res.status(400).json({ message: 'Email and password are required' });
+            return res.status(400).jzson({ message: 'Email and password are required' });
         }
         // Find user by email
         const user = await User.findOne({ email });
@@ -61,15 +61,15 @@ const loginUser = async (req, res) => {
             return res.status(401).json({ message: 'Invalid password' });
         }
         const token = generateToken(user._id, user.role);
-        res.cookie('token', token, {
-            httpOnly: true,
-            secure: process.env.NODE_ENV === 'production', // Use secure cookies in production
-            sameSite: 'None', // Prevent CSRF attacks,
-            maxAge: 24 * 60 * 60 * 1000, // 1 day
-            path: '/' // Ensure the cookie is accessible on all routes
-        })
+        // res.cookie('token', token, {
+        //     httpOnly: true,
+        //     secure: process.env.NODE_ENV === 'production', // Use secure cookies in production
+        //     sameSite: 'None', // Prevent CSRF attacks,
+        //     maxAge: 24 * 60 * 60 * 1000, // 1 day
+        //     path: '/' // Ensure the cookie is accessible on all routes
+        // })
         // If password is valid, return user data (excluding password)
-        res.status(200).json({ message: 'Login successful' });
+        res.status(200).json({ message: 'Login successful',token });
     } catch (error) {
         res.status(500).json({ message: 'Server error', error: error.message });
     }

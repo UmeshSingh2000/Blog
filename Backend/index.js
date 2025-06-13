@@ -34,8 +34,7 @@ app.use(cors({
         } else {
             return callback(new Error('Not allowed by CORS'));
         }
-    },
-    credentials: true,
+    }
 }));
 
 app.get('/', (req, res) => {
@@ -43,6 +42,7 @@ app.get('/', (req, res) => {
 })
 
 app.get('/api/auth/check', authenticateToken, (req, res) => {
+
     res.status(200).json({
         message: 'You are authenticated',
         user: req.user

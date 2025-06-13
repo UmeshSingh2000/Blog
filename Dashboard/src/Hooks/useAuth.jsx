@@ -9,8 +9,10 @@ const useAuth = () => {
   useEffect(() => {
     const checkAuth = async () => {
       try {
-        const res = await axios.get(`${api}/auth/check`, {
-          withCredentials: true,
+        const res = await axios.get(`${api}/auth/check`,{
+          headers:{
+            Authorization : `Bearer ${localStorage.getItem('token')}`
+          }
         })
         if (res.status===200) {
           setIsAuthenticated(true)
