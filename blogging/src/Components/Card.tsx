@@ -10,6 +10,12 @@ interface Blog {
     name: string;
     email: string;
   };
+  tags: [
+    {
+      _id: string;
+      name: string;
+    }
+  ];
   excerpt: string;
   coverImage: string;
 }
@@ -46,8 +52,11 @@ const Card: React.FC<CardProps> = ({blog}) => {
                     </div>
 
                     <div className="mt-4 flex gap-2 flex-wrap">
-                        <span className="px-3 py-1 text-xs bg-gray-100 text-gray-700 rounded-full">Nature</span>
-                        <span className="px-3 py-1 text-xs bg-gray-100 text-gray-700 rounded-full">Water fall</span>
+                        {blog.tags && blog.tags.map((tag, index) => (
+                            <span key={index} className="px-3 py-1 text-xs bg-gray-100 text-gray-700 rounded-full">
+                                {tag.name}
+                            </span>
+                        ))}
                     </div>
                 </div>
             </div>

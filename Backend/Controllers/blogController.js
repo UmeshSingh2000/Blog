@@ -167,7 +167,9 @@ const updateBlog = async (req, res) => {
 
 const getBlogs = async (req, res) => {
   try {
-    const blogs = await Blog.find().populate('author', 'name email').select('-__v -createdAt -updatedAt -content');
+    const blogs = await Blog.find().populate('author', 'name email')
+    .populate('tags', 'name')
+    .select('-__v -createdAt -updatedAt -content');
     if (!blogs || blogs.length === 0) {
       return res.status(404).json({ message: 'No blogs found' });
     }

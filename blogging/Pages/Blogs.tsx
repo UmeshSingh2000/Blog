@@ -9,6 +9,12 @@ interface Blog {
         name: string;
         email: string;
     };
+    tags: [
+        {
+            _id: string;
+            name: string;
+        }
+    ];
     excerpt: string;
     coverImage: string;
 }
