@@ -19,7 +19,7 @@ const userSchema = new Schema({
         type: String,
         enum: ['admin','superAdmin','user'],
         default: 'user'
-    },
+    }
 },{
     timestamps: true
 })

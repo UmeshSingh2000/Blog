@@ -17,6 +17,10 @@ const sectionOptions = [
 ]
 
 const CreateBlogInteractive = () => {
+  // const [search, setSearch] = useState("")
+  const [results, setResults] = useState([])
+  const [tags, setTags] = useState([]);
+  const [tagInput, setTagInput] = useState("");
   const [loading, setLoading] = useState(false)
   const [sections, setSections] = useState([])
   const [coverImage, setCoverImage] = useState(null)
@@ -111,7 +115,41 @@ const CreateBlogInteractive = () => {
     }, 0)
   }
 
+  const handleSearchTags = async () => {
+    try {
+      const response = await axios.get(`${api}/getTags?search=${tagInput}`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        }
+      })
+      if (response.status === 200) {
+        setResults(response.data)
+      } else {
+        toast.error("Failed to fetch tags. Please try again.")
+      }
+    }
+    catch (err) {
+      console.log(err)
+      toast.error("Failed to fetch tags. Please try again.")
+    }
+  }
+
+  useEffect(() => {
+    const delayDebouce = setTimeout(() => {
+      if (tagInput.trim()) {
+        handleSearchTags()
+      }
+    }, 500);
+
+    return () => clearTimeout(delayDebouce)
+  }, [tagInput])
+
+
   const handleSubmit = async () => {
+    if (tags.length === 0) {
+      toast.error("Please add at least one tag.")
+      return
+    }
     const formData = new FormData()
     if (coverImage) {
       formData.append("coverImage", coverImage)
@@ -136,6 +174,7 @@ const CreateBlogInteractive = () => {
     }
 
     formData.append("sections", JSON.stringify(sectionsData))
+    formData.append("tagsIds", JSON.stringify(tags));
 
     try {
       setLoading(true)
@@ -352,6 +391,67 @@ const CreateBlogInteractive = () => {
             })}
           </div>
         </div>
+        <div className="space-y-2">
+          <Label htmlFor="tags">Tags</Label>
+          <div className="flex gap-2 relative">
+            <Input
+              id="tags"
+              placeholder="Enter tag and press Enter"
+              value={tagInput}
+              onChange={(e) => {
+                setTagInput(e.target.value)
+              }}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" && tagInput.trim()) {
+                  e.preventDefault();
+                  if (!tags.includes(tagInput.trim())) {
+                    setTags([...tags, tagInput.trim()]);
+                  }
+                  setTagInput("");
+                }
+              }}
+            />
+            {tagInput && results.length > 0 && (
+              <ul className="absolute z-10 top-full bg-white border rounded shadow mt-1 w-full flex flex-wrap gap-2 p-2">
+                {results.map((tag) => (
+                  <li
+                    key={tag._id}
+                    className="px-3 py-1 bg-gray-200 text-sm rounded-full cursor-pointer hover:bg-gray-300"
+                    onClick={() => {
+                      if (!tags.includes(tag.name)) {
+                        setTags((prev) => [...prev, tag.name]);
+                      }
+                      setTagInput(""); // input cleared
+                    }}
+                  >
+                    {tag.name}
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
+
+          <div className="flex flex-wrap gap-2 mt-2">
+            {tags.map((tag, idx) => (
+              <span
+                key={idx}
+                className="px-3 py-1 text-sm bg-gray-200 rounded-full flex items-center"
+              >
+                {tag}
+                <button
+                  type="button"
+                  className="ml-2 text-red-500 hover:text-red-700"
+                  onClick={() => {
+                    setTags((prev) => prev.filter((t) => t !== tag));
+                  }}
+                >
+                  &times;
+                </button>
+              </span>
+            ))}
+          </div>
+        </div>
+
 
         {loading ? (
           <Button className="w-full mt-6" disabled>
