@@ -1,32 +1,41 @@
 const express = require('express');
 const multer = require('multer');
 const router = express.Router();
-const { registeruser, loginUser } = require('../Controllers/userController');
+const { registeruser, loginUser, sendOtp, verifyOtp, resetPassword } = require('../Controllers/userController');
 const { loginLimiter } = require('../Helpers/rateLimiter');
 const authenticateToken = require('../Middlewares/authenticateToken');
 const { createBlog, deleteBlog, updateBlog, getBlogs, getBlogById } = require('../Controllers/blogController');
 const { getTags } = require('../Controllers/tagController');
+const otpIsVerified = require('../Middlewares/otpIsVerified');
 const upload = multer({ dest: 'uploads/' });
 
 
-router.post('/login', loginUser);
+router.post('/login',loginLimiter, loginUser);
 router.get('/logout', (req, res) => {
     res.clearCookie('token', {
-  httpOnly: true,
-  secure: process.env.NODE_ENV === 'production',
-  sameSite: 'None',
-  path: '/', // match this!
-});
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'None',
+        path: '/', // match this!
+    });
     res.status(200).json({ message: 'Logged out successfully' });
 });
 router.post('/register', authenticateToken, loginLimiter, registeruser);
+
+//otp related routes
+router.post('/sendotp',loginLimiter,authenticateToken,sendOtp); // otp for password reset or verification
+router.post('/verifyOtp',loginLimiter,authenticateToken,verifyOtp) // verify otp for password reset or verification
+router.post('/resetPassword',loginLimiter,authenticateToken,otpIsVerified,resetPassword); // reset password after otp verification
+
+
+
 
 router.post(
     '/createBlog',
     upload.fields([
         { name: 'coverImage', maxCount: 1 },
         { name: 'images', maxCount: 10 }, // adjust as needed
-    ]),
+    ]),loginLimiter,
     authenticateToken,
     createBlog
 );

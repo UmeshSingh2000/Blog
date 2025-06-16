@@ -19,7 +19,14 @@ const userSchema = new Schema({
         type: String,
         enum: ['admin','superAdmin','user'],
         default: 'user'
-    }
+    },
+    otp: {
+        type: String
+    },
+    otpVerified: {
+        type: Boolean,
+        default: false
+    },
 },{
     timestamps: true
 })
