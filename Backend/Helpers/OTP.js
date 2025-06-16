@@ -12,14 +12,14 @@ const generateOtp = ()=>{
     }
 }
 
-const verifyOtpHelper = async(otp, id) => {
+const verifyOtpHelper = async(otp, email) => {
     try {
         if (!otp || typeof otp !== 'string') {
-            throw new Error("Invalid OTP format");
+            return {success:false,message:"Invalid OTP format"};
         }
-        const user = await User.findById(id);
+        const user = await User.findOne({email});
         if (!user) {
-            throw new Error("User not found");
+            return { success: false, message: "User not found!" };
         }
         const isOtpValid = await bcrypt.compare(otp, user.otp);
         if (!isOtpValid) {

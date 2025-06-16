@@ -23,9 +23,9 @@ router.get('/logout', (req, res) => {
 router.post('/register', authenticateToken, loginLimiter, registeruser);
 
 //otp related routes
-router.post('/sendotp',loginLimiter,authenticateToken,sendOtp); // otp for password reset or verification
-router.post('/verifyOtp',loginLimiter,authenticateToken,verifyOtp) // verify otp for password reset or verification
-router.post('/resetPassword',loginLimiter,authenticateToken,otpIsVerified,resetPassword); // reset password after otp verification
+router.post('/sendotp',loginLimiter,sendOtp); // otp for password reset or verification
+router.post('/verifyOtp',loginLimiter,verifyOtp) // verify otp for password reset or verification
+router.post('/resetPassword',loginLimiter,otpIsVerified,resetPassword); // reset password after otp verification
 
 
 

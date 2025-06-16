@@ -80,8 +80,7 @@ const loginUser = async (req, res) => {
 
 const sendOtp = async (req, res) => {
     try {
-        const { email } = req.user
-        console.log(req.user)
+        const { email } = req.body
         if (!email) {
             return res.status(400).json({ message: 'Email is required' });
         }
@@ -113,12 +112,12 @@ const sendOtp = async (req, res) => {
 
 const verifyOtp = async (req,res)=>{
     try{
-        const {id} = req.user;
-        const { otp } = req.body;
-        if (!otp) {
-            return res.status(400).json({ message: 'OTP is required' });
+        // const {id} = req.user;
+        const { otp,email } = req.body;
+        if (!otp || !email) {
+            return res.status(400).json({ message: 'OTP and email is required' });
         }
-        const isValid = await verifyOtpHelper(otp, id);
+        const isValid = await verifyOtpHelper(otp, email);
         if (!isValid.success) {
             return res.status(400).json({ message: isValid.message });
         }
@@ -133,12 +132,12 @@ const verifyOtp = async (req,res)=>{
 
 const resetPassword = async (req, res) => {
     try {
-        const { newPassword } = req.body;
-        const {id} = req.user;
-        if (!newPassword) {
-            return res.status(400).json({ message: 'new password are required' });
+        const { newPassword,email } = req.body;
+        // const {id} = req.user;
+        if (!newPassword || !email) {
+            return res.status(400).json({ message: 'new password and email are required' });
         }
-        const user = await User.findById(id);
+        const user = await User.findOne({email});
         if (!user) {
             return res.status(404).json({ message: 'User not found' });
         }

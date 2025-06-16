@@ -7,6 +7,7 @@ import React, { useState } from 'react'
 import toast from 'react-hot-toast'
 import { useNavigate } from 'react-router-dom'
 import Loader from '../components/Loader/Loader'
+import ResetPassword from '@/components/ResetPassword'
 const api = import.meta.env.VITE_BACKEND_URL
 
 const Login = () => {
@@ -86,9 +87,7 @@ const Login = () => {
 
                     <p className="text-sm text-center text-gray-500 mt-4">
                         Forget Password?{" "}
-                        <a href="/register" className="text-blue-600 hover:underline">
-                            Reset Password
-                        </a>
+                        <ResetPassword />
                     </p>
                 </CardContent>
             </Card>
