@@ -99,6 +99,15 @@ const CreateBlogInteractive = () => {
       case "italic":
         formatted = `*${selected}*`
         break
+      case "link":
+        const url = prompt("Enter URL for the link:")
+        if (url) {
+          formatted = `[${selected || 'click'}](${url})`
+        } else {
+          toast.error("URL is required for links.")
+          return
+        }
+        break
     }
 
     const updatedValue =
@@ -267,6 +276,7 @@ const CreateBlogInteractive = () => {
                               rows={3}
                               maxLength={150}
                               value={section.value}
+                              placeholder="Enter excerpt (max 150 characters)"
                               onChange={(e) =>
                                 handleChange(section.id, e.target.value)
                               }
@@ -305,6 +315,13 @@ const CreateBlogInteractive = () => {
                                 onClick={() => applyFormatting(section.id, "italic")}
                               >
                                 Italic
+                              </Button>
+                              <Button
+                                type="button"
+                                variant="outline"
+                                onClick={() => applyFormatting(section.id, "link")}
+                              >
+                                Link
                               </Button>
                             </div>
 
