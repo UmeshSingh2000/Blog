@@ -15,7 +15,6 @@ seedSuperAdmin()
 //configure cloudinary
 cloudinaryConfig()
 
-
 app.use(express.json())
 app.use(cookieParser())
 

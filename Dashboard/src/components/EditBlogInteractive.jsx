@@ -6,6 +6,8 @@ import { Textarea } from "@/components/ui/textarea"
 import { Label } from "@/components/ui/label"
 import toast from "react-hot-toast"
 import axios from "axios"
+import { useParams, useNavigate } from "react-router-dom"
+import Loader from "./Loader/Loader"
 
 const api = import.meta.env.VITE_BACKEND_URL
 
@@ -16,21 +18,117 @@ const sectionOptions = [
   { type: "image", label: "Image" },
 ]
 
-const CreateBlogInteractive = () => {
-  // const [search, setSearch] = useState("")
+const EditBlogInteractive = () => {
+  const navigate = useNavigate()
+  const { blogId } = useParams()
+  // const blogId = '6851a2e7d0f50175838c6dd7'
+
   const [results, setResults] = useState([])
-  const [tags, setTags] = useState([]);
-  const [tagInput, setTagInput] = useState("");
+  const [tags, setTags] = useState([])
+  const [tagInput, setTagInput] = useState("")
   const [loading, setLoading] = useState(false)
+  const [initialLoading, setInitialLoading] = useState(true)
   const [sections, setSections] = useState([])
   const [coverImage, setCoverImage] = useState(null)
+  const [existingCoverImage, setExistingCoverImage] = useState(null)
+  const [blogData, setBlogData] = useState(null)
 
+  // Load existing blog data
+  const loadBlogData = async () => {
+    try {
+      setInitialLoading(true)
+      const response = await axios.get(`${api}/getBlog/${blogId}`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        }
+      })
+
+      if (response.status === 200) {
+        const blog = response.data.blog || response.data // Handle both formats
+        setBlogData(blog)
+
+        // Set existing cover image
+        if (blog.coverImage) {
+          setExistingCoverImage(blog.coverImage)
+        }
+
+        // Set tags
+        if (blog.tags && Array.isArray(blog.tags)) {
+          setTags(blog.tags.map(tag => typeof tag === 'string' ? tag : tag.name || tag._id))
+        }
+
+        // Initialize sections array
+        let loadedSections = []
+
+        // First add the title section
+        loadedSections.push({
+          id: `title-${Date.now()}`,
+          type: "title",
+          value: blog.title || ""
+        })
+
+        // Then add the excerpt section
+        loadedSections.push({
+          id: `excerpt-${Date.now()}`,
+          type: "excerpt",
+          value: blog.excerpt || ""
+        })
+
+        // Then handle the content sections
+        if (Array.isArray(blog.content)) {
+          // If content is an array of sections, add them all
+          blog.content.forEach((section, index) => {
+            loadedSections.push({
+              id: section.id || `content-${index}-${Date.now()}`,
+              type: section.type || "content",
+              value: section.value || "",
+              ...(section.subtitle && { subtitle: section.subtitle })
+            })
+          })
+        } else if (typeof blog.content === 'string') {
+          // If content is just a string, create one content section
+          loadedSections.push({
+            id: `content-${Date.now()}`,
+            type: "content",
+            value: blog.content
+          })
+        }
+
+        // Add any other sections that might exist in the blog data
+        if (Array.isArray(blog.sections)) {
+          blog.sections.forEach((section, index) => {
+            // Skip if we already have this section type
+            if (!['title', 'excerpt'].includes(section.type)) {
+              loadedSections.push({
+                id: section.id || `section-${index}-${Date.now()}`,
+                type: section.type,
+                value: section.value || "",
+                ...(section.subtitle && { subtitle: section.subtitle }),
+                ...(section.file && { file: null }) // Reset file
+              })
+            }
+          })
+        }
+
+        setSections(loadedSections)
+
+        toast.success("Blog loaded successfully!", {
+          position: "bottom-center",
+          icon: "📝",
+        })
+      }
+    } catch (error) {
+      console.error("Error loading blog:", error)
+      toast.error("Failed to load blog data")
+    } finally {
+      setInitialLoading(false)
+    }
+  }
   useEffect(() => {
-    toast.success("Create a New Blog!", {
-      position: "bottom-center",
-      icon: "👏",
-    })
-  }, [])
+    if (blogId) {
+      loadBlogData()
+    }
+  }, [blogId])
 
   const handleAddSection = (type) => {
     setSections((prev) => [
@@ -62,7 +160,10 @@ const CreateBlogInteractive = () => {
 
   const handleCoverImageChange = (e) => {
     const file = e.target.files[0]
-    if (file) setCoverImage(file)
+    if (file) {
+      setCoverImage(file)
+      setExistingCoverImage(null) // Clear existing image when new one is selected
+    }
   }
 
   const handleDelete = (id) => {
@@ -153,63 +254,82 @@ const CreateBlogInteractive = () => {
     return () => clearTimeout(delayDebouce)
   }, [tagInput])
 
-
   const handleSubmit = async () => {
     if (tags.length === 0) {
-      toast.error("Please add at least one tag.")
-      return
+      toast.error("Please add at least one tag.");
+      return;
     }
-    const formData = new FormData()
+
+    const formData = new FormData();
+
+    // Add new cover image if selected
     if (coverImage) {
-      formData.append("coverImage", coverImage)
+      formData.append("coverImage", coverImage);
     }
 
-    const sectionsData = []
+    // Prepare sections data (no need to separate existing/new images in frontend)
+    const sectionsData = sections.map(section => {
+      const baseSection = {
+        id : section.id,
+        type: section.type,
+        value: section.value,
+      };
 
-    for (const section of sections) {
-      if (section.type === "image" && section.file) {
-        formData.append("images", section.file, section.file.name)
-        sectionsData.push({
-          type: "image",
-          value: section.file.name,
-          subtitle: section.subtitle || "",
-        })
-      } else {
-        sectionsData.push({
-          type: section.type,
-          value: section.value,
-        })
+      // Add subtitle for image sections
+      if (section.type === "image" && section.subtitle) {
+        baseSection.subtitle = section.subtitle;
       }
-    }
+      if (section.imageFile instanceof File) {
 
-    formData.append("sections", JSON.stringify(sectionsData))
+        formData.append("images", section.imageFile);
+        baseSection.file = section.imageFile.name;
+      }
+
+      return baseSection;
+    });
+
+    // Add all data to formData
+    formData.append("sections", JSON.stringify(sectionsData));
     formData.append("tagsIds", JSON.stringify(tags));
 
     try {
-      setLoading(true)
-      const response = await axios.post(`${api}/createBlog`, formData, {
+      setLoading(true);
+      const response = await axios.put(`${api}/updateBlog/${blogId}`, formData, {
         headers: {
           "Content-Type": "multipart/form-data",
           Authorization: `Bearer ${localStorage.getItem("token")}`,
-        }
-      })
+        },
+      });
 
-      toast.success("Blog submitted successfully!")
+      if (response.status === 200) {
+        toast.success("Blog updated successfully!");
+        // Optionally redirect or refresh data
+        navigate(`/dashboard`);
+      } else {
+        throw new Error(response.data.message || "Failed to update blog");
+      }
     } catch (error) {
-      toast.error("Failed to submit blog. Please try again.")
+      console.error("Update error:", error);
+      toast.error(error.response?.data?.message || "Failed to update blog. Please try again.");
     } finally {
-      setLoading(false)
-      setSections([])
-      setCoverImage(null)
+      setLoading(false);
     }
-  }
+  };
 
   const hasTitle = sections.some((s) => s.type === "title")
   const hasExcerpt = sections.some((s) => s.type === "excerpt")
 
+  if (initialLoading) {
+    return (
+      <div className="min-h-screen bg-white p-8 flex items-center justify-center">
+        <Loader />
+      </div>
+    )
+  }
+
   return (
     <div className="min-h-screen bg-white p-8">
-      <h1 className="text-3xl mb-5 font-bold text-center">Create a New Blog</h1>
+      <h1 className="text-3xl mb-5 font-bold text-center">Edit Blog</h1>
       <div className="max-w-3xl mx-auto space-y-8">
         <div className="space-y-2">
           <Label htmlFor="coverImage">Cover Image</Label>
@@ -220,11 +340,24 @@ const CreateBlogInteractive = () => {
             onChange={handleCoverImageChange}
           />
           {coverImage && (
-            <img
-              src={URL.createObjectURL(coverImage)}
-              alt="Cover Preview"
-              className="mt-2 h-52 w-full rounded-md object-cover border"
-            />
+            <div className="relative">
+              <img
+                src={URL.createObjectURL(coverImage)}
+                alt="New Cover Preview"
+                className="mt-2 h-52 w-full rounded-md object-cover border"
+              />
+              <p className="text-sm text-green-600 mt-1">New cover image selected</p>
+            </div>
+          )}
+          {existingCoverImage && !coverImage && (
+            <div className="relative">
+              <img
+                src={existingCoverImage.startsWith('http') ? existingCoverImage : `${api}/uploads/${existingCoverImage}`}
+                alt="Current Cover"
+                className="mt-2 h-52 w-full rounded-md object-cover border"
+              />
+              <p className="text-sm text-gray-600 mt-1">Current cover image</p>
+            </div>
           )}
         </div>
 
@@ -353,11 +486,24 @@ const CreateBlogInteractive = () => {
                               }
                             />
                             {section.file && (
-                              <img
-                                src={URL.createObjectURL(section.file)}
-                                alt="Preview"
-                                className="mt-2 h-48 w-full rounded-md border object-cover"
-                              />
+                              <div className="relative">
+                                <img
+                                  src={URL.createObjectURL(section.file)}
+                                  alt="New Image Preview"
+                                  className="mt-2 h-48 w-full rounded-md border object-cover"
+                                />
+                                <p className="text-sm text-green-600 mt-1">New image selected</p>
+                              </div>
+                            )}
+                            {section.value && !section.file && (
+                              <div className="relative">
+                                <img
+                                  src={section.value.startsWith('http') ? section.value : `${api}/uploads/${section.value}`}
+                                  alt="Current Image"
+                                  className="mt-2 h-48 w-full rounded-md border object-cover"
+                                />
+                                <p className="text-sm text-gray-600 mt-1">Current image</p>
+                              </div>
                             )}
 
                             <div className="mt-2">
@@ -408,6 +554,7 @@ const CreateBlogInteractive = () => {
             })}
           </div>
         </div>
+
         <div className="space-y-2">
           <Label htmlFor="tags">Tags</Label>
           <div className="flex gap-2 relative">
@@ -469,23 +616,29 @@ const CreateBlogInteractive = () => {
           </div>
         </div>
 
-
-        {loading ? (
-          <Button className="w-full mt-6" disabled>
-            Submitting...
+        <div className="flex gap-4">
+          <Button
+            variant="outline"
+            className="flex-1 cursor-pointer"
+            onClick={() => navigate("/dashboard")}
+          >
+            Cancel
           </Button>
-        ) : (
-          sections.length > 0 && (
-            <Button className="w-full mt-6" onClick={handleSubmit}>
-              Submit Blog
+          {loading ? (
+            <Button className="flex-1" disabled>
+              Updating...
             </Button>
-          )
-        )}
+          ) : (
+            sections.length > 0 && (
+              <Button className="flex-1 cursor-pointer" onClick={handleSubmit}>
+                Update Blog
+              </Button>
+            )
+          )}
+        </div>
       </div>
     </div>
   )
 }
 
-export default CreateBlogInteractive
-
-
+export default EditBlogInteractive

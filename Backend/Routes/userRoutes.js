@@ -4,13 +4,13 @@ const router = express.Router();
 const { registeruser, loginUser, sendOtp, verifyOtp, resetPassword } = require('../Controllers/userController');
 const { loginLimiter } = require('../Helpers/rateLimiter');
 const authenticateToken = require('../Middlewares/authenticateToken');
-const { createBlog, deleteBlog, updateBlog, getBlogs, getBlogById } = require('../Controllers/blogController');
+const { createBlog, deleteBlog, updateBlog, getBlogs, getBlogById, getMyBlogs } = require('../Controllers/blogController');
 const { getTags } = require('../Controllers/tagController');
 const otpIsVerified = require('../Middlewares/otpIsVerified');
 const upload = multer({ dest: 'uploads/' });
 
 
-router.post('/login',loginLimiter, loginUser);
+router.post('/login', loginLimiter, loginUser);
 router.get('/logout', (req, res) => {
     res.clearCookie('token', {
         httpOnly: true,
@@ -23,9 +23,9 @@ router.get('/logout', (req, res) => {
 router.post('/register', authenticateToken, loginLimiter, registeruser);
 
 //otp related routes
-router.post('/sendotp',loginLimiter,sendOtp); // otp for password reset or verification
-router.post('/verifyOtp',loginLimiter,verifyOtp) // verify otp for password reset or verification
-router.post('/resetPassword',loginLimiter,otpIsVerified,resetPassword); // reset password after otp verification
+router.post('/sendotp', loginLimiter, sendOtp); // otp for password reset or verification
+router.post('/verifyOtp', loginLimiter, verifyOtp) // verify otp for password reset or verification
+router.post('/resetPassword', loginLimiter, otpIsVerified, resetPassword); // reset password after otp verification
 
 
 
@@ -35,14 +35,21 @@ router.post(
     upload.fields([
         { name: 'coverImage', maxCount: 1 },
         { name: 'images', maxCount: 10 }, // adjust as needed
-    ]),loginLimiter,
+    ]), loginLimiter,
     authenticateToken,
     createBlog
 );
 router.delete('/deleteBlog/:id', authenticateToken, deleteBlog);
-router.put('/updateBlog/:id', authenticateToken, updateBlog);
+router.put('/updateBlog/:blogId',
+    upload.fields([
+        { name: 'coverImage', maxCount: 1 },
+        { name: 'images', maxCount: 10 }, // if you're uploading more files (like content images)
+    ]),
+    authenticateToken, updateBlog);
 router.get('/getBlogs', getBlogs); // there is no user login required to get blogs
 router.get('/getblog/:id', getBlogById);
+
+router.get('/getMyBlogs', authenticateToken, getMyBlogs) // this route is for getting blogs of the logged in user
 
 
 

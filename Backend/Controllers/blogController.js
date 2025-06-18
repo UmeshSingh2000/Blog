@@ -146,39 +146,195 @@ const deleteBlog = async (req, res) => {
 
 const updateBlog = async (req, res) => {
   try {
-    const { id } = req.params;
-    const { title, content } = req.body;
-    if (!validateId(id)) {
-      return res.status(400).json({ message: 'Invalid blog ID' });
+    const { blogId } = req.params;
+    const author = req.user.id;
+
+    // Validate required fields
+    if (!req.body.sections) {
+      return res.status(400).json({ message: "Sections are required" });
     }
-    if (!title || !content) {
-      return res.status(400).json({ message: 'Title and content are required' });
+    // Parse incoming data
+    const parsedSections = JSON.parse(req.body.sections);
+    const tagsIds = JSON.parse(req.body.tagsIds || '[]');
+
+    // Find and validate existing blog
+    const existingBlog = await Blog.findById(blogId);
+    if (!existingBlog) {
+      return res.status(404).json({ message: "Blog not found" });
     }
-    const updatedBlog = await Blog.findByIdAndUpdate(id, { title, content }, { new: true });
-    if (!updatedBlog) {
-      return res.status(404).json({ message: 'Blog not found' });
+
+    // Verify ownership
+    if (existingBlog.author.toString() !== author) {
+      return res.status(403).json({ message: "Unauthorized to update this blog" });
     }
-    res.status(200).json({ message: 'Blog updated successfully', blog: updatedBlog });
+
+    // Extract title and excerpt
+    const titleSection = parsedSections.find(s => s.type === "title");
+    const excerptSection = parsedSections.find(s => s.type === "excerpt");
+
+    if (!titleSection?.value?.trim() || !excerptSection?.value?.trim()) {
+      return res.status(400).json({ message: "Title and excerpt are required" });
+    }
+
+    // Process cover image
+    let coverImageUrl = existingBlog.coverImage;
+    if (req.files) { // Assuming single file for cover image
+      // Delete old cover image if exists
+      if (coverImageUrl) {
+        const publicId = coverImageUrl.split('/').pop().split('.')[0];
+        await cloudinary.uploader.destroy(`blog_images/cover/${publicId}`);
+      }
+
+      // Upload new cover image
+      const result = await cloudinary.uploader.upload(req.file.path, {
+        folder: "blog_images/cover",
+      });
+      fs.unlinkSync(req.file.path);
+      coverImageUrl = result.secure_url;
+    }
+
+    // Process content images
+    const contentImages = parsedSections
+      .filter(s => s.type === "image")
+      .map(img => ({ id: img.id, file: img.file, subtitle: img.subtitle }));
+
+    const imageUpdates = {};
+    for (const img of contentImages) {
+      if (img.file) {
+        // This would need to match your actual file handling
+        // You might need to adjust based on how files are sent
+        const result = await cloudinary.uploader.upload(img.file.path, {
+          folder: "blog_images/content",
+        });
+        fs.unlinkSync(img.file.path);
+        imageUpdates[img.id] = result.secure_url;
+      }
+    }
+
+    // Process tags
+    const validTagIds = [];
+    for (const tagId of tagsIds) {
+      if (validateId(tagId)) {
+        const tagExists = await Tag.exists({ _id: tagId });
+        if (tagExists) {
+          validTagIds.push(tagId);
+        }
+      } else {
+        // Handle string tags (create new if needed)
+        const normalizedTag = tagId.trim().toLowerCase();
+        let tag = await Tag.findOne({ name: normalizedTag });
+        if (!tag) {
+          tag = new Tag({ name: normalizedTag });
+          await tag.save();
+        }
+        validTagIds.push(tag._id);
+      }
+    }
+
+    // Reconstruct content sections
+    const updatedContent = parsedSections
+      .filter(s => s.type === 'content' || s.type === 'image')
+      .map(section => {
+        if (section.type === 'image') {
+          return {
+            type: 'image',
+            value: imageUpdates[section.id] || section.value, // Use new URL or existing
+            subtitle: section.subtitle || ''
+          };
+        }
+        return {
+          type: 'content',
+          value: section.value
+        };
+      });
+
+    // Update blog document
+    const updatedBlog = await Blog.findByIdAndUpdate(
+      blogId,
+      {
+        title: titleSection.value.trim(),
+        excerpt: excerptSection.value.trim(),
+        content: updatedContent,
+        coverImage: coverImageUrl,
+        tags: validTagIds,
+        updatedAt: new Date()
+      },
+      { new: true }
+    ).populate('tags', 'name');
+
+    res.status(200).json({
+      success: true,
+      message: "Blog updated successfully",
+      blog: updatedBlog
+    });
+
   } catch (error) {
-    console.error('Error updating blog:', error);
-    res.status(500).json({ message: 'Server error', error: error.message });
+    console.error("Error updating blog:", error);
+    res.status(500).json({
+      success: false,
+      message: "Failed to update blog",
+      error: error.message
+    });
   }
-}
+};
 
 const getBlogs = async (req, res) => {
   try {
-    const blogs = await Blog.find().populate('author', 'name email')
-    .populate('tags', 'name')
-    .select('-__v -createdAt -updatedAt -content');
-    if (!blogs || blogs.length === 0) {
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 10;
+    const skip = (page - 1) * limit;
+
+    const totalBlogs = await Blog.countDocuments();
+
+    const blogs = await Blog.find()
+      .skip(skip)
+      .limit(limit)
+      .populate('author', 'name email')
+      .populate('tags', 'name')
+      .select('-__v -createdAt -updatedAt -content')
+      .sort({ createdAt: -1 }); // optional: sort by newest
+
+    if (!blogs.length) {
       return res.status(404).json({ message: 'No blogs found' });
     }
-    res.status(200).json({ message: 'Blogs retrieved successfully', blogs });
+
+    res.status(200).json({
+      message: 'Blogs retrieved successfully',
+      totalBlogs,
+      currentPage: page,
+      totalPages: Math.ceil(totalBlogs / limit),
+      blogs,
+    });
   } catch (error) {
     console.error('Error retrieving blogs:', error);
     res.status(500).json({ message: 'Server error', error: error.message });
   }
+};
+
+const getMyBlogs = async (req, res) => {
+  try {
+    const { id } = req.user;
+    if (!validateId(id)) {
+      return res.status(400).json({ message: 'Invalid user ID' });
+    }
+    const myBlogs = await Blog.find({ author: id })
+      .populate('author', 'name email')
+      .populate('tags', 'name')
+      .select('-__v -createdAt -updatedAt -content')
+      .sort({ createdAt: -1 }); // optional: sort by newest
+    if (!myBlogs.length) {
+      return res.status(404).json({ message: 'You dont have any blogs posted!' });
+    }
+    res.status(200).json({
+      message: 'My blogs retrieved successfully',
+      blogs: myBlogs,
+    });
+  } catch (error) {
+    console.error('Error retrieving my blogs:', error);
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
 }
+
 
 const getBlogById = async (req, res) => {
   try {
@@ -186,7 +342,7 @@ const getBlogById = async (req, res) => {
     if (!validateId(id)) {
       return res.status(400).json({ message: 'Invalid blog ID' });
     }
-    const blog = await Blog.findById(id).populate('author', 'name email ');
+    const blog = await Blog.findById(id).populate('author', 'name email ').populate('tags', 'name');
     if (!blog) {
       return res.status(404).json({ message: 'Blog not found' });
     }
@@ -202,5 +358,6 @@ module.exports = {
   deleteBlog,
   updateBlog,
   getBlogs,
-  getBlogById
+  getBlogById,
+  getMyBlogs
 }
