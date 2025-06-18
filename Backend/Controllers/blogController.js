@@ -178,7 +178,7 @@ const updateBlog = async (req, res) => {
 
     // Process cover image
     let coverImageUrl = existingBlog.coverImage;
-    if (req.files) { // Assuming single file for cover image
+    if (req.file) { // Assuming single file for cover image ---------------------fix later-----------
       // Delete old cover image if exists
       if (coverImageUrl) {
         const publicId = coverImageUrl.split('/').pop().split('.')[0];
