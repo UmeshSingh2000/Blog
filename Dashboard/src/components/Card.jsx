@@ -3,6 +3,7 @@ import { Eye, Pen, Trash } from "lucide-react";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 const api = import.meta.env.VITE_BACKEND_URL;
+const mainUrl = import.meta.env.VITE_POTATO_TRAILS_URL
 
 const ImageCard = ({ blog }) => {
   const navigate = useNavigate();
@@ -60,7 +61,9 @@ const ImageCard = ({ blog }) => {
 
       {/* Buttons */}
       <div className="p-4 pt-2 flex gap-3 mt-auto">
-        <button className="w-1/3 cursor-pointer flex items-center justify-center gap-1 bg-gray-100 text-gray-800 py-2 rounded-md hover:bg-gray-200 transition duration-200 text-sm">
+        <button className="w-1/3 cursor-pointer flex items-center justify-center gap-1 bg-gray-100 text-gray-800 py-2 rounded-md hover:bg-gray-200 transition duration-200 text-sm"
+          onClick={()=> window.open(`${mainUrl}/blog/${blog._id}`,'_blank')}
+        >
           <Eye className="h-4 w-4" />
           View
         </button>
