@@ -23,12 +23,12 @@ const DashboardLayout = () => {
         }
     }
 
-    useEffect(()=>{
-        if(page==='logout'){
+    useEffect(() => {
+        if (page === 'logout') {
             localStorage.removeItem("token")
             navigate("/")
         }
-    },[page,navigate])
+    }, [page, navigate])
 
     return (
         <div className="flex h-screen overflow-hidden">
@@ -42,14 +42,14 @@ const DashboardLayout = () => {
 
             {/* Sidebar */}
             <div
-                className={`fixed z-40 inset-y-0 left-0 transform ${
-                    sidebarOpen ? "translate-x-0" : "-translate-x-full"
-                } transition-transform duration-300 ease-in-out md:relative md:translate-x-0 md:flex md:w-64`}
+                className={`fixed z-40 inset-y-0 left-0 transform ${sidebarOpen ? "translate-x-0" : "-translate-x-full"
+                    } transition-transform duration-300 ease-in-out md:relative md:translate-x-0 md:flex md:w-64`}
             >
                 <Sidebar setPage={(page) => {
                     setPage(page)
                     setSidebarOpen(false) // Close sidebar on mobile when a page is selected
-                }} />
+                }}
+                    activePage={page} />
             </div>
 
             {/* Overlay when sidebar is open on mobile */}

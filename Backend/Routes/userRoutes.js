@@ -1,7 +1,7 @@
 const express = require('express');
 const multer = require('multer');
 const router = express.Router();
-const { registeruser, loginUser, sendOtp, verifyOtp, resetPassword } = require('../Controllers/userController');
+const { registeruser, loginUser, sendOtp, verifyOtp, resetPassword, getMyData, verifyPassword } = require('../Controllers/userController');
 const { loginLimiter } = require('../Helpers/rateLimiter');
 const authenticateToken = require('../Middlewares/authenticateToken');
 const { createBlog, deleteBlog, updateBlog, getBlogs, getBlogById, getMyBlogs } = require('../Controllers/blogController');
@@ -21,11 +21,17 @@ router.get('/logout', (req, res) => {
     res.status(200).json({ message: 'Logged out successfully' });
 });
 router.post('/register', authenticateToken, loginLimiter, registeruser);
+router.post('/verifyPassword',authenticateToken,loginLimiter,verifyPassword) // verify password for user
+
 
 //otp related routes
 router.post('/sendotp', loginLimiter, sendOtp); // otp for password reset or verification
 router.post('/verifyOtp', loginLimiter, verifyOtp) // verify otp for password reset or verification
 router.post('/resetPassword', loginLimiter, otpIsVerified, resetPassword); // reset password after otp verification
+router.get('/getMyData',authenticateToken,getMyData);
+
+
+
 
 
 

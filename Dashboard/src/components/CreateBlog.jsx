@@ -25,12 +25,6 @@ const CreateBlogInteractive = () => {
   const [sections, setSections] = useState([])
   const [coverImage, setCoverImage] = useState(null)
 
-  useEffect(() => {
-    toast.success("Create a New Blog!", {
-      position: "bottom-center",
-      icon: "👏",
-    })
-  }, [])
 
   const handleAddSection = (type) => {
     setSections((prev) => [

@@ -110,10 +110,10 @@ const sendOtp = async (req, res) => {
     }
 }
 
-const verifyOtp = async (req,res)=>{
-    try{
+const verifyOtp = async (req, res) => {
+    try {
         // const {id} = req.user;
-        const { otp,email } = req.body;
+        const { otp, email } = req.body;
         if (!otp || !email) {
             return res.status(400).json({ message: 'OTP and email is required' });
         }
@@ -123,7 +123,7 @@ const verifyOtp = async (req,res)=>{
         }
         res.status(200).json({ message: isValid.message });
     }
-    catch(error){
+    catch (error) {
         console.error('Error verifying OTP:', error);
         res.status(500).json({ message: 'Server error', error: error.message });
     }
@@ -132,12 +132,12 @@ const verifyOtp = async (req,res)=>{
 
 const resetPassword = async (req, res) => {
     try {
-        const { newPassword,email } = req.body;
+        const { newPassword, email } = req.body;
         // const {id} = req.user;
         if (!newPassword || !email) {
             return res.status(400).json({ message: 'new password and email are required' });
         }
-        const user = await User.findOne({email});
+        const user = await User.findOne({ email });
         if (!user) {
             return res.status(404).json({ message: 'User not found' });
         }
@@ -152,10 +152,52 @@ const resetPassword = async (req, res) => {
 }
 
 
+const getMyData = async (req, res) => {
+    try {
+        const { id } = req.user; // Assuming user ID is stored in req.user
+        const user = await User.findById(id).select('-password -otpVerified -otp'); // Exclude password from response
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+        res.status(200).json({ user });
+    }
+    catch (error) {
+        console.error('Error fetching user data:', error);
+        res.status(500).json({ message: 'Server error', error: error.message });
+    }
+}
+
+const verifyPassword = async (req, res) => {
+    try {
+        const { id } = req.user; // Assuming user ID is stored in req.user
+        const { password } = req.body;
+        const user = await User.findById(id);
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+        const isPasswordValid = await comparePassword(password, user.password);
+        if (!isPasswordValid) {
+            return res.status(401).json({ message: 'Invalid password' });
+        }
+        res.status(200).json({ message: 'Password verified successfully' });
+    } catch (error) {
+        console.error('Error verifying password:', error);
+        res.status(500).json({ message: 'Server error', error: error.message });
+    }
+}
+
+
+// const updateProfilePicture = async(req,res)=>{
+
+// }
+
+
 module.exports = {
     loginUser,
     registeruser,
     sendOtp,
     verifyOtp,
-    resetPassword
+    resetPassword,
+    getMyData,
+    verifyPassword
 }
