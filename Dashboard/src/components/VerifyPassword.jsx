@@ -17,7 +17,7 @@ import { useDispatch } from "react-redux";
 import { changePasswordVerified } from "@/Redux/Features/User/userSlice";
 const api = import.meta.env.VITE_BACKEND_URL;
 
-export function VerifyPassword() {
+export default function VerifyPassword() {
   const dispatch = useDispatch()
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
