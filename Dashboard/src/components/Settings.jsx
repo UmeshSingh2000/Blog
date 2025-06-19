@@ -8,7 +8,7 @@ import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import { setMydata } from "@/Redux/Features/User/userSlice";
 import defaultProfile from '../assets/default_User.png'
-import { VerifyPassword } from "./verifyPassword";
+import VerifyPassword from "./verifyPassword";
 const api = import.meta.env.VITE_BACKEND_URL;
 
 const Settings = () => {
