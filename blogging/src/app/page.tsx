@@ -12,8 +12,10 @@ const page = () => {
         <div><Toaster /></div>
         <Navbar />
         <section className='hero flex items-center h-screen pl-4 bg-gray-100'>
-          <div className=''>
-            <p className='text-white text-5xl font-bold italic'>Curated travel stories & visual <br /> diaries from every corner <br /> of the world</p>
+          <div className='text-center w-full'>
+            <p className='text-white text-3xl md:text-5xl font-bold italic'>“Go where you <br />
+              feel most <br />
+              alive.”</p>
           </div>
         </section>
         <Blogs />

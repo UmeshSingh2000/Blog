@@ -167,6 +167,7 @@ const getMyData = async (req, res) => {
     }
 }
 
+//check password for user
 const verifyPassword = async (req, res) => {
     try {
         const { id } = req.user; // Assuming user ID is stored in req.user
@@ -191,6 +192,25 @@ const verifyPassword = async (req, res) => {
 
 // }
 
+const updateProfile = async (req, res) => {
+    try {
+        const { id } = req.user;
+        const formData = req.body
+        const user = await User.findByIdAndUpdate(id, formData, {
+            new: true,
+            runValidators: true
+        });
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+        res.status(200).json({ message: 'User data updated successfully' });
+    } catch (error) {
+        console.error('Error updating user data:', error);
+        res.status(500).json({ message: 'Server error', error: error.message });
+
+    }
+}
+
 
 module.exports = {
     loginUser,
@@ -199,5 +219,6 @@ module.exports = {
     verifyOtp,
     resetPassword,
     getMyData,
-    verifyPassword
+    verifyPassword,
+    updateProfile
 }

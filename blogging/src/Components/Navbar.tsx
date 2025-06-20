@@ -40,6 +40,7 @@ const Navbar = () => {
           />
         </div>
 
+
         {/* Mobile Menu */}
         <details className="md:hidden relative">
           <summary className="text-2xl cursor-pointer marker:hidden list-none">&#9776;</summary>

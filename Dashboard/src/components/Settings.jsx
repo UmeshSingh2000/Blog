@@ -62,16 +62,13 @@ const Settings = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const data = new FormData();
-    data.append("username", formData.username);
-    data.append("email", formData.email);
+    
     if (formData.password) data.append("password", formData.password);
     if (formData.profilePicture) data.append("profilePicture", formData.profilePicture);
 
     try {
       const response = await axios.put(`${api}/updateProfile`, data, {
         headers: {
-          "Content-Type": "multipart/form-data",
           Authorization: `Bearer ${localStorage.getItem("token")}`
         }
       });
