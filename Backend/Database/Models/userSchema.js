@@ -31,6 +31,9 @@ const userSchema = new Schema({
         data: Buffer,
         contentType: String
     },
+    subscribers:[{ // list of users emails who subscribed 
+        type:String,
+    }]
 },{
     timestamps: true
 })

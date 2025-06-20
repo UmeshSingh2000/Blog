@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Subscription Confirmed</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f4f4f4;
+      margin: 0;
+      padding: 0;
+    }
+    .email-container {
+      max-width: 600px;
+      margin: auto;
+      background-color: #ffffff;
+      padding: 30px;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
+    }
+    h2 {
+      color: #333333;
+      margin-bottom: 10px;
+    }
+    p {
+      color: #555555;
+      line-height: 1.6;
+    }
+    .highlight {
+      background-color: #e0f2ff;
+      padding: 10px 15px;
+      border-left: 4px solid #007acc;
+      border-radius: 6px;
+      margin: 20px 0;
+    }
+    .footer {
+      margin-top: 30px;
+      font-size: 12px;
+      color: #888888;
+      text-align: center;
+    }
+    a.button {
+      display: inline-block;
+      margin-top: 15px;
+      background-color: #007acc;
+      color: white;
+      padding: 10px 20px;
+      text-decoration: none;
+      border-radius: 6px;
+      font-weight: bold;
+    }
+    a.button:hover {
+      background-color: #005fa3;
+    }
+  </style>
+</head>
+<body>
+  <div class="email-container">
+    <h2>You're Subscribed, {{name}}! 📨</h2>
+    <p>Thanks for subscribing to <strong>PotatoTrails</strong>! You’ll now receive email updates whenever we publish new travel blogs.</p>
+
+    <div class="highlight">
+      <p>Next up: 🌍 <strong>{{latestBlogTitle}}</strong></p>
+      <p>Posted on: {{publishDate}}</p>
+    </div>
+
+    <p>
+      Stay tuned for the best travel stories, tips, and hidden gems from around the world.
+    </p>
+
+    <a href="{{blogUrl}}" class="button">Read the Latest Blog</a>
+
+    <p class="footer">
+      If you didn’t subscribe to this newsletter, you can <a href="{{unsubscribeUrl}}">unsubscribe here</a>.
+    </p>
+  </div>
+</body>
+</html>

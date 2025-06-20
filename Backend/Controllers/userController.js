@@ -211,6 +211,30 @@ const updateProfile = async (req, res) => {
     }
 }
 
+// Subscribe to newsletter
+const subscribeToNewsletter = async (req, res) => {
+    try {
+        const { email, userId } = req.body;
+        if (!email || !userId) {
+            return res.status(400).json({ message: 'Email and userId is required' });
+        }
+        const isUser = await User.findById(userId);
+        if (!isUser) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+        if (isUser.subscribers.includes(email)) {
+            return res.status(400).json({ message: 'You are already subscribed to the newsletter' });
+        }
+        isUser.subscribers.push(email);
+        await isUser.save();
+        res.status(200).json({ message: 'Subscribed to newsletter successfully' });
+
+    } catch (error) {
+        console.error('Error subscribing to newsletter:', error);
+        res.status(500).json({ message: 'Server error', error: error.message });
+    }
+}
+
 
 module.exports = {
     loginUser,
@@ -220,5 +244,6 @@ module.exports = {
     resetPassword,
     getMyData,
     verifyPassword,
-    updateProfile
+    updateProfile,
+    subscribeToNewsletter
 }

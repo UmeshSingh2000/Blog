@@ -44,7 +44,7 @@ export default async function Blogs() {
     }
 
     return (
-        <section id="blogs" className="blogs min-h-screen relative mt-3 p-3">
+        <section id="blogs" className="blogs min-h-screen relative mt-5 p-3">
             <div className="flex flex-col items-start justify-center gap-1 mb-4">
                 <div className="flex items-end gap-2">
                     <h1 className="text-3xl font-black">Blogs</h1>

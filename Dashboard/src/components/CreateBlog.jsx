@@ -268,9 +268,8 @@ const CreateBlogInteractive = () => {
                             <Label>Excerpt</Label>
                             <Textarea
                               rows={3}
-                              maxLength={150}
                               value={section.value}
-                              placeholder="Enter excerpt (max 150 characters)"
+                              placeholder="Enter excerpt"
                               onChange={(e) =>
                                 handleChange(section.id, e.target.value)
                               }

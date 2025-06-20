@@ -4,6 +4,8 @@ const validateId = require("../Helpers/validateId");
 const Blog = require("../Database/Models/blogSchema");
 const Tag = require('../Database/Models/tagsSchema')
 
+// onblog Creation send email to all subscribers
+
 const createBlog = async (req, res) => {
   try {
     const { sections } = req.body; // tags containing an array of tags IDs

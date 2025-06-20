@@ -40,7 +40,6 @@ const blogSchema = new Schema({
     excerpt: {
         type: String,
         trim: true,
-        maxlength: 150
     },
     author: {
         type: mongoose.Schema.Types.ObjectId,

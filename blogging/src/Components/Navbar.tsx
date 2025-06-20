@@ -10,7 +10,8 @@ const Navbar = () => {
       <nav className="max-w-7xl mx-auto flex items-center justify-between px-4 py-3">
         {/* Logo */}
         <div className="text-3xl font-extrabold text-gray-800 tracking-tight">
-          Potato<span className="text-blue-500">trails</span>
+          <a href="/">Potato<span className="text-blue-500">trails</span></a>
+          
         </div>
 
         {/* Desktop Nav Links */}
