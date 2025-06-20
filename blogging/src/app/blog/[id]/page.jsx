@@ -41,7 +41,7 @@ export default function BlogDetailPage({ params }) {
     fetchData()
   }, [id])
 
-  if (!blog) return null
+  // if (!blog) return null
   if (loading) {
     return (
       <div className='h-screen flex items-center justify-center'>
