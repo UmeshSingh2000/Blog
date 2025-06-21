@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Subscription Confirmed</title>
+  <title>New Blog Published</title>
   <style>
     body {
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -57,22 +57,24 @@
 </head>
 <body>
   <div class="email-container">
-    <h2>You're Subscribed, {{name}}! 📨</h2>
-    <p>Thanks for subscribing to <strong>PotatoTrails</strong>! You’ll now receive email updates whenever we publish new travel blogs.</p>
+    <h2>Hey, a new blog is live! from {{name}} ✨</h2>
+
+    <p>We're excited to share our latest travel story with you on <strong>PotatoTrails</strong>!</p>
 
     <div class="highlight">
-      <p>Next up: 🌍 <strong>{{latestBlogTitle}}</strong></p>
-      <p>Posted on: {{publishDate}}</p>
+      <p><strong>{{blogTitle}}</strong></p>
+      <p>Published on: {{publishDate}}</p>
     </div>
 
     <p>
-      Stay tuned for the best travel stories, tips, and hidden gems from around the world.
+      Dive into our latest destination and discover tips, experiences, and hidden gems that will inspire your next trip.
     </p>
 
-    <a href="{{blogUrl}}" class="button">Read the Latest Blog</a>
+    <a href="{{blogUrl}}" class="button">Read Now</a>
 
     <p class="footer">
-      If you didn’t subscribe to this newsletter, you can <a href="{{unsubscribeUrl}}">unsubscribe here</a>.
+      You received this email because you're subscribed to PotatoTrails.  
+      <br />Not interested anymore? <a href="{{unsubscribeUrl}}">Unsubscribe here</a>.
     </p>
   </div>
 </body>

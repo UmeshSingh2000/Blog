@@ -28,14 +28,16 @@ const Card: React.FC<CardProps> = ({ blog }) => {
   const hiddenTags = hasMoreTags ? blog.tags?.slice(2) : []
 
   return (
-    <div className="max-w-sm rounded-xl overflow-hidden shadow bg-white mt-2 cursor-pointer hover:shadow-lg transition-shadow duration-300">
-      <Image
-        src={blog.coverImage || defaultUser}
-        alt="Blog cover"
-        className="w-full h-56 object-cover rounded-t-xl"
-        width={500}
-        height={300}
-      />
+    <div className="group max-w-sm rounded-xl overflow-hidden shadow bg-white mt-2 cursor-pointer hover:shadow-lg transition-shadow duration-300">
+      <div className="overflow-hidden"> {/* Ensure image stays within bounds when zooming */}
+        <Image
+          src={blog.coverImage || defaultUser}
+          alt="Blog cover"
+          className="w-full h-56 object-cover rounded-t-xl transform transition-transform duration-300 group-hover:scale-105"
+          width={500}
+          height={300}
+        />
+      </div>
       <div className="p-4">
         <h2 className="text-xl font-bold text-gray-800">
           {blog.title}
@@ -55,25 +57,23 @@ const Card: React.FC<CardProps> = ({ blog }) => {
             <p className="ml-2 text-sm text-gray-700 font-medium">{blog.author.name}</p>
           </div>
 
-          <div className="relative group min-w-0"> {/* Added min-w-0 for proper text truncation */}
-            {/* Visible tags - 2 per line with truncation */}
+          <div className="relative group/tag min-w-0">
             <div className="flex flex-col gap-2 w-full">
               <div className="flex gap-2 w-full">
                 {visibleTags.map((tag) => (
-                  <span 
-                    key={tag._id} 
+                  <span
+                    key={tag._id}
                     className="px-3 py-1 text-xs bg-gray-100 text-gray-700 rounded-full truncate max-w-[120px]"
-                    title={tag.name} // Show full name on hover
+                    title={tag.name}
                   >
                     {tag.name}
                   </span>
                 ))}
               </div>
-              
-              {/* Show "+X more" indicator if there are more tags */}
+
               {hasMoreTags && (
                 <div className="flex gap-2">
-                  <span 
+                  <span
                     className="px-3 py-1 text-xs bg-gray-100 text-gray-700 rounded-full hover:bg-gray-200 transition-colors"
                     title={`Tags: ${hiddenTags.map(t => t.name).join(', ')}`}
                   >
@@ -82,14 +82,13 @@ const Card: React.FC<CardProps> = ({ blog }) => {
                 </div>
               )}
             </div>
-            
-            {/* Hidden tags shown on hover with proper width management */}
+
             {hasMoreTags && (
-              <div className="absolute hidden group-hover:flex flex-col gap-2 bottom-full mb-2 right-0 z-10 bg-white p-3 rounded-lg shadow-lg border border-gray-200 min-w-[200px] max-w-[240px]">
+              <div className="absolute hidden group-hover/tag:flex flex-col gap-2 bottom-full mb-2 right-0 z-10 bg-white p-3 rounded-lg shadow-lg border border-gray-200 min-w-[200px] max-w-[240px]">
                 <div className="grid grid-cols-2 gap-2 w-full">
                   {hiddenTags.map((tag) => (
-                    <span 
-                      key={tag._id} 
+                    <span
+                      key={tag._id}
                       className="px-3 py-1 text-xs bg-gray-100 text-gray-700 rounded-full truncate w-full"
                       title={tag.name}
                     >
@@ -100,6 +99,7 @@ const Card: React.FC<CardProps> = ({ blog }) => {
               </div>
             )}
           </div>
+
         </div>
       </div>
     </div>

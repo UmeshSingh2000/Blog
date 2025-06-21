@@ -10,7 +10,7 @@ export default function Subscribe({ userId }) {
         e.preventDefault()
         setMessage('')
         if (!email || !userId) {
-            alert('❌ Please provide both email and user ID')
+            setMessage('Please provide email')
             return
         }
         setLoading(true)
@@ -20,14 +20,17 @@ export default function Subscribe({ userId }) {
                 userId
             })
             if (res.status === 200) {
-                alert('✅ Thanks for subscribing!')
+                setMessage('Thanks for subscribing!')
                 setEmail('')
             }
         } catch (err) {
-            alert(err.response.data.message)
+            setMessage(err.response.data.message)
         }
         finally {
             setLoading(false)
+            setTimeout(() => {
+                setMessage('')
+            }, 3000)
         }
     }
 
@@ -45,7 +48,7 @@ export default function Subscribe({ userId }) {
             <div className="flex flex-col sm:flex-row gap-3">
                 <input
                     type="email"
-                    required
+                    
                     placeholder="Enter your email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
@@ -62,7 +65,7 @@ export default function Subscribe({ userId }) {
 
             {message && (
                 <p
-                    className={`text-sm text-center mt-2 transition-opacity duration-300 `}
+                    className={`text-sm text-center mt-2 transition-opacity duration-300 text-red-500`}
                 >
                     {message}
                 </p>

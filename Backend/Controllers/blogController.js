@@ -1,8 +1,11 @@
 const fs = require('fs');
+const path = require('path');
 const cloudinary = require('cloudinary').v2;
 const validateId = require("../Helpers/validateId");
 const Blog = require("../Database/Models/blogSchema");
-const Tag = require('../Database/Models/tagsSchema')
+const User = require('../Database/Models/userSchema');
+const Tag = require('../Database/Models/tagsSchema');
+const sendEmail = require('../Helpers/mailer');
 
 // onblog Creation send email to all subscribers
 
@@ -57,9 +60,9 @@ const createBlog = async (req, res) => {
       const result = await cloudinary.uploader.upload(file.path, {
         folder: "blog_images/content",
         transformation: [
-          {width:1200,crop:'limit'},
-          {quality:"auto"},
-          {fetch_format:"auto"}
+          { width: 1200, crop: 'limit' },
+          { quality: "auto" },
+          { fetch_format: "auto" }
         ]
       });
       uploadedImageMap[file.originalname] = result.secure_url;
@@ -124,6 +127,37 @@ const createBlog = async (req, res) => {
       coverImage: coverImageResult.secure_url,
       tags: insertedIds
     });
+
+    //send email to all subscribers
+    const user = await User.findById(author);
+    if (!user) {
+      return res.status(404).json({ message: "Author not found" });
+    }
+    const subscribers = user.subscribers //[]
+    if (subscribers && subscribers.length > 0) {
+      let html = fs.readFileSync(path.join(__dirname, '../Helpers/newsletter.html'), 'utf-8');
+      html = html
+        .replace('{{blogTitle}}', title)
+        .replace('{{name}}', user.name)
+        .replace('{{publishDate}}', new Date().toLocaleDateString('en-US', {
+          year: 'numeric',
+          month: 'long',
+          day: 'numeric',
+        }))
+        .replace('{{blogUrl}}', `${process.env.FRONTEND_URL}/blog/${newBlog._id}`)
+
+      subscribers.forEach(async (subscriber) => {
+        const htmlForSubscriber = html.replace(
+          '{{unsubscribeUrl}}',
+          `${process.env.FRONTEND_URL}/unsubscribe?email=${subscriber}&userId=${user._id}` // handle later????????????
+        );
+        await sendEmail({
+          to: subscriber,
+          subject: `New Blog Post: ${title}`,
+          html : htmlForSubscriber
+        })
+      })
+    }
 
     await newBlog.save();
 
