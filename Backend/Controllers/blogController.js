@@ -41,6 +41,11 @@ const createBlog = async (req, res) => {
     const coverImageFile = req.files.coverImage[0];
     const coverImageResult = await cloudinary.uploader.upload(coverImageFile.path, {
       folder: "blog_images/cover",
+      transformation: [
+        { width: 1200, crop: 'limit' },
+        { quality: "auto" },
+        { fetch_format: "auto" }
+      ]
     });
     fs.unlinkSync(coverImageFile.path);
 
@@ -51,6 +56,11 @@ const createBlog = async (req, res) => {
     for (const file of imageFiles) {
       const result = await cloudinary.uploader.upload(file.path, {
         folder: "blog_images/content",
+        transformation: [
+          {width:1200,crop:'limit'},
+          {quality:"auto"},
+          {fetch_format:"auto"}
+        ]
       });
       uploadedImageMap[file.originalname] = result.secure_url;
       fs.unlinkSync(file.path);
