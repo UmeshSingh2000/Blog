@@ -83,6 +83,7 @@ export default function BlogDetailPage({ params }) {
               return (
                 <figure key={idx} className="my-6">
                   <img
+                    loading="lazy"
                     src={block.value}
                     alt={`Blog Image ${idx + 1}`}
                     className="rounded-xl w-full h-auto"
@@ -100,7 +101,7 @@ export default function BlogDetailPage({ params }) {
           })}
         </div>
       </div>
-      <Subscribe userId = {userId} />
+      <Subscribe userId={userId} />
       <Footer />
     </>
   )
