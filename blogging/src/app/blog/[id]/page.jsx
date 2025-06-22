@@ -70,10 +70,10 @@ export default function BlogDetailPage({ params }) {
           alt={blog.title}
           className="rounded-xl w-full h-auto mb-8"
         />
-        <div>
+        {/* <div>
           <h1 className='font-bold'>Excert</h1>
           {blog.excerpt && <p className="text-gray-500 mb-6">{blog.excerpt}</p>}
-        </div>
+        </div> */}
         <hr />
         <div className="prose prose-lg dark:prose-invert max-w-none mt-2">
           {blog.content.map((block, idx) => {
