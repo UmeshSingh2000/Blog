@@ -13,7 +13,7 @@ const page = () => {
         <Navbar />
         <section className='hero flex items-center h-screen pl-4 bg-gray-100'>
           <div className='text-center w-full'>
-            <p className='text-white text-3xl md:text-5xl font-bold italic'>“Go where you <br />
+            <p className='text-white text-3xl md:text-6xl font-bold italic'>“Go where you <br />
               feel most <br />
               alive.”</p>
           </div>
