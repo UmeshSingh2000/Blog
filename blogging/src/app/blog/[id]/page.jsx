@@ -40,6 +40,7 @@ export default function BlogDetailPage({ params }) {
 
     fetchData()
   }, [id])
+  
 
   // if (!blog) return null
   if (loading) {
@@ -66,7 +67,7 @@ export default function BlogDetailPage({ params }) {
           </p>
         </div>
         <img
-          src={blog.coverImage.url}
+          src={blog.coverImage.url || blog.coverImage}
           alt={blog.title}
           className="rounded-xl w-full h-auto mb-2"
         />

@@ -51,7 +51,7 @@ export default async function Blogs() {
             <div className="flex flex-col items-start justify-center gap-1 mb-4">
                 <div className="flex items-end gap-2">
                     <h1 className="text-3xl font-black">Blogs</h1>
-                    <p className="text-gray-600 underline italic">Our Latest Trails</p>
+                    {/* <p className="text-gray-600 underline italic">Our Latest Trails</p> */}
                 </div>
                 <p className="italic text-lg font-extralight">
                     Curated adventures, untold tales, and breathtaking escapes. Dive into our stories from the road.

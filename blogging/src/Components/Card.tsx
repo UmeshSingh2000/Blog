@@ -2,6 +2,7 @@ import React from 'react'
 import Image from 'next/image'
 import defaultUser from '../../public/default User.png'
 
+
 interface Blog {
   title: string
   _id: string
@@ -17,7 +18,7 @@ interface Blog {
   excerpt: string
   coverImage: {
     url: string,
-    subtitle : string
+    subtitle: string
   }
 }
 
@@ -29,12 +30,13 @@ const Card: React.FC<CardProps> = ({ blog }) => {
   const hasMoreTags = blog.tags && blog.tags.length > 2
   const visibleTags = blog.tags?.slice(0, 2) || []
   const hiddenTags = hasMoreTags ? blog.tags?.slice(2) : []
-
+  const coverImageUrl = 
+  typeof blog.coverImage === 'string' ? blog.coverImage : blog.coverImage.url || ''
   return (
     <div className="group max-w-sm rounded-xl overflow-hidden shadow bg-white mt-2 cursor-pointer hover:shadow-lg transition-shadow duration-300">
       <div className="overflow-hidden"> {/* Ensure image stays within bounds when zooming */}
         <Image
-          src={blog.coverImage.url}
+          src={coverImageUrl}
           alt="Blog cover"
           className="w-full h-56 object-cover rounded-t-xl transform transition-transform duration-300 group-hover:scale-105"
           width={500}
