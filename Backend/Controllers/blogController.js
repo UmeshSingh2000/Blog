@@ -154,7 +154,7 @@ const createBlog = async (req, res) => {
         await sendEmail({
           to: subscriber,
           subject: `New Blog Post: ${title}`,
-          html : htmlForSubscriber
+          html: htmlForSubscriber
         })
       })
     }

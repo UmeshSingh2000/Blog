@@ -235,6 +235,25 @@ const subscribeToNewsletter = async (req, res) => {
     }
 }
 
+const unsubscribeFromNewsletter = async (req, res) => {
+    try {
+        const { email, userId } = req.query;
+        if (!email || !userId) {
+            return res.status(400).json({ message: 'Email and userId is required' });
+        }
+        const isUser = await User.findById(userId);
+        if (!isUser) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+        isUser.subscribers = isUser.subscribers.filter(subscriber => subscriber !== email);
+        await isUser.save();
+        res.status(200).json({ message: 'Unsubscribed from newsletter successfully' });
+
+    } catch (error) {
+        console.error('Error unsubscribing from newsletter:', error);
+        res.status(500).json({ message: 'Server error', error: error.message });
+    }
+}
 
 module.exports = {
     loginUser,
@@ -245,5 +264,6 @@ module.exports = {
     getMyData,
     verifyPassword,
     updateProfile,
-    subscribeToNewsletter
+    subscribeToNewsletter,
+    unsubscribeFromNewsletter
 }
