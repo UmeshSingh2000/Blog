@@ -21,7 +21,6 @@ const sectionOptions = [
 const EditBlogInteractive = () => {
   const navigate = useNavigate()
   const { blogId } = useParams()
-  // const blogId = '6851a2e7d0f50175838c6dd7'
 
   const [results, setResults] = useState([])
   const [tags, setTags] = useState([])
@@ -31,6 +30,7 @@ const EditBlogInteractive = () => {
   const [sections, setSections] = useState([])
   const [coverImage, setCoverImage] = useState(null)
   const [existingCoverImage, setExistingCoverImage] = useState(null)
+  const [coverSubtitle, setCoverSubtitle] = useState("")
   const [blogData, setBlogData] = useState(null)
 
   // Load existing blog data
@@ -50,6 +50,9 @@ const EditBlogInteractive = () => {
         // Set existing cover image
         if (blog.coverImage) {
           setExistingCoverImage(blog.coverImage)
+        }
+        if(blog.coverImage.subtitle){
+          setCoverSubtitle(blog.coverImage.subtitle)
         }
 
         // Set tags
@@ -267,10 +270,14 @@ const EditBlogInteractive = () => {
       formData.append("coverImage", coverImage);
     }
 
+    if (coverSubtitle) {
+      formData.append("coverImageSubtitle", coverSubtitle)
+    }
+
     // Prepare sections data (no need to separate existing/new images in frontend)
     const sectionsData = sections.map(section => {
       const baseSection = {
-        id : section.id,
+        id: section.id,
         type: section.type,
         value: section.value,
       };
@@ -352,11 +359,18 @@ const EditBlogInteractive = () => {
           {existingCoverImage && !coverImage && (
             <div className="relative">
               <img
-                src={existingCoverImage.startsWith('http') ? existingCoverImage : `${api}/uploads/${existingCoverImage}`}
+                src={existingCoverImage.url.startsWith('http') ? existingCoverImage.url : `${api}/uploads/${existingCoverImage.url}`}
                 alt="Current Cover"
-                className="mt-2 h-52 w-full rounded-md object-cover border"
+                className="mt-2 h-52 w-full rounded-md object-cover border mb-2"
               />
-              <p className="text-sm text-gray-600 mt-1">Current cover image</p>
+
+              <Label htmlFor="coverSubtitle" className="mt-3 mb-2" >Cover Image Subtitle</Label>
+              <Input
+                id="coverSubtitle"
+                type="text"
+                value={coverSubtitle}
+                onChange={(e) => setCoverSubtitle(e.target.value)}
+              />
             </div>
           )}
         </div>

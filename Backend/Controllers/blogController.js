@@ -23,6 +23,7 @@ const createBlog = async (req, res) => {
 
     const titleSection = parsedSections.find(s => s.type === "title");
     const excerptSection = parsedSections.find(s => s.type === "excerpt");
+    const coverImageSubtitle = req.body.coverImageSubtitle;
 
     const title = titleSection?.value?.trim();
     const excerpt = excerptSection?.value?.trim();
@@ -124,9 +125,14 @@ const createBlog = async (req, res) => {
       excerpt,
       content,
       author,
-      coverImage: coverImageResult.secure_url,
+      coverImage: {
+        url: coverImageResult.secure_url,
+        subtitle: coverImageSubtitle?.trim() || "" // optional subtitle
+      },
       tags: insertedIds
     });
+
+    await newBlog.save();
 
     //send email to all subscribers
     const user = await User.findById(author);
@@ -159,7 +165,7 @@ const createBlog = async (req, res) => {
       })
     }
 
-    await newBlog.save();
+    
 
     res.status(201).json({
       message: "Blog created successfully",
@@ -195,6 +201,7 @@ const updateBlog = async (req, res) => {
     const { blogId } = req.params;
     const author = req.user.id;
 
+    const coverImageSubtitle = req.body.coverImageSubtitle;
     // Validate required fields
     if (!req.body.sections) {
       return res.status(400).json({ message: "Sections are required" });
@@ -301,7 +308,10 @@ const updateBlog = async (req, res) => {
         title: titleSection.value.trim(),
         excerpt: excerptSection.value.trim(),
         content: updatedContent,
-        coverImage: coverImageUrl,
+        coverImage: {
+          url : coverImageUrl.url,
+          subtitle: coverImageSubtitle ? coverImageSubtitle.trim() : ''
+        },
         tags: validTagIds,
         updatedAt: new Date()
       },

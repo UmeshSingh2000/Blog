@@ -15,7 +15,10 @@ interface Blog {
     name: string
   }[]
   excerpt: string
-  coverImage: string
+  coverImage: {
+    url: string,
+    subtitle : string
+  }
 }
 
 interface CardProps {
@@ -31,7 +34,7 @@ const Card: React.FC<CardProps> = ({ blog }) => {
     <div className="group max-w-sm rounded-xl overflow-hidden shadow bg-white mt-2 cursor-pointer hover:shadow-lg transition-shadow duration-300">
       <div className="overflow-hidden"> {/* Ensure image stays within bounds when zooming */}
         <Image
-          src={blog.coverImage || defaultUser}
+          src={blog.coverImage.url}
           alt="Blog cover"
           className="w-full h-56 object-cover rounded-t-xl transform transition-transform duration-300 group-hover:scale-105"
           width={500}

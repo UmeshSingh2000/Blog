@@ -16,7 +16,10 @@ interface Blog {
         }
     ];
     excerpt: string;
-    coverImage: string;
+    coverImage: {
+        url: string;
+        subtitle : string;
+    };
 }
 
 export default async function Blogs() {

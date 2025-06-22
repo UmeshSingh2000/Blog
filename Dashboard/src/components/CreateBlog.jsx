@@ -24,6 +24,7 @@ const CreateBlogInteractive = () => {
   const [loading, setLoading] = useState(false)
   const [sections, setSections] = useState([])
   const [coverImage, setCoverImage] = useState(null)
+  const [coverSubtitle, setCoverSubtitle] = useState("")
 
 
   const handleAddSection = (type) => {
@@ -157,6 +158,9 @@ const CreateBlogInteractive = () => {
     if (coverImage) {
       formData.append("coverImage", coverImage)
     }
+    if (coverSubtitle) {
+      formData.append("coverImageSubtitle", coverSubtitle)
+    }
 
     const sectionsData = []
 
@@ -220,6 +224,17 @@ const CreateBlogInteractive = () => {
               className="mt-2 h-52 w-full rounded-md object-cover border"
             />
           )}
+          {coverImage &&
+            <>
+              <Label htmlFor="coverSubtitle">Cover Image Subtitle</Label>
+              <Input
+                id="coverSubtitle"
+                type="text"
+                value={coverSubtitle}
+                onChange={(e) => setCoverSubtitle(e.target.value)}
+              />
+            </>
+          }
         </div>
 
         <DragDropContext onDragEnd={onDragEnd}>
@@ -329,7 +344,6 @@ const CreateBlogInteractive = () => {
                             />
                           </>
                         )}
-
                         {section.type === "image" && (
                           <>
                             <Label>Image</Label>
@@ -480,5 +494,3 @@ const CreateBlogInteractive = () => {
 }
 
 export default CreateBlogInteractive
-
-

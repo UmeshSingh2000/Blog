@@ -42,7 +42,7 @@ const ImageCard = ({ blog }) => {
       {/* Cover Image */}
       <div className="relative overflow-hidden rounded-t-lg">
         <img
-          src={blog.coverImage}
+          src={blog.coverImage.url}
           alt={blog.title}
           className="w-full h-64 object-cover transition-transform duration-500 group-hover:scale-110"
         />

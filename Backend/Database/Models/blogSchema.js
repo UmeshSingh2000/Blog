@@ -35,7 +35,16 @@ const blogSchema = new Schema({
     },
     content: [contentBlockSchema],
     coverImage: {
-        type: String
+        url:{
+            type: String,
+            required: true,
+            trim: true
+        },
+        subtitle:{
+            type:String,
+            trim : true,
+            maxlength: 200,
+        }
     },
     excerpt: {
         type: String,

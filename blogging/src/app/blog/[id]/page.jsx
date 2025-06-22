@@ -66,10 +66,13 @@ export default function BlogDetailPage({ params }) {
           </p>
         </div>
         <img
-          src={blog.coverImage}
+          src={blog.coverImage.url}
           alt={blog.title}
-          className="rounded-xl w-full h-auto mb-8"
+          className="rounded-xl w-full h-auto mb-2"
         />
+        <figcaption className="text-center text-gray-500 text-sm italic">
+          {blog.coverImage.subtitle || 'Cover Image'}
+        </figcaption>
         {/* <div>
           <h1 className='font-bold'>Excert</h1>
           {blog.excerpt && <p className="text-gray-500 mb-6">{blog.excerpt}</p>}
