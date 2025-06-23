@@ -33,3 +33,12 @@ body {
   position: relative;
   z-index: 1;
 }
+@media (max-width: 768px) {
+  .hero {
+    background-image: url('../../public/bg.jpg');
+    /* background-position: center bottom; */
+    background-repeat: no-repeat;
+    background-size: cover;
+  }
+  
+}

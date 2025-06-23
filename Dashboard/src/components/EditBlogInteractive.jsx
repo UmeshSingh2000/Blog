@@ -51,7 +51,7 @@ const EditBlogInteractive = () => {
         if (blog.coverImage) {
           setExistingCoverImage(blog.coverImage)
         }
-        if(blog.coverImage.subtitle){
+        if (blog.coverImage.subtitle) {
           setCoverSubtitle(blog.coverImage.subtitle)
         }
 
@@ -359,7 +359,13 @@ const EditBlogInteractive = () => {
           {existingCoverImage && !coverImage && (
             <div className="relative">
               <img
-                src={existingCoverImage.url.startsWith('http') ? existingCoverImage.url : `${api}/uploads/${existingCoverImage.url}`}
+                src={
+                  existingCoverImage?.startsWith?.('http')
+                    ? existingCoverImage
+                    : existingCoverImage?.url?.startsWith?.('http')
+                      ? existingCoverImage.url
+                      : `${api}/uploads/${existingCoverImage?.url || existingCoverImage}`
+                }
                 alt="Current Cover"
                 className="mt-2 h-52 w-full rounded-md object-cover border mb-2"
               />

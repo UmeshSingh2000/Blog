@@ -8,7 +8,7 @@ export const metadata: Metadata = {
   description:
     "Discover inspiring travel blogs, tips, and guides from around the globe. From hidden gems to popular destinations, find your next adventure with our curated travel stories.",
   icons: {
-    icon: '/favicon.jpg',
+    icon: '/favicon.png',
   }
 };
 
@@ -21,7 +21,6 @@ export default function RootLayout({
     <html lang="en">
       <body>
         {children}
-
         <Script
           async
           src="https://www.googletagmanager.com/gtag/js?id=G-RHQB1PGJLF"
@@ -34,6 +33,8 @@ export default function RootLayout({
             gtag('config', 'G-RHQB1PGJLF');
           `}
         </Script>
+        <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7004317414119715"
+          crossorigin="anonymous"></script>
       </body>
     </html>
   );
