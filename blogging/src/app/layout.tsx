@@ -33,8 +33,12 @@ export default function RootLayout({
             gtag('config', 'G-RHQB1PGJLF');
           `}
         </Script>
-        <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7004317414119715"
-          crossorigin="anonymous"></script>
+        <Script
+          async
+          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7004317414119715"
+          crossOrigin="anonymous"
+        />
+
       </body>
     </html>
   );
