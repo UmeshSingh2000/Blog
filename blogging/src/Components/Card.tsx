@@ -26,12 +26,14 @@ interface CardProps {
   blog: Blog
 }
 
+
 const Card: React.FC<CardProps> = ({ blog }) => {
   const hasMoreTags = blog.tags && blog.tags.length > 2
   const visibleTags = blog.tags?.slice(0, 2) || []
   const hiddenTags = hasMoreTags ? blog.tags?.slice(2) : []
-  const coverImageUrl = 
-  typeof blog.coverImage === 'string' ? blog.coverImage : blog.coverImage.url || ''
+  const coverImageUrl =
+    typeof blog.coverImage === 'string' ? blog.coverImage : blog.coverImage.url || ''
+
   return (
     <div className="group max-w-sm rounded-xl overflow-hidden shadow bg-white mt-2 cursor-pointer hover:shadow-lg transition-shadow duration-300">
       <div className="overflow-hidden"> {/* Ensure image stays within bounds when zooming */}
@@ -47,7 +49,7 @@ const Card: React.FC<CardProps> = ({ blog }) => {
         <h2 className="text-xl font-bold text-gray-800">
           {blog.title}
         </h2>
-        <p className="text-gray-600 italic mt-1">
+        <p className="text-gray-600 italic mt-1 line-clamp-3 hover:line-clamp-none">
           {blog.excerpt}
         </p>
         <div className="flex flex-col sm:flex-row sm:items-end justify-between mt-4 gap-2">

@@ -36,6 +36,7 @@ const ImageCard = ({ blog }) => {
       toast.error("Failed to delete blog");
     }
   }
+  const diableButton = blog._id === '68503f7378ef8b88d170317d' ? true : false;
 
   return (
     <div className="rounded-lg overflow-hidden bg-white shadow-lg hover:shadow-xl transition duration-300 group flex flex-col">
@@ -62,13 +63,14 @@ const ImageCard = ({ blog }) => {
       {/* Buttons */}
       <div className="p-4 pt-2 flex gap-3 mt-auto">
         <button className="w-1/3 cursor-pointer flex items-center justify-center gap-1 bg-gray-100 text-gray-800 py-2 rounded-md hover:bg-gray-200 transition duration-200 text-sm"
-          onClick={()=> window.open(`${mainUrl}/blog/${blog._id}`,'_blank')}
+          onClick={() => window.open(`${mainUrl}/blog/${blog._id}`, '_blank')}
         >
           <Eye className="h-4 w-4" />
           View
         </button>
-        <button className="w-1/3 cursor-pointer flex items-center justify-center gap-1 bg-black text-white py-2 rounded-md text-sm"
+        <button className={`w-1/3  flex items-center justify-center gap-1 bg-black ${diableButton ? 'bg-gray-500 cursor-not-allowed' : 'cursor-pointer'} text-white py-2 rounded-md text-sm`}
           onClick={() => navigate(`/editBlog/${blog._id}`)}
+          disabled={diableButton}
         >
           <Pen className="h-4 w-4" />
           Edit

@@ -10,162 +10,89 @@ const ContactUs = () => {
     message: ''
   })
 
-  const handleInputChange = (e) => {
-    const { name, value } = e.target
-    setFormData(prev => ({
-      ...prev,
-      [name]: value
-    }))
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value })
   }
 
   const handleSubmit = (e) => {
     e.preventDefault()
-    // Handle form submission here
     console.log('Form submitted:', formData)
-    alert('Thank you for your message! We\'ll get back to you soon.')
+    alert('Thanks for reaching out!')
     setFormData({ name: '', email: '', subject: '', message: '' })
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 py-12 px-4">
-      <div className="max-w-6xl mx-auto">
-        <div className="text-center mb-12">
-          <h1 className="text-4xl font-bold text-gray-800 mb-4">Get In Touch</h1>
-          <p className="text-xl text-gray-600">We'd love to hear from you. Send us a message and we'll respond as soon as possible.</p>
-        </div>
+    <div id="contact" className="min-h-screen bg-gradient-to-br from-indigo-100 to-white py-12 px-4">
+      <div className="max-w-3xl mx-auto bg-white rounded-xl shadow-2xl p-8">
+        <h2 className="text-4xl font-bold text-center text-gray-950 mb-4">Contact Us</h2>
+        <p className="text-center text-gray-600 mb-8">
+          Have a question or want to work together? Fill out the form below.
+        </p>
 
-        <div className="bg-white rounded-2xl shadow-2xl overflow-hidden">
-          <div className="grid grid-cols-1 lg:grid-cols-2">
-            {/* Left Side - Image and Contact Info */}
-            <div className="relative bg-gradient-to-br from-indigo-600 to-purple-700 p-8 lg:p-12">
-              <div className="relative z-10">
-                <h2 className="text-3xl font-bold text-white mb-6">Let's Connect</h2>
-                {/* <p className="text-indigo-100 mb-8 text-lg">
-                  Ready to start your next project with us? We're here to help bring your ideas to life.
-                </p> */}
-
-                <div className="space-y-6">
-                  <div className="flex items-center space-x-4">
-                    <div className="bg-white bg-opacity-20 p-3 rounded-full">
-                      <Mail className="w-6 h-6 text-white" />
-                    </div>
-                    <div>
-                      <p className="text-white font-semibold">Email</p>
-                      <p className="text-indigo-100">hello@company.com</p>
-                    </div>
-                  </div>
-
-                  <div className="flex items-center space-x-4">
-                    <div className="bg-white bg-opacity-20 p-3 rounded-full">
-                      <Phone className="w-6 h-6 text-white" />
-                    </div>
-                    <div>
-                      <p className="text-white font-semibold">Phone</p>
-                      <p className="text-indigo-100">+1 (555) 123-4567</p>
-                    </div>
-                  </div>
-
-                  <div className="flex items-center space-x-4">
-                    <div className="bg-white bg-opacity-20 p-3 rounded-full">
-                      <MapPin className="w-6 h-6 text-white" />
-                    </div>
-                    <div>
-                      <p className="text-white font-semibold">Office</p>
-                      <p className="text-indigo-100">123 Business Ave<br />Suite 100, City, State 12345</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-
-            </div>
-
-            {/* Right Side - Contact Form */}
-            <div className="p-8 lg:p-12">
-              <div className="space-y-6">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div>
-                    <label htmlFor="name" className="block text-sm font-semibold text-gray-700 mb-2">
-                      Full Name *
-                    </label>
-                    <input
-                      type="text"
-                      id="name"
-                      name="name"
-                      value={formData.name}
-                      onChange={handleInputChange}
-                      required
-                      className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-indigo-500 focus:outline-none transition-colors duration-200"
-                      placeholder="John Doe"
-                    />
-                  </div>
-
-                  <div>
-                    <label htmlFor="email" className="block text-sm font-semibold text-gray-700 mb-2">
-                      Email Address *
-                    </label>
-                    <input
-                      type="email"
-                      id="email"
-                      name="email"
-                      value={formData.email}
-                      onChange={handleInputChange}
-                      required
-                      className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-indigo-500 focus:outline-none transition-colors duration-200"
-                      placeholder="john@example.com"
-                    />
-                  </div>
-                </div>
-
-                <div>
-                  <label htmlFor="subject" className="block text-sm font-semibold text-gray-700 mb-2">
-                    Subject *
-                  </label>
-                  <input
-                    type="text"
-                    id="subject"
-                    name="subject"
-                    value={formData.subject}
-                    onChange={handleInputChange}
-                    required
-                    className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-indigo-500 focus:outline-none transition-colors duration-200"
-                    placeholder="How can we help you?"
-                  />
-                </div>
-
-                <div>
-                  <label htmlFor="message" className="block text-sm font-semibold text-gray-700 mb-2">
-                    Message *
-                  </label>
-                  <textarea
-                    id="message"
-                    name="message"
-                    value={formData.message}
-                    onChange={handleInputChange}
-                    required
-                    rows={6}
-                    className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-indigo-500 focus:outline-none transition-colors duration-200 resize-vertical"
-                    placeholder="Tell us about your project or inquiry..."
-                  />
-                </div>
-
-                <button
-                  type="submit"
-                  className="w-full bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-semibold py-4 px-6 rounded-lg hover:from-indigo-700 hover:to-purple-700 transform hover:scale-105 transition-all duration-200 flex items-center justify-center space-x-2 shadow-lg"
-                >
-                  <Send className="w-5 h-5" />
-                  <span>Send Message</span>
-                </button>
-              </div>
-
-              <div className="mt-8 p-4 bg-gray-50 rounded-lg">
-                <p className="text-sm text-gray-600 text-center">
-                  We typically respond within 24 hours during business days.
-                </p>
-              </div>
-            </div>
+        {/* Contact Info Row */}
+        <div className="flex flex-col md:flex-row justify-around items-center text-sm text-gray-600 mb-10 gap-6">
+          <div className="flex items-center gap-2">
+            <Mail className="text-gray-950" size={18} />
+            <a href="mailto:cityinstories@gmail.com"><span>cityinstories@gmail.com</span></a>
+          </div>
+          <div className="flex items-center gap-2">
+            <MapPin className="text-gray-950" size={18} />
+            <span>New Delhi, India</span>
           </div>
         </div>
+
+        {/* Contact Form */}
+        <form onSubmit={handleSubmit} className="space-y-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <input
+              type="text"
+              name="name"
+              placeholder="Full Name"
+              value={formData.name}
+              onChange={handleChange}
+              required
+              className="border-2 border-gray-200 rounded-lg px-4 py-3 focus:border-gray-950 focus:outline-none transition-all"
+            />
+
+            <input
+              type="email"
+              name="email"
+              placeholder="Email Address"
+              value={formData.email}
+              onChange={handleChange}
+              required
+              className="border-2 border-gray-200 rounded-lg px-4 py-3 focus:border-gray-950 focus:outline-none transition-all"
+            />
+          </div>
+
+          <input
+            type="text"
+            name="subject"
+            placeholder="Subject"
+            value={formData.subject}
+            onChange={handleChange}
+            required
+            className="w-full border-2 border-gray-200 rounded-lg px-4 py-3 focus:border-gray-950 focus:outline-none transition-all"
+          />
+
+          <textarea
+            name="message"
+            placeholder="Your Message"
+            value={formData.message}
+            onChange={handleChange}
+            required
+            rows={5}
+            className="w-full border-2 border-gray-200 rounded-lg px-4 py-3 focus:border-gray-950 focus:outline-none "
+          />
+
+          <button
+            type="submit"
+            className="w-full bg-gray-950 text-white cursor-pointer py-4 px-6 rounded-lg transition-all font-semibold flex justify-center items-center gap-2 shadow-md"
+          >
+            <Send size={18} />
+            Send Message
+          </button>
+        </form>
       </div>
     </div>
   )
