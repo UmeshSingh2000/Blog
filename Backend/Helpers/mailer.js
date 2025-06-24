@@ -10,10 +10,10 @@ const transporter = nodemailer.createTransport({
 });
 
 // Send email function
-const sendEmail = async ({ to, subject, html }) => {
+const sendEmail = async ({ from = process.env.EMAIL_USER, to, subject, html }) => {
   try {
     const mailOptions = {
-      from: `"Potato Trails Admin" <${process.env.EMAIL_USER}>`,
+      from: `"Potato Trails Admin" <${from}>`,
       to,
       subject,
       html,

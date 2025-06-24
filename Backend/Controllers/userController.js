@@ -255,6 +255,32 @@ const unsubscribeFromNewsletter = async (req, res) => {
     }
 }
 
+
+const contactMeEmailSender = async (req, res) => {
+    try {
+        const { name, email, subject, message } = req.body;
+        if (!name || !email || !subject || !message) {
+            return res.status(400).json({ message: 'All fields are required' });
+        }
+        let html = fs.readFileSync(path.join(__dirname, '../Helpers/contactMeEmail.html'), 'utf-8');
+        html = html
+            .replaceAll('{{name}}', name)
+            .replaceAll('{{email}}', email)
+            .replaceAll('{{message}}', message)
+        await sendEmail({
+            from: email,
+            to: process.env.EMAIL_USER,
+            subject: `Contact Me: ${subject}`,
+            html
+        })
+        res.status(200).json({ message: 'Contact email sent successfully' });
+    } catch (error) {
+        console.error('Error sending contact email:', error);
+        res.status(500).json({ message: 'Server error', error: error.message });
+    }
+}
+
+
 module.exports = {
     loginUser,
     registeruser,
@@ -265,5 +291,6 @@ module.exports = {
     verifyPassword,
     updateProfile,
     subscribeToNewsletter,
-    unsubscribeFromNewsletter
+    unsubscribeFromNewsletter,
+    contactMeEmailSender
 }

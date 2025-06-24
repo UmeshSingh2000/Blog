@@ -1,12 +1,13 @@
 const express = require('express');
 const multer = require('multer');
 const router = express.Router();
-const { registeruser, loginUser, sendOtp, verifyOtp, resetPassword, getMyData, verifyPassword, updateProfile, subscribeToNewsletter, unsubscribeFromNewsletter } = require('../Controllers/userController');
+const { registeruser, loginUser, sendOtp, verifyOtp, resetPassword, getMyData, verifyPassword, updateProfile, subscribeToNewsletter, unsubscribeFromNewsletter, contactMeEmailSender } = require('../Controllers/userController');
 const { loginLimiter } = require('../Helpers/rateLimiter');
 const authenticateToken = require('../Middlewares/authenticateToken');
 const { createBlog, deleteBlog, updateBlog, getBlogs, getBlogById, getMyBlogs } = require('../Controllers/blogController');
 const { getTags } = require('../Controllers/tagController');
 const otpIsVerified = require('../Middlewares/otpIsVerified');
+const fetchWeather = require('../Helpers/fetchWeather');
 const upload = multer({ dest: 'uploads/' });
 
 
@@ -21,11 +22,11 @@ router.get('/logout', (req, res) => {
     res.status(200).json({ message: 'Logged out successfully' });
 });
 router.post('/register', authenticateToken, loginLimiter, registeruser);
-router.post('/verifyPassword',authenticateToken,loginLimiter,verifyPassword) // verify password for user
-router.get('/getMyData',authenticateToken,getMyData);
-router.put('/updateProfile',authenticateToken,loginLimiter,updateProfile)
-router.post('/subscribeToNewsletter',subscribeToNewsletter)
-router.get('/unsubscribeFromNewsletter',unsubscribeFromNewsletter)
+router.post('/verifyPassword', authenticateToken, loginLimiter, verifyPassword) // verify password for user
+router.get('/getMyData', authenticateToken, getMyData);
+router.put('/updateProfile', authenticateToken, loginLimiter, updateProfile)
+router.post('/subscribeToNewsletter', subscribeToNewsletter)
+router.get('/unsubscribeFromNewsletter', unsubscribeFromNewsletter)
 
 //otp related routes
 router.post('/sendotp', loginLimiter, sendOtp); // otp for password reset or verification
@@ -39,6 +40,7 @@ router.post('/resetPassword', loginLimiter, otpIsVerified, resetPassword); // re
 
 
 
+//blog related routes
 router.post(
     '/createBlog',
     upload.fields([
@@ -66,7 +68,22 @@ router.get('/getMyBlogs', authenticateToken, getMyBlogs) // this route is for ge
 router.get('/getTags', authenticateToken, getTags);
 
 
+//anonymous routes
+router.post('/contactMe', loginLimiter, contactMeEmailSender)
+router.get('/getWeather', loginLimiter, async (req, res) => {
+    try {
+        const response = await fetchWeather();
+        if (!response) {
+            return res.status(500).json({ message: 'Failed to fetch weather data' });
+        }
+        return res.status(200).json({ message: 'Weather data fetched successfully', response });
 
+    } catch (error) {
+        console.error("Error fetching weather data:", error);
+        return res.status(500).json({ message: 'Internal Server Error' });
+
+    }
+})
 
 
 module.exports = router;

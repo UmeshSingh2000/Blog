@@ -8,6 +8,7 @@ const cookieParser = require('cookie-parser')
 const cloudinaryConfig = require('./Cloudinary/Config')
 const cors = require('cors')
 const authenticateToken = require('./Middlewares/authenticateToken')
+const fetchWeather = require('./Helpers/fetchWeather')
 //connect to the database
 dbConnect()
 //seed the super admin user

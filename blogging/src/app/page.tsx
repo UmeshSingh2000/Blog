@@ -1,6 +1,5 @@
 import Navbar from '@/Components/Navbar'
 import React from 'react'
-import dynamic from 'next/dynamic'
 import Blogs from '../../Pages/Blogs'
 import { Toaster } from 'react-hot-toast'
 import Footer from '@/Components/Footer'
