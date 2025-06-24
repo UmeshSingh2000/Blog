@@ -55,7 +55,7 @@ const Navbar = () => {
             <a href="/" className="text-sm font-medium text-gray-700 hover:text-blue-500">Home</a>
             <a href="#blogs" className="text-sm font-medium text-gray-700 hover:text-blue-500">Blogs</a>
             <a href="/contact" className="text-sm font-medium text-gray-700 hover:text-blue-500">Photos</a>
-            <a href="/contact" className="text-sm font-medium text-gray-700 hover:text-blue-500">Contact</a>
+            <a href="#contact" className="text-sm font-medium text-gray-700 hover:text-blue-500">Contact</a>
             <div className='flex flex-col gap-2'>
               <div className="flex items-center bg-gray-100 rounded-full px-4 py-1 mt-2 border border-gray-300">
                 <FontAwesomeIcon icon={faSearch} className="text-gray-500 text-sm" />
