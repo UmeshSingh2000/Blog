@@ -9,7 +9,9 @@ export const metadata: Metadata = {
     "Discover inspiring travel blogs, tips, and guides from around the globe. From hidden gems to popular destinations, find your next adventure with our curated travel stories.",
   icons: {
     icon: '/favicon.png',
-  }
+  },
+  keywords: ["travel", "blogs", "adventure", "tourism", "destinations"],
+  authors: [{ name: "Lalit Singh" }],
 };
 
 export default function RootLayout({
@@ -19,6 +21,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <head>
+        <meta name="google-adsense-account" content="ca-pub-7004317414119715"></meta>
+      </head>
       <body>
         {children}
         <Script
