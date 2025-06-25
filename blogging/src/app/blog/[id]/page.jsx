@@ -57,8 +57,8 @@ export default function BlogDetailPage({ params }) {
       <div className="max-w-3xl mx-auto px-4 py-10">
         <h1 className="text-4xl font-bold mb-2">{blog.title}</h1>
         <div className='flex items-center justify-between mb-6'>
-          <p className="text-gray-600 mb-6 text-sm">By {blog.author?.name}</p>
-          <p className="text-gray-500 text-xs mb-4"><span className="font-bold">Posted: </span>
+          <p className="text-gray-600 text-sm">By {blog.author?.name}</p>
+          <p className="text-gray-500 text-xs"><span className="font-bold">Posted: </span>
             {new Date(blog.createdAt).toLocaleDateString('en-US', {
               year: 'numeric',
               month: 'long',
