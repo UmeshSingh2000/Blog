@@ -1,5 +1,5 @@
 import Card from '@/Components/Card';
-
+import SearchBar from '@/Components/SearchBar';
 import Link from 'next/link'
 interface Blog {
     title: string;
@@ -18,7 +18,7 @@ interface Blog {
     excerpt: string;
     coverImage: {
         url: string;
-        subtitle : string;
+        subtitle: string;
     };
 }
 
@@ -49,8 +49,9 @@ export default async function Blogs() {
     return (
         <section id="blogs" className="blogs min-h-screen relative mt-5 p-3">
             <div className="flex flex-col items-start justify-center gap-1 mb-2">
-                <div className="flex items-end gap-2">
+                <div className="flex items-center w-full justify-between gap-2">
                     <h1 className="text-3xl font-black">Blogs</h1>
+                    <SearchBar />
                     {/* <p className="text-gray-600 underline italic">Our Latest Trails</p> */}
                 </div>
                 <p className="italic text-lg font-extralight">

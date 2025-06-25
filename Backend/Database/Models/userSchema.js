@@ -28,8 +28,7 @@ const userSchema = new Schema({
         default: false
     },
     profilePicture: {
-        data: Buffer,
-        contentType: String
+        type : String
     },
     subscribers:[{ // list of users emails who subscribed 
         type:String,

@@ -2,6 +2,7 @@ const User = require('../Database/Models/userSchema');
 const { comparePassword } = require('../Helpers/comparePassword');
 const generateToken = require('../Helpers/generateToken');
 const fs = require('fs');
+const cloudinary = require('cloudinary').v2;
 const path = require('path');
 const { hashPass } = require('../Helpers/hashPassword');
 const sendEmail = require('../Helpers/mailer');
@@ -188,22 +189,51 @@ const verifyPassword = async (req, res) => {
 }
 
 
-// const updateProfilePicture = async(req,res)=>{
+const updateProfilePicture = async (req, res) => {
+    try {
+        const { id } = req.user;
+        const user = await User.findById(id);
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+        const profilePictureFile = req.files?.profilePicture?.[0];
+        if (!profilePictureFile) {
+            return res.status(400).json({ message: "Profile picture is required" });
+        }
+        const profilePictureResult = await cloudinary.uploader.upload(profilePictureFile.path, {
+            folder: "blog_images/profile_pictures",
+            transformation: [
+                { width: 1200, crop: 'limit' },
+                { quality: "auto" },
+                { fetch_format: "auto" }
+            ]
+        });
+        fs.unlinkSync(profilePictureFile.path);
+        user.profilePicture = profilePictureResult.secure_url;
+        await user.save();
+        res.status(200).json({ message: 'Profile picture updated successfully', user });
+    } catch (error) {
+        console.error('Error updating profile picture:', error);
+        res.status(500).json({ message: 'Server error', error: error.message });
 
-// }
+    }
+}
 
 const updateProfile = async (req, res) => {
     try {
         const { id } = req.user;
-        const formData = req.body
-        const user = await User.findByIdAndUpdate(id, formData, {
+        const data = req.body;
+        if (data.password) {
+            data.password = await hashPass(data.password); // Hash the password before saving
+        }
+        const user = await User.findByIdAndUpdate(id, data, {
             new: true,
             runValidators: true
         });
         if (!user) {
             return res.status(404).json({ message: 'User not found' });
         }
-        res.status(200).json({ message: 'User data updated successfully' });
+        res.status(200).json({ message: 'User data updated successfully', user });
     } catch (error) {
         console.error('Error updating user data:', error);
         res.status(500).json({ message: 'Server error', error: error.message });
@@ -292,5 +322,6 @@ module.exports = {
     updateProfile,
     subscribeToNewsletter,
     unsubscribeFromNewsletter,
-    contactMeEmailSender
+    contactMeEmailSender,
+    updateProfilePicture
 }

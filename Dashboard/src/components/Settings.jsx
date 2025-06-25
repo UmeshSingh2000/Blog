@@ -7,20 +7,23 @@ import toast from "react-hot-toast";
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import { setMydata } from "@/Redux/Features/User/userSlice";
-import defaultProfile from '../assets/default_User.png'
+import defaultProfile from '../assets/default_User.png';
 import VerifyPassword from "./VerifyPassword";
+import Loader from "./Loader/Loader";
+
 const api = import.meta.env.VITE_BACKEND_URL;
 
 const Settings = () => {
   const userData = useSelector((state) => state.user.value);
   const isPasswordVerified = useSelector((state) => state.user.isPasswordVerified);
   const dispatch = useDispatch();
+  const [loading, setLoading] = useState(false);
 
   const [formData, setFormData] = useState({
     name: "",
     email: "",
     password: "",
-    profilePicture: null
+    profilePicture: null,
   });
 
   useEffect(() => {
@@ -37,6 +40,7 @@ const Settings = () => {
 
   const fetchMyData = async () => {
     try {
+      setLoading(true);
       const response = await axios.get(`${api}/getMyData`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`
@@ -47,6 +51,9 @@ const Settings = () => {
       }
     } catch (error) {
       toast.error(error.response?.data?.message || "An error occurred while fetching data.");
+    }
+    finally {
+      setLoading(false);
     }
   };
 
@@ -59,14 +66,43 @@ const Settings = () => {
     }
   };
 
+  const handleProfilePictureUpdate = async () => {
+    if (!formData.profilePicture) {
+      return toast.error("Please select a profile picture.");
+    }
+    const data = new FormData();
+    data.append("profilePicture", formData.profilePicture);
+
+
+    try {
+      setLoading(true);
+      const response = await axios.put(`${api}/updateProfilePicture`, data, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+          "Content-Type": "multipart/form-data"
+        }
+      });
+
+      toast.success("Profile picture updated");
+      dispatch(setMydata(response.data.user));
+    } catch (error) {
+      toast.error(error.response?.data?.message || "Failed to update profile picture");
+    }
+    finally {
+      setLoading(false);
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    
-    if (formData.password) data.append("password", formData.password);
-    if (formData.profilePicture) data.append("profilePicture", formData.profilePicture);
-
+    const data = {
+      name: formData.name,
+      email: formData.email,
+    }
+    if (formData.password) data.password = formData.password;
     try {
+      setLoading(true);
       const response = await axios.put(`${api}/updateProfile`, data, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`
@@ -78,7 +114,11 @@ const Settings = () => {
     } catch (error) {
       toast.error(error.response?.data?.message || "Failed to update profile");
     }
+    finally {
+      setLoading(false);
+    }
   };
+
   if (!isPasswordVerified) {
     return (
       <div className="flex items-center justify-center min-h-screen bg-gray-100">
@@ -86,6 +126,14 @@ const Settings = () => {
       </div>
     );
   }
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen bg-gray-100">
+        <Loader />
+      </div>
+    )
+  }
+
   return (
     <div className="min-h-screen w-full bg-gray-50 p-8">
       <div className="max-w-3xl mx-auto">
@@ -109,9 +157,9 @@ const Settings = () => {
               onChange={handleChange}
             />
           </div>
-          <Button
-            className="ml-4 cursor-pointer"
-          > Update</Button>
+          <Button className="ml-4" onClick={handleProfilePictureUpdate}>
+            Update
+          </Button>
         </div>
 
         {/* Settings Card */}
@@ -148,7 +196,7 @@ const Settings = () => {
                 />
               </div>
 
-              <Button type="submit" className="w-full mt-4">
+              <Button type="submit" className="w-full mt-4 cursor-pointer">
                 Save Changes
               </Button>
             </form>

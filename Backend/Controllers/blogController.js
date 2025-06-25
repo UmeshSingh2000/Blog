@@ -345,7 +345,7 @@ const getBlogs = async (req, res) => {
     const blogs = await Blog.find()
       .skip(skip)
       .limit(limit)
-      .populate('author', 'name email')
+      .populate('author', 'name email profilePicture')
       .populate('tags', 'name')
       .select('-__v -createdAt -updatedAt -content')
       .sort({ createdAt: -1 }); // optional: sort by newest

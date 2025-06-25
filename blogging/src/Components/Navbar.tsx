@@ -5,7 +5,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 const Navbar = () => {
   return (
     <header className="w-full bg-white shadow-md sticky top-0 z-50">
-      <nav className="max-w-7xl mx-auto flex items-center justify-between py-3">
+      <nav className="max-w-7xl mx-auto flex items-center justify-between py-3 px-2">
         {/* Logo */}
         <div className="text-3xl font-extrabold text-gray-800 tracking-tight">
           <a href="/">Potato<span className="text-blue-500">trails</span></a>
@@ -29,7 +29,7 @@ const Navbar = () => {
 
         {/* Desktop Search + Login */}
         <div className='flex justify-between gap-2'>
-          <div className="hidden md:flex items-center bg-gray-100 rounded-full px-4 py-1 w-[240px] border border-gray-300">
+          {/* <div className="hidden md:flex items-center bg-gray-100 rounded-full px-4 py-1 w-[240px] border border-gray-300">
             <FontAwesomeIcon icon={faSearch} className="text-gray-500 text-sm" />
             <input
               type="text"
@@ -37,7 +37,7 @@ const Navbar = () => {
               aria-label="Search blog posts"
               className="ml-3 w-full bg-transparent outline-none text-sm placeholder-gray-500 text-gray-800"
             />
-          </div>
+          </div> */}
           <a
             href={process.env.NEXT_PUBLIC_ADMIN_URL}
             target="_blank"
@@ -57,7 +57,7 @@ const Navbar = () => {
             <a href="/contact" className="text-sm font-medium text-gray-700 hover:text-blue-500">Photos</a>
             <a href="#contact" className="text-sm font-medium text-gray-700 hover:text-blue-500">Contact</a>
             <div className='flex flex-col gap-2'>
-              <div className="flex items-center bg-gray-100 rounded-full px-4 py-1 mt-2 border border-gray-300">
+              {/* <div className="flex items-center bg-gray-100 rounded-full px-4 py-1 mt-2 border border-gray-300">
                 <FontAwesomeIcon icon={faSearch} className="text-gray-500 text-sm" />
                 <input
                   type="text"
@@ -65,7 +65,7 @@ const Navbar = () => {
                   aria-label="Search blog posts"
                   className="ml-3 w-full bg-transparent outline-none text-sm placeholder-gray-500 text-gray-800"
                 />
-              </div>
+              </div> */}
               <a
                 href={process.env.NEXT_PUBLIC_ADMIN_URL}
                 target="_blank"

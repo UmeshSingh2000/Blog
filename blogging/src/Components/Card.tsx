@@ -2,14 +2,14 @@ import React from 'react'
 import Image from 'next/image'
 import defaultUser from '../../public/default User.png'
 
-
 interface Blog {
   title: string
   _id: string
   author: {
     _id: string
     name: string
-    email: string
+    email: string,
+    profilePicture?: string
   }
   tags: {
     _id: string
@@ -26,90 +26,130 @@ interface CardProps {
   blog: Blog
 }
 
-
 const Card: React.FC<CardProps> = ({ blog }) => {
+  console.log(blog)
   const hasMoreTags = blog.tags && blog.tags.length > 2
   const visibleTags = blog.tags?.slice(0, 2) || []
   const hiddenTags = hasMoreTags ? blog.tags?.slice(2) : []
   const coverImageUrl =
     typeof blog.coverImage === 'string' ? blog.coverImage : blog.coverImage.url || ''
 
+
   return (
-    <div className="group max-w-sm rounded-xl overflow-hidden shadow bg-white mt-2 cursor-pointer hover:shadow-lg transition-shadow duration-300">
-      <div className="overflow-hidden"> {/* Ensure image stays within bounds when zooming */}
+    <article className="group relative max-w-sm bg-white rounded-2xl shadow-sm hover:shadow-xl transition-all duration-500 cursor-pointer border border-gray-100 hover:border-gray-200">
+      {/* Image Container with Gradient Overlay */}
+      <div className="relative overflow-hidden rounded-t-2xl">
+        <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
         <Image
           src={coverImageUrl}
           alt="Blog cover"
-          className="w-full h-56 object-cover rounded-t-xl transform transition-transform duration-300 group-hover:scale-105"
+          className="w-full h-64 object-cover transform transition-transform duration-700 group-hover:scale-110"
           width={500}
           height={300}
         />
+
+        {/* Floating Tag Preview on Hover */}
+        {hasMoreTags && (
+          <div className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-2 group-hover:translate-y-0 z-20">
+            <div className="bg-white/90 backdrop-blur-sm rounded-lg px-3 py-1 shadow-lg">
+              <span className="text-xs font-medium text-gray-700">
+                +{hiddenTags.length} tags
+              </span>
+            </div>
+          </div>
+        )}
       </div>
-      <div className="p-4">
-        <h2 className="text-xl font-bold text-gray-800">
+
+      {/* Content Container */}
+      <div className="p-6 space-y-2">
+        {/* Title */}
+        <h2 className="text-xl font-bold text-gray-900 leading-tight group-hover:text-blue-600 transition-colors duration-300 line-clamp-2">
           {blog.title}
         </h2>
-        <p className="text-gray-600 italic mt-1 line-clamp-3 hover:line-clamp-none">
-          {blog.excerpt}
-        </p>
-        <div className="flex flex-col sm:flex-row sm:items-end justify-between mt-4 gap-2">
-          <div className="flex items-center">
-            <Image
-              className="w-9 h-9 rounded-full object-cover"
-              src={defaultUser}
-              alt="Author avatar"
-              width={36}
-              height={36}
-            />
-            <p className="ml-2 text-sm text-gray-700 font-medium">{blog.author.name}</p>
-          </div>
 
-          <div className="relative group/tag min-w-0">
-            <div className="flex flex-col gap-2 w-full">
-              <div className="flex gap-2 w-full">
-                {visibleTags.map((tag) => (
-                  <span
-                    key={tag._id}
-                    className="px-3 py-1 text-xs bg-gray-100 text-gray-700 rounded-full truncate max-w-[120px]"
-                    title={tag.name}
-                  >
-                    {tag.name}
-                  </span>
-                ))}
-              </div>
+        {/* Excerpt - Always visible on mobile, hover-only on desktop */}
+        <div className="overflow-hidden transition-all duration-300 max-h-20 opacity-100 md:max-h-0 md:opacity-0 md:group-hover:max-h-20 md:group-hover:opacity-100">
+          <p className="text-gray-600 text-sm leading-relaxed line-clamp-3 group-hover:text-gray-700 transition-colors duration-300">
+            {blog.excerpt}
+          </p>
+        </div>
 
-              {hasMoreTags && (
-                <div className="flex gap-2">
-                  <span
-                    className="px-3 py-1 text-xs bg-gray-100 text-gray-700 rounded-full hover:bg-gray-200 transition-colors"
-                    title={`Tags: ${hiddenTags.map(t => t.name).join(', ')}`}
-                  >
-                    +{hiddenTags.length} more
-                  </span>
-                </div>
-              )}
-            </div>
+        {/* Tags Section */}
+        <div className="relative transition-all duration-300 max-h-20 opacity-100 md:max-h-0 md:opacity-0 md:group-hover:max-h-20 md:group-hover:opacity-100">
+          <div className="flex flex-wrap gap-2">
+            {visibleTags.map((tag, index) => (
+              <span
+                key={tag._id}
+                className={`
+                  px-3 py-1.5 text-xs font-medium rounded-full transition-all duration-300
+                  ${index === 0
+                    ? 'bg-blue-50 text-blue-700 hover:bg-blue-100'
+                    : 'bg-gray-50 text-gray-600 hover:bg-gray-100'
+                  }
+                  hover:scale-105 cursor-pointer
+                `}
+                title={tag.name}
+              >
+                {tag.name}
+              </span>
+            ))}
 
             {hasMoreTags && (
-              <div className="absolute hidden group-hover/tag:flex flex-col gap-2 bottom-full mb-2 right-0 z-10 bg-white p-3 rounded-lg shadow-lg border border-gray-200 min-w-[200px] max-w-[240px]">
-                <div className="grid grid-cols-2 gap-2 w-full">
-                  {hiddenTags.map((tag) => (
-                    <span
-                      key={tag._id}
-                      className="px-3 py-1 text-xs bg-gray-100 text-gray-700 rounded-full truncate w-full"
-                      title={tag.name}
-                    >
-                      {tag.name}
-                    </span>
-                  ))}
+              <div className="relative group/tooltip">
+                <span className="px-3 py-1.5 text-xs font-medium bg-gradient-to-r from-gray-50 to-gray-100 text-gray-600 rounded-full hover:from-gray-100 hover:to-gray-150 transition-all duration-300 hover:scale-105 cursor-pointer border border-gray-200">
+                  +{hiddenTags.length} more
+                </span>
+
+                {/* Enhanced Tooltip */}
+                <div className="invisible group-hover/tooltip:visible opacity-0 group-hover/tooltip:opacity-100 absolute bottom-full left-1/2 transform -translate-x-1/2 mb-3 z-50 transition-all duration-300">
+                  <div className="bg-gray-900 text-white text-xs rounded-lg px-3 py-2 shadow-xl max-w-xs whitespace-nowrap">
+                    <div className="flex flex-wrap gap-1">
+                      {hiddenTags.map((tag, index) => (
+                        <span key={tag._id}>
+                          {tag.name}{index < hiddenTags.length - 1 ? ', ' : ''}
+                        </span>
+                      ))}
+                    </div>
+                    {/* Tooltip Arrow */}
+                    <div className="absolute top-full left-1/2 transform -translate-x-1/2 border-4 border-transparent border-t-gray-900"></div>
+                  </div>
                 </div>
               </div>
             )}
           </div>
+        </div>
 
+        {/* Author Section */}
+        <div className="flex items-center justify-between pt-4 border-t border-gray-100">
+          <div className="flex items-center space-x-3">
+            <div className="relative">
+              <Image
+                className="w-10 h-10 rounded-full object-cover"
+                src={blog.author.profilePicture ||defaultUser}
+                alt="Author avatar"
+                width={40}
+                height={40}
+              />
+              {/* <div className="absolute -bottom-0.5 -right-0.5 w-3 h-3 bg-green-400 rounded-full border-2 border-white"></div> */}
+            </div>
+            <div>
+              <p className="text-sm font-semibold text-gray-900 hover:text-blue-600 transition-colors duration-300 cursor-pointer">
+                {blog.author.name}
+              </p>
+              <p className="text-xs text-gray-500">Author</p>
+            </div>
+          </div>
+
+          {/* Read More Indicator */}
+          <div className="flex items-center text-blue-600 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-x-2 group-hover:translate-x-0">
+            <span className="text-sm font-medium mr-1">Read</span>
+            <svg className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+            </svg>
+          </div>
         </div>
       </div>
-    </div>
+    </article>
   )
 }
 
