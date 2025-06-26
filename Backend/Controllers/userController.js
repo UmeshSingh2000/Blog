@@ -153,7 +153,7 @@ const resetPassword = async (req, res) => {
 }
 
 
-const getMyData = async (req, res) => {
+const getMyData = async (req, res) => { // get data for login user
     try {
         const { id } = req.user; // Assuming user ID is stored in req.user
         const user = await User.findById(id).select('-password -otpVerified -otp'); // Exclude password from response
@@ -241,6 +241,31 @@ const updateProfile = async (req, res) => {
     }
 }
 
+const updateUserAbout = async (req, res) => {
+    try {
+        const { id } = req.user;
+        const { about } = req.body;
+        if (!about) {
+            return res.status(400).json({ message: 'About section is required' });
+        }
+        const user = await User.findByIdAndUpdate(id, { about }, {
+            new: true,
+            runValidators: true
+        });
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+        res.status(200).json({ message: 'User about section updated successfully', user });
+    } catch (error) {
+        console.error('Error updating user about section:', error);
+        res.status(500).json({ message: 'Server error', error: error.message });
+    }
+}
+
+
+
+
+
 // Subscribe to newsletter
 const subscribeToNewsletter = async (req, res) => {
     try {
@@ -323,5 +348,6 @@ module.exports = {
     subscribeToNewsletter,
     unsubscribeFromNewsletter,
     contactMeEmailSender,
-    updateProfilePicture
+    updateProfilePicture,
+    updateUserAbout
 }

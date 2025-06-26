@@ -1,7 +1,7 @@
 const express = require('express');
 const multer = require('multer');
 const router = express.Router();
-const { registeruser, loginUser, sendOtp, verifyOtp, resetPassword, getMyData, verifyPassword, updateProfile, subscribeToNewsletter, unsubscribeFromNewsletter, contactMeEmailSender, updateProfilePicture } = require('../Controllers/userController');
+const { registeruser, loginUser, sendOtp, verifyOtp, resetPassword, getMyData, verifyPassword, updateProfile, subscribeToNewsletter, unsubscribeFromNewsletter, contactMeEmailSender, updateProfilePicture, updateUserAbout } = require('../Controllers/userController');
 const { loginLimiter } = require('../Helpers/rateLimiter');
 const authenticateToken = require('../Middlewares/authenticateToken');
 const { createBlog, deleteBlog, updateBlog, getBlogs, getBlogById, getMyBlogs } = require('../Controllers/blogController');
@@ -24,6 +24,7 @@ router.get('/logout', (req, res) => {
 router.post('/register', authenticateToken, loginLimiter, registeruser);
 router.post('/verifyPassword', authenticateToken, loginLimiter, verifyPassword) // verify password for user
 router.get('/getMyData', authenticateToken, getMyData);
+router.put('/updateUserAbout', authenticateToken, loginLimiter, updateUserAbout)
 router.put('/updateProfile', authenticateToken, loginLimiter, updateProfile)
 router.put('/updateProfilePicture', upload.fields([
     { name: 'profilePicture', maxCount: 1 },

@@ -1,10 +1,17 @@
 const mongoose = require('mongoose');
-const {Schema} = mongoose;
+const { Schema } = mongoose;
 
 const userSchema = new Schema({
-    name:{
+    name: {
         type: String,
-        required: true  
+        required: true
+    },
+    about: {
+        type: String,
+        default: 'This user has not provided any information about themselves.'
+    },
+    title: {
+        type: String,
     },
     email: {
         type: String,
@@ -17,7 +24,7 @@ const userSchema = new Schema({
     },
     role: {
         type: String,
-        enum: ['admin','superAdmin','user'],
+        enum: ['admin', 'superAdmin', 'user'],
         default: 'user'
     },
     otp: {
@@ -28,12 +35,12 @@ const userSchema = new Schema({
         default: false
     },
     profilePicture: {
-        type : String
+        type: String
     },
-    subscribers:[{ // list of users emails who subscribed 
-        type:String,
+    subscribers: [{ // list of users emails who subscribed 
+        type: String,
     }]
-},{
+}, {
     timestamps: true
 })
 const Admin = mongoose.model('User', userSchema);

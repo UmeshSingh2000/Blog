@@ -9,11 +9,13 @@ import { notFound } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import { use } from 'react'
 import Subscribe from '@/Components/Subscribe'
+import AboutTheAuthor from '@/Components/AboutTheAuthor'
 export default function BlogDetailPage({ params }) {
   const [blog, setBlog] = useState(null)
   const [loading, setLoading] = useState(true)
   const { id } = use(params)
   const [userId, setUserId] = useState(null)
+
 
   useEffect(() => {
     async function fetchData() {
@@ -40,7 +42,7 @@ export default function BlogDetailPage({ params }) {
 
     fetchData()
   }, [id])
-  
+
 
   // if (!blog) return null
   if (loading) {
@@ -106,6 +108,7 @@ export default function BlogDetailPage({ params }) {
         </div>
       </div>
       <Subscribe userId={userId} />
+      <AboutTheAuthor author = {blog.author} />
       <Footer />
     </>
   )

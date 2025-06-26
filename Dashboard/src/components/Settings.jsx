@@ -3,6 +3,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+import { Textarea } from "@/components/ui/textarea";
 import toast from "react-hot-toast";
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
@@ -24,6 +25,8 @@ const Settings = () => {
     email: "",
     password: "",
     profilePicture: null,
+    about: "",
+    title: ""
   });
 
   useEffect(() => {
@@ -31,7 +34,9 @@ const Settings = () => {
       setFormData((prev) => ({
         ...prev,
         name: userData.name || "",
-        email: userData.email || ""
+        email: userData.email || "",
+        about: userData.about || "",
+        title: userData.title || "",
       }));
     } else {
       fetchMyData();
@@ -73,7 +78,6 @@ const Settings = () => {
     const data = new FormData();
     data.append("profilePicture", formData.profilePicture);
 
-
     try {
       setLoading(true);
       const response = await axios.put(`${api}/updateProfilePicture`, data, {
@@ -99,6 +103,7 @@ const Settings = () => {
     const data = {
       name: formData.name,
       email: formData.email,
+      title : formData.title
     }
     if (formData.password) data.password = formData.password;
     try {
@@ -119,6 +124,22 @@ const Settings = () => {
     }
   };
 
+  const handleAboutUpdate = async () => {
+    try {
+      const res = await axios.put(`${api}/updateUserAbout`, { about: formData.about }, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`
+        }
+      })
+      if (res.status === 200) {
+        toast.success("About section updated successfully");
+        // dispatch(setMydata(res.data.user));
+      }
+    } catch (error) {
+      toast.error(error.response?.data?.message || "Failed to update about section");
+    }
+  }
+
   if (!isPasswordVerified) {
     return (
       <div className="flex items-center justify-center min-h-screen bg-gray-100">
@@ -136,9 +157,9 @@ const Settings = () => {
 
   return (
     <div className="min-h-screen w-full bg-gray-50 p-8">
-      <div className="max-w-3xl mx-auto">
+      <div className="max-w-3xl mx-auto space-y-6">
         {/* Profile Picture */}
-        <div className="flex justify-center items-center mb-6">
+        <div className="flex justify-center items-center">
           <div className="relative">
             <img
               src={
@@ -162,18 +183,26 @@ const Settings = () => {
           </Button>
         </div>
 
-        {/* Settings Card */}
+        {/* Account Settings Card */}
         <Card className="shadow-md">
           <CardHeader>
             <CardTitle className="text-2xl font-semibold">Account Settings</CardTitle>
           </CardHeader>
           <CardContent>
             <form className="space-y-6" onSubmit={handleSubmit}>
-              <div className="space-y-1">
-                <Label htmlFor="name" className="text-sm font-medium">
-                  Name
-                </Label>
-                <Input id="name" type="text" value={formData.name} onChange={handleChange} />
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="space-y-1">
+                  <Label htmlFor="name" className="text-sm font-medium">
+                    Name
+                  </Label>
+                  <Input id="name" type="text" value={formData.name} onChange={handleChange} />
+                </div>
+                <div className="space-y-1">
+                  <Label htmlFor="title" className="text-sm font-medium">
+                    Title
+                  </Label>
+                  <Input id="title" placeholder="What should we call you?" type="text" value={formData.title} onChange={handleChange} />
+                </div>
               </div>
 
               <div className="space-y-1">
@@ -198,6 +227,39 @@ const Settings = () => {
 
               <Button type="submit" className="w-full mt-4 cursor-pointer">
                 Save Changes
+              </Button>
+            </form>
+          </CardContent>
+        </Card>
+
+        {/* About Me Card */}
+        <Card className="shadow-md">
+          <CardHeader>
+            <CardTitle className="text-2xl font-semibold">About Me</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <form className="space-y-4">
+              <div className="space-y-1">
+                <Label htmlFor="about" className="text-sm font-medium">
+                  Tell others about yourself
+                </Label>
+                <Textarea
+                  id="about"
+                  placeholder="Write something about yourself..."
+                  value={formData.about}
+                  onChange={handleChange}
+                  className="min-h-[100px]"
+                />
+                <p className="text-xs text-gray-500 mt-1">
+                  This will be displayed on your public profile
+                </p>
+              </div>
+              <Button
+                type="button"
+                className="w-full mt-2 cursor-pointer"
+                onClick={handleAboutUpdate}
+              >
+                Update About Me
               </Button>
             </form>
           </CardContent>
