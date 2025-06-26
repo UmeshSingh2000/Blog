@@ -11,7 +11,7 @@ const city = new Set([
   'Visakhapatnam', // Correct full name for Vizag
   'Gangtok',        // Correct spelling for Gantok
   'Aizawl',         // Correct spelling for Aizwal
-  'Ladakh'          // Correct spelling for Laddakh
+  'Leh'          // Correct spelling for Laddakh
 ]);
 
 
