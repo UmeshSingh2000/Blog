@@ -20,7 +20,7 @@ const Navbar = () => {
             <a href="#blogs">Blogs</a>
           </li>
           <li className="hover:text-blue-500 transition-colors duration-200">
-            <a href="/contact">Photos</a>
+            <a href="/merch">Merch</a>
           </li>
           <li className="hover:text-blue-500 transition-colors duration-200">
             <a href="#contact">Contact</a>
@@ -54,7 +54,7 @@ const Navbar = () => {
           <div className="absolute right-0 top-10 bg-white border rounded-lg shadow-lg w-56 p-4 flex flex-col gap-3 z-50">
             <a href="/" className="text-sm font-medium text-gray-700 hover:text-blue-500">Home</a>
             <a href="#blogs" className="text-sm font-medium text-gray-700 hover:text-blue-500">Blogs</a>
-            <a href="/contact" className="text-sm font-medium text-gray-700 hover:text-blue-500">Photos</a>
+            <a href="/merch" className="text-sm font-medium text-gray-700 hover:text-blue-500">Merch</a>
             <a href="#contact" className="text-sm font-medium text-gray-700 hover:text-blue-500">Contact</a>
             <div className='flex flex-col gap-2'>
               {/* <div className="flex items-center bg-gray-100 rounded-full px-4 py-1 mt-2 border border-gray-300">

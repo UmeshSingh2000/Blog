@@ -49,16 +49,16 @@ export default async function Blogs() {
     return (
         <section id="blogs" className="blogs min-h-screen relative mt-5 p-3">
             <div className="flex flex-col items-start justify-center gap-1 mb-2">
-                <div className="flex items-center w-full justify-between gap-2">
-                    <h1 className="text-3xl font-black">Blogs</h1>
+                <div className="flex items-center w-full flex-col  gap-2">
+                    <h1 className="text-4xl underline font-black">Blogs</h1>
+                    <p className="text-gray-600 underline italic">Our Latest Trails</p>
                     <SearchBar />
-                    {/* <p className="text-gray-600 underline italic">Our Latest Trails</p> */}
                 </div>
-                <p className="italic text-lg font-extralight">
+                <p className="italic w-full text-lg text-center font-extralight">
                     Curated adventures, untold tales, and breathtaking escapes. Dive into our stories from the road.
                 </p>
             </div>
-            <hr />
+            {/* <hr /> */}
             <div className="container grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mt-4">
                 {blogs.length > 0 ? (
                     blogs.map((blog) => <Link key={blog._id} href={`/blog/${blog._id}`}><Card blog={blog} /></Link>)

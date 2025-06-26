@@ -27,7 +27,6 @@ interface CardProps {
 }
 
 const Card: React.FC<CardProps> = ({ blog }) => {
-  console.log(blog)
   const hasMoreTags = blog.tags && blog.tags.length > 2
   const visibleTags = blog.tags?.slice(0, 2) || []
   const hiddenTags = hasMoreTags ? blog.tags?.slice(2) : []

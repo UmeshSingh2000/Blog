@@ -57,6 +57,18 @@ app.get('/api/auth/check', authenticateToken, (req, res) => {
         user: req.user
     })
 })
+app.get('/api/feature/weather',async(req,res)=>{
+    try {
+        const weatherData = await fetchWeather();
+        if (!weatherData) {
+            return res.status(500).json({ message: 'Failed to fetch weather data' });
+        }
+        res.status(200).json(weatherData);
+    } catch (error) {
+        console.error('Error fetching weather data:', error);
+        res.status(500).json({ message: 'Internal Server Error' });
+    }
+})
 
 app.use('/api', userRoutes)
 

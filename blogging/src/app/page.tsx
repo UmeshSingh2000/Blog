@@ -4,6 +4,7 @@ import Blogs from '../../Pages/Blogs'
 import Footer from '@/Components/Footer'
 import ContactUs from '@/Components/ContactUs'
 import { FaArrowDown } from 'react-icons/fa';
+import Weather from '@/Components/Weather'
 const page = () => {
   return (
     <>
@@ -28,7 +29,7 @@ const page = () => {
             </div>
           </div>
         </section>
-
+        <Weather />
         <Blogs />
         <ContactUs />
         <Footer />

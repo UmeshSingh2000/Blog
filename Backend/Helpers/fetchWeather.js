@@ -1,12 +1,19 @@
 const Weather = require('../Database/Models/weatherSchema');
 
 const city = new Set([
-  'New delhi',
+  'New Delhi',
   'Srinagar',
   'Goa',
   'Mumbai',
-  'Nainital'
+  'Nainital',
+  'Jaipur',
+  'Chennai',
+  'Visakhapatnam', // Correct full name for Vizag
+  'Gangtok',        // Correct spelling for Gantok
+  'Aizawl',         // Correct spelling for Aizwal
+  'Ladakh'          // Correct spelling for Laddakh
 ]);
+
 
 const ONE_DAY_MS = 24 * 60 * 60 * 1000;
 
