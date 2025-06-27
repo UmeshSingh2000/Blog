@@ -1,7 +1,6 @@
 import React from 'react';
 
 export default function AboutAuthor({ author }) {
-    console.log(author)
     return (
         <div className="min-h-screen bg-gradient-to-br from-slate-50 to-stone-100">
             <div className="container mx-auto px-6 py-16 max-w-4xl">

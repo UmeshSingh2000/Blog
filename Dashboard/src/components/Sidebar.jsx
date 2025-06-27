@@ -19,11 +19,12 @@ const Sidebar = ({ setPage, activePage }) => {
           <button
             key={item.key}
             onClick={() => setPage(item.key)}
-            className={`flex items-center cursor-pointer gap-2 w-full p-2 rounded-md text-left transition-colors duration-200 ${
+            className={`flex items-center ${item.name==='Logout' ? 'text-red-500':''} cursor-pointer gap-2 w-full p-2 rounded-md text-left transition-colors duration-200 ${
               isActive
                 ? "bg-blue-100 text-blue-700 font-semibold"
                 : "text-gray-700 hover:bg-gray-100"
-            }`}
+            }`
+          }
           >
             {item.icon}
             {item.name}

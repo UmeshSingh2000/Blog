@@ -1,10 +1,12 @@
 import React from 'react'
-import toast from 'react-hot-toast'
+import BlogStats from './BlogStats'
+
 
 const Dashboard = () => {
   return (
     <div>
-      this is dashbaoard
+
+      <BlogStats />
     </div>
   )
 }
