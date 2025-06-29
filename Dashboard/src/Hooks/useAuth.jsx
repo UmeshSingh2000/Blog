@@ -5,6 +5,7 @@ const api = import.meta.env.VITE_BACKEND_URL
 const useAuth = () => {
   const [loading, setLoading] = useState(true)
   const [isAuthenticated, setIsAuthenticated] = useState(false)
+  const [role,setRole] = useState(null)
 
   useEffect(() => {
     const checkAuth = async () => {
@@ -16,6 +17,7 @@ const useAuth = () => {
         })
         if (res.status===200) {
           setIsAuthenticated(true)
+          setRole(res.data.user.role)
         }
       } catch (err) {
         setIsAuthenticated(false)
@@ -27,7 +29,7 @@ const useAuth = () => {
     checkAuth()
   }, [])
 
-  return { isAuthenticated, loading }
+  return { isAuthenticated, loading, role }
 }
 
 export default useAuth

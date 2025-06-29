@@ -54,7 +54,7 @@ app.get('/api/auth/check', authenticateToken, (req, res) => {
 
     res.status(200).json({
         message: 'You are authenticated',
-        user: req.user
+        user: req.user,
     })
 })
 app.get('/api/feature/weather',async(req,res)=>{

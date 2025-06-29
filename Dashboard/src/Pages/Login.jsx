@@ -30,7 +30,10 @@ const Login = () => {
                 toast.success("Login successful");
                 // Redirect to the dashboard or home page
                 localStorage.setItem('token', res.data.token)
-                navigate('/dashboard');
+                if (res.data.role === 'superAdmin')
+                    navigate('/superAdmin/dashboard');
+                else if (res.data.role === 'admin')
+                    navigate('/dashboard');
             }
         }
         catch (error) {

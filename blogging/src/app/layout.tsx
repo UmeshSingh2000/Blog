@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Analytics } from '@vercel/analytics/next';
 import Script from "next/script";
 import "./globals.css";
 import "../../lib/fontawesome";
@@ -26,6 +27,7 @@ export default function RootLayout({
       </head>
       <body>
         {children}
+        <Analytics />
         <Script
           async
           src="https://www.googletagmanager.com/gtag/js?id=G-RHQB1PGJLF"
