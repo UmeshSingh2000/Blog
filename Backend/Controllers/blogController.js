@@ -342,7 +342,7 @@ const getBlogs = async (req, res) => {
 
     const totalBlogs = await Blog.countDocuments();
 
-    const blogs = await Blog.find()
+    const blogs = await Blog.find({status: "published"})
       .skip(skip)
       .limit(limit)
       .populate('author', 'name email profilePicture')

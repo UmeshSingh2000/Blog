@@ -50,6 +50,12 @@ const blogSchema = new Schema({
         type: String,
         trim: true,
     },
+    status:{
+        type: String,
+        enum: ['blocked','pending', 'published'],
+        default: 'pending',
+        required: true
+    },
     author: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
