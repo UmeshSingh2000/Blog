@@ -11,7 +11,7 @@ export const metadata: Metadata = {
   icons: {
     icon: '/favicon.png',
   },
-  keywords: ["travel", "blogs", "adventure", "tourism", "destinations"],
+  keywords: ["travel", "blogs", "adventure", "tourism", "destinations","arachitecture"],
   authors: [{ name: "Lalit Singh" }],
 };
 
