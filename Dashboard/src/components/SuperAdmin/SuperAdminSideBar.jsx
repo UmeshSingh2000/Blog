@@ -5,7 +5,7 @@ const SuperAdminSideBar = ({ setPage, activePage }) => {
   const menu = [
     { name: "Dashboard", icon: <Home className="w-4 h-4" />, key: "dashboard" },
     { name: "Users", icon: <Users className="w-4 h-4" />, key: "users" },
-    { name: "Create ", icon: <PenLine className="w-4 h-4" />, key: "create-blog" },
+    { name: "Blogs ", icon: <PenLine className="w-4 h-4" />, key: "create-blog" },
     { name: "Settings", icon: <Settings className="w-4 h-4" />, key: "settings" },
     { name: "Logout", icon: <Lock className="w-4 h-4" />, key: "logout" },
   ]
