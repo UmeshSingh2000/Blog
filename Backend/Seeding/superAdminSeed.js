@@ -3,7 +3,8 @@ const { hashPass } = require('../Helpers/hashPassword');
 const seedSuperAdmin = async () => {
     try {
         const superAdminExists = await User.findOne({
-            role: 'superAdmin'
+            // role: 'superAdmin'
+            email : "lalit2013singh@gmail.com"
         })
         if (superAdminExists) {
             console.log('Super Admin already exists');
@@ -11,8 +12,8 @@ const seedSuperAdmin = async () => {
         }
         const password = process.env.SUPER_ADMIN_PASSWORD || 'defaultSuperAdminPassword';
         const superAdmin = new User({
-            name: 'Umesh Singh',
-            email: 'umeshsinghmehta4@gmail.com',
+            name: 'Lalit Singh',
+            email: 'lalit2013singh@gmail.com',
             password: await hashPass(password),
             role: 'superAdmin',
         })
