@@ -65,6 +65,14 @@ const blogSchema = new Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Tags'
     }],
+    comments:[
+        {
+            content:{
+                type: String,
+                trim: true
+            },
+        }
+    ]
 }, {
     timestamps: true
 });

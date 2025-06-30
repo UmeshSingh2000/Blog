@@ -165,7 +165,7 @@ const createBlog = async (req, res) => {
       })
     }
 
-    
+
 
     res.status(201).json({
       message: "Blog created successfully",
@@ -309,7 +309,7 @@ const updateBlog = async (req, res) => {
         excerpt: excerptSection.value.trim(),
         content: updatedContent,
         coverImage: {
-          url : coverImageUrl.url,
+          url: coverImageUrl.url,
           subtitle: coverImageSubtitle ? coverImageSubtitle.trim() : ''
         },
         tags: validTagIds,
@@ -342,7 +342,7 @@ const getBlogs = async (req, res) => {
 
     const totalBlogs = await Blog.countDocuments();
 
-    const blogs = await Blog.find({status: "published"})
+    const blogs = await Blog.find({ status: "published" })
       .skip(skip)
       .limit(limit)
       .populate('author', 'name email profilePicture')
@@ -409,11 +409,38 @@ const getBlogById = async (req, res) => {
   }
 }
 
+// to be done by user
+const addCommentToBlog = async (req, res) => {
+  try {
+    const {id} = req.params // blog Id
+    if(!validateId(id)) {
+      return res.status(400).json({ message: 'Invalid blog ID' });
+    }
+    const { content } = req.body; // comment content
+    if (!content || content.trim() === '') {
+      return res.status(400).json({ message: 'Comment content is required' });
+    }
+    const blog = await Blog.findById(id);
+    if (!blog) {
+      return res.status(404).json({ message: 'Blog not found' });
+    }
+    blog.comments.push({
+      content: content.trim(),
+    })
+    await blog.save();
+    res.status(200).json({ message: 'Comment added successfully', blog });
+  } catch (error) {
+    console.error('Error adding comment to blog:', error);
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+}
+
 module.exports = {
   createBlog,
   deleteBlog,
   updateBlog,
   getBlogs,
   getBlogById,
-  getMyBlogs
+  getMyBlogs,
+  addCommentToBlog
 }
