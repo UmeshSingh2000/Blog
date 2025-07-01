@@ -142,7 +142,7 @@ const Weather = () => {
     }
 
     return (
-        <div className="w-full max-w-4xl mx-auto p-6">
+        <div className="w-full max-w-4xl mx-auto p-4 md:p-6">
             <div className="mb-6">
                 <h1 className="text-2xl font-bold text-gray-800 mb-2">Weather Updates</h1>
                 <p className="text-gray-600">Live weather information from major cities</p>
@@ -158,7 +158,7 @@ const Weather = () => {
                     
                     <div
                         ref={scrollRef}
-                        className="flex gap-4 overflow-x-hidden w-full"
+                        className="flex gap-4 overflow-x-auto w-full px-4 md:px-0 snap-x snap-mandatory scrollbar-hide"
                         style={{ cursor: isDragging ? 'grabbing' : 'grab' }}
                         onMouseDown={handleMouseDown}
                         onMouseLeave={handleMouseLeave}
@@ -172,7 +172,7 @@ const Weather = () => {
                                 bg-gradient-to-br ${getBackgroundGradient(item.condition)}
                                 shadow-lg rounded-xl p-4 border border-white/20
                                 transition-shadow duration-300 ease-in-out
-                                hover:shadow-xl`}
+                                hover:shadow-xl snap-center`}
                             >
                                 <div className="flex items-center justify-between mb-3">
                                     <h3 className="text-lg font-semibold text-gray-800 truncate">

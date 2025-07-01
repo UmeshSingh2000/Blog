@@ -28,7 +28,10 @@ body {
   background-color: rgba(0, 0, 0, 0.1); /* Change 0.4 to control opacity */
   z-index: 0;
 }
-
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
 /* Make sure your content appears above the overlay */
 .hero > * {
   position: relative;
