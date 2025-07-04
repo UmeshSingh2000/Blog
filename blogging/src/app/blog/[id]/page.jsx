@@ -11,6 +11,7 @@ import Subscribe from '@/Components/Subscribe'
 import AboutTheAuthor from '@/Components/AboutTheAuthor'
 import CommentSection from '@/Components/CommentSection'
 import ImageModal from '@/Components/ImageModal'
+import BlogSuggestion from '@/Components/BlogSuggestion'
 export default function BlogDetailPage({ params }) {
   const [blog, setBlog] = useState(null)
   const [loading, setLoading] = useState(true)
@@ -196,6 +197,7 @@ export default function BlogDetailPage({ params }) {
 
       <Subscribe userId={userId} />
       <AboutTheAuthor author={blog.author} />
+      <BlogSuggestion blogId = {blog.author._id}/>
       <Footer />
 
       {/* Image Modal */}

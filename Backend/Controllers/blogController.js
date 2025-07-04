@@ -410,30 +410,30 @@ const getBlogById = async (req, res) => {
 }
 
 // to be done by user
-const addCommentToBlog = async (req, res) => {
-  try {
-    const { id } = req.params // blog Id
-    if (!validateId(id)) {
-      return res.status(400).json({ message: 'Invalid blog ID' });
-    }
-    const { content } = req.body; // comment content
-    if (!content || content.trim() === '') {
-      return res.status(400).json({ message: 'Comment content is required' });
-    }
-    const blog = await Blog.findById(id);
-    if (!blog) {
-      return res.status(404).json({ message: 'Blog not found' });
-    }
-    blog.comments.push({
-      content: content.trim(),
-    })
-    await blog.save();
-    res.status(200).json({ message: 'Comment added successfully', blog });
-  } catch (error) {
-    console.error('Error adding comment to blog:', error);
-    res.status(500).json({ message: 'Server error', error: error.message });
-  }
-}
+// const addCommentToBlog = async (req, res) => {
+//   try {
+//     const { id } = req.params // blog Id
+//     if (!validateId(id)) {
+//       return res.status(400).json({ message: 'Invalid blog ID' });
+//     }
+//     const { content } = req.body; // comment content
+//     if (!content || content.trim() === '') {
+//       return res.status(400).json({ message: 'Comment content is required' });
+//     }
+//     const blog = await Blog.findById(id);
+//     if (!blog) {
+//       return res.status(404).json({ message: 'Blog not found' });
+//     }
+//     blog.comments.push({
+//       content: content.trim(),
+//     })
+//     await blog.save();
+//     res.status(200).json({ message: 'Comment added successfully', blog });
+//   } catch (error) {
+//     console.error('Error adding comment to blog:', error);
+//     res.status(500).json({ message: 'Server error', error: error.message });
+//   }
+// }
 // single comment added seperately not any reply
 const addCommentsToBlog = async (req, res) => {
   try {
@@ -441,7 +441,7 @@ const addCommentsToBlog = async (req, res) => {
     if (!validateId(id)) {
       return res.status(400).json({ message: 'Invalid blog ID' });
     }
-    const { comments,authorName } = req.body; // single comment
+    const { comments, authorName } = req.body; // single comment
     if (!comments || comments.trim() === '') {
       return res.status(400).json({ message: 'Comment content is required' });
     }
@@ -461,14 +461,14 @@ const addCommentsToBlog = async (req, res) => {
     })
     await blog.save();
 
-    res.status(200).json({ message: 'Comments added successfully', id:blog.comments[blog.comments.length-1]._id });
+    res.status(200).json({ message: 'Comments added successfully', id: blog.comments[blog.comments.length - 1]._id });
   } catch (error) {
     console.error('Error adding comments to blog:', error);
     res.status(500).json({ message: 'Server error', error: error.message });
   }
 }
 
-const getblogComments = async (req,res)=>{
+const getblogComments = async (req, res) => {
   try {
     const { id } = req.params; // blog Id
     if (!validateId(id)) {
@@ -483,7 +483,32 @@ const getblogComments = async (req,res)=>{
     console.error('Error retrieving comments:', error);
     res.status(500).json({ message: 'Server error', error: error.message });
   }
-} 
+}
+
+const getBlogSuggestion = async (req, res) => {
+  try {
+    const { id } = req.params; // author Id
+    if (!validateId(id)) {
+      return res.status(400).json({ message: 'Invalid author ID' });
+    }
+    const blogs = await Blog.find({ author: id, status: "published" })
+      .select('title excerpt coverImage author createdAt')
+      .populate('author', 'name profilePicture')
+      .sort({ createdAt: -1 }) // optional: sort by newest
+      .limit(5); // limit to 5 suggestions
+    if (!blogs.length) {
+      return res.status(404).json({ message: 'No blog suggestions found for this author' });
+    }
+    res.status(200).json({
+      message: 'Blog suggestions retrieved successfully',
+      blogs
+    })
+  } catch (error) {
+    console.error('Error retrieving blog suggestions:', error);
+    res.status(500).json({ message: 'Server error', error: error.message });
+
+  }
+}
 
 
 
@@ -495,7 +520,8 @@ module.exports = {
   getBlogs,
   getBlogById,
   getMyBlogs,
-  addCommentToBlog,
+  // addCommentToBlog,
   addCommentsToBlog,
-  getblogComments
+  getblogComments,
+  getBlogSuggestion
 }
