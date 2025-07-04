@@ -1,5 +1,4 @@
 'use client'
-
 import Footer from '@/Components/Footer'
 import Loader from '@/Components/Loader/Loader'
 import MarkdownRenderer from '@/Components/MarkdownRenderer'

@@ -1,62 +1,60 @@
+import axios from "axios"
 import { useEffect, useState } from "react"
+import toast from "react-hot-toast"
 
 export default function CommentSection({ blogId }) {
-  const [comments, setComments] = useState([])
+  const myName = localStorage.getItem('myName') || null
+  const [comments, setComments] = useState([]) // allComments
   const [newComment, setNewComment] = useState('')
-  const [authorName, setAuthorName] = useState('')
+  const [authorName, setAuthorName] = useState(myName || '')
   const [loading, setLoading] = useState(false)
 
-  // Mock comments data - replace with actual API call
-  useEffect(() => {
-    // Simulate loading comments
-    setComments([
-      {
-        id: 1,
-        author: 'John Doe',
-        content: 'Great article! Really insightful perspective on architecture.',
-        createdAt: new Date().toISOString(),
-        replies: []
-      },
-      {
-        id: 2,
-        author: 'Jane Smith',
-        content: 'I love the way you explained the concepts. Looking forward to more posts like this.',
-        createdAt: new Date(Date.now() - 86400000).toISOString(),
-        replies: [
-          {
-            id: 3,
-            author: 'Mike Johnson',
-            content: 'I agree! The examples were very clear.',
-            createdAt: new Date(Date.now() - 43200000).toISOString()
-          }
-        ]
-      },
-      
-    ])
-  }, [blogId])
-
-  const handleSubmitComment = (e) => {
+  
+  const handleSubmitComment = async (e) => {
     e.preventDefault()
     if (!newComment.trim() || !authorName.trim()) return
-
-    setLoading(true)
-    
-    // Simulate API call
-    setTimeout(() => {
-      const comment = {
-        id: Date.now(),
-        author: authorName,
-        content: newComment,
-        createdAt: new Date().toISOString(),
-        replies: []
+    try {
+      setLoading(true)
+      const res = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/addCommentsToBlog/${blogId}`, {
+        comments: newComment.trim(),
+        authorName: authorName.trim()
+      })
+      if (res.status === 200) {
+        localStorage.setItem('myName', authorName.trim())
+        await fetchComments()
+        toast.success('Comment submitted successfully:')
       }
-      
-      setComments(prev => [comment, ...prev])
-      setNewComment('')
-      setAuthorName('')
+    } catch (error) {
+      console.error('Error submitting comment:', error)
+    }
+    finally {
       setLoading(false)
-    }, 500)
+      setNewComment('')
+    }
   }
+
+  const fetchComments = async () => {
+    try {
+      setLoading(true)
+      const res = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/getblogComments/${blogId}`)
+      if (res.status === 200) {
+        setComments(res.data.comments || [])
+      } else {
+        console.error('Failed to fetch comments:', res.data.message)
+      }
+    } catch (error) {
+      console.error('Error fetching comments:', error)
+    }
+    finally {
+      setLoading(false)
+    }
+  }
+
+  useEffect(() => {
+    fetchComments();
+  }, [])
+
+
 
   const formatDate = (dateString) => {
     return new Date(dateString).toLocaleDateString('en-US', {
@@ -71,7 +69,7 @@ export default function CommentSection({ blogId }) {
   return (
     <div className="bg-white rounded-lg shadow-sm p-6 sticky top-20 max-h-[calc(100vh-100px)] overflow-y-auto">
       <h3 className="text-xl font-bold mb-4">Comments ({comments.length})</h3>
-      
+
       {/* Comment Form */}
       <form onSubmit={handleSubmitComment} className="mb-6">
         <div className="mb-3">
@@ -106,18 +104,20 @@ export default function CommentSection({ blogId }) {
       {/* Comments List */}
       <div className="space-y-4">
         {comments.map((comment) => (
-          <div key={comment.id} className="border-b border-gray-100 pb-4 last:border-b-0">
+          <div key={comment._id} className="border-b border-gray-100 pb-4 last:border-b-0">
             <div className="flex items-start space-x-3">
-              <div className="w-8 h-8 bg-gray-300 rounded-full flex items-center justify-center text-sm font-medium">
-                {comment.author.charAt(0).toUpperCase()}
+              <div className="w-8 h-8 bg-gray-300  rounded-full flex items-center justify-center text-sm font-medium">
+                {comment.authorName[0].toUpperCase()}
               </div>
               <div className="flex-1">
                 <div className="flex items-center space-x-2 mb-1">
-                  <span className="font-medium text-sm">{comment.author}</span>
+                  <span className="font-medium text-sm">{comment.authorName}</span>
                   <span className="text-xs text-gray-500">{formatDate(comment.createdAt)}</span>
                 </div>
-                <p className="text-gray-700 text-sm leading-relaxed">{comment.content}</p>
-                
+                <div className="flex items-center justify-between">
+
+                  <p className="text-gray-700 text-sm leading-relaxed">{comment.content}</p>
+                </div>
                 {/* Replies */}
                 {comment.replies && comment.replies.length > 0 && (
                   <div className="mt-3 ml-4 space-y-2">
@@ -141,7 +141,7 @@ export default function CommentSection({ blogId }) {
             </div>
           </div>
         ))}
-        
+
         {comments.length === 0 && (
           <p className="text-gray-500 text-center py-8 text-sm">No comments yet. Be the first to comment!</p>
         )}

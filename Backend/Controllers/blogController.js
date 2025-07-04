@@ -412,8 +412,8 @@ const getBlogById = async (req, res) => {
 // to be done by user
 const addCommentToBlog = async (req, res) => {
   try {
-    const {id} = req.params // blog Id
-    if(!validateId(id)) {
+    const { id } = req.params // blog Id
+    if (!validateId(id)) {
       return res.status(400).json({ message: 'Invalid blog ID' });
     }
     const { content } = req.body; // comment content
@@ -434,6 +434,59 @@ const addCommentToBlog = async (req, res) => {
     res.status(500).json({ message: 'Server error', error: error.message });
   }
 }
+// single comment added seperately not any reply
+const addCommentsToBlog = async (req, res) => {
+  try {
+    const { id } = req.params; // blog Id
+    if (!validateId(id)) {
+      return res.status(400).json({ message: 'Invalid blog ID' });
+    }
+    const { comments,authorName } = req.body; // single comment
+    if (!comments || comments.trim() === '') {
+      return res.status(400).json({ message: 'Comment content is required' });
+    }
+    if (!authorName || authorName.trim() === '') {
+      return res.status(400).json({ message: 'Author name is required' });
+    }
+
+    const blog = await Blog.findById(id);
+    if (!blog) {
+      return res.status(404).json({ message: 'Blog not found' });
+    }
+    blog.comments.push({
+      content: comments.trim(),
+      authorName: authorName.trim(),
+      createdAt: new Date(),
+      reply: []
+    })
+    await blog.save();
+
+    res.status(200).json({ message: 'Comments added successfully', id:blog.comments[blog.comments.length-1]._id });
+  } catch (error) {
+    console.error('Error adding comments to blog:', error);
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+}
+
+const getblogComments = async (req,res)=>{
+  try {
+    const { id } = req.params; // blog Id
+    if (!validateId(id)) {
+      return res.status(400).json({ message: 'Invalid blog ID' });
+    }
+    const blog = await Blog.findById(id).select('comments');
+    if (!blog) {
+      return res.status(404).json({ message: 'Blog not found' });
+    }
+    res.status(200).json({ message: 'Comments retrieved successfully', comments: blog.comments });
+  } catch (error) {
+    console.error('Error retrieving comments:', error);
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+} 
+
+
+
 
 module.exports = {
   createBlog,
@@ -442,5 +495,7 @@ module.exports = {
   getBlogs,
   getBlogById,
   getMyBlogs,
-  addCommentToBlog
+  addCommentToBlog,
+  addCommentsToBlog,
+  getblogComments
 }

@@ -35,14 +35,14 @@ const blogSchema = new Schema({
     },
     content: [contentBlockSchema],
     coverImage: {
-        url:{
+        url: {
             type: String,
             required: true,
             trim: true
         },
-        subtitle:{
-            type:String,
-            trim : true,
+        subtitle: {
+            type: String,
+            trim: true,
             maxlength: 200,
         }
     },
@@ -50,9 +50,9 @@ const blogSchema = new Schema({
         type: String,
         trim: true,
     },
-    status:{
+    status: {
         type: String,
-        enum: ['blocked','pending', 'published'],
+        enum: ['blocked', 'pending', 'published'],
         default: 'pending',
         required: true
     },
@@ -65,12 +65,25 @@ const blogSchema = new Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Tags'
     }],
-    comments:[
+    comments: [
         {
-            content:{
+            authorName:{
                 type: String,
                 trim: true
             },
+            content: {
+                type: String,
+                trim: true
+            },
+            reply: [
+                {
+                    type: String,
+                }
+            ],
+            createdAt: {
+                type: Date,
+                default: Date.now
+            }
         }
     ]
 }, {
