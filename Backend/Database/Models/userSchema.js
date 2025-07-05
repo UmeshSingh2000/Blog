@@ -39,7 +39,12 @@ const userSchema = new Schema({
     },
     subscribers: [{ // list of users emails who subscribed 
         type: String,
-    }]
+    }],
+    status:{
+        type: String,
+        enum: ['active', 'blocked'],
+        default: 'active'
+    }
 }, {
     timestamps: true
 })

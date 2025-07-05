@@ -70,7 +70,25 @@ const registeruser = async (req, res) => {
 }
 
 
+const blockUserAccount = async(req, res) => {
+    try {
+        const { id } = req.params;
+        const user = await User.findById(userId);
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+        user.status = 'blocked';
+        await user.save();
+        res.status(200).json({ message: 'User account blocked successfully', user });
+    } catch (error) {
+        console.error('Error blocking user account:', error);
+        res.status(500).json({ message: 'Server error', error: error.message });
+    }
+}
+
+
 module.exports = {
     getAllUsers,
-    registeruser
+    registeruser,
+    blockUserAccount
 }

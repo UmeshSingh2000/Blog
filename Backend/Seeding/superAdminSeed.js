@@ -4,7 +4,7 @@ const seedSuperAdmin = async () => {
     try {
         const superAdminExists = await User.findOne({
             // role: 'superAdmin'
-            email : "lalit2013singh@gmail.com"
+            email : "cityinstories@gmail.com"
         })
         if (superAdminExists) {
             console.log('Super Admin already exists');
@@ -12,8 +12,8 @@ const seedSuperAdmin = async () => {
         }
         const password = process.env.SUPER_ADMIN_PASSWORD || 'defaultSuperAdminPassword';
         const superAdmin = new User({
-            name: 'Lalit Singh',
-            email: 'lalit2013singh@gmail.com',
+            name: 'Potato Trails Admin',
+            email: 'cityinstories@gmail.com',
             password: await hashPass(password),
             role: 'superAdmin',
         })
