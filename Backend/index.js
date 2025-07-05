@@ -4,11 +4,16 @@ require('dotenv').config()
 const dbConnect = require('./Database/config')
 const { seedSuperAdmin } = require('./Seeding/superAdminSeed')
 const userRoutes = require('./Routes/userRoutes')
+const superAdminRoutes = require('./Routes/superAdminRoutes')
 const cookieParser = require('cookie-parser')
 const cloudinaryConfig = require('./Cloudinary/Config')
 const cors = require('cors')
 const authenticateToken = require('./Middlewares/authenticateToken')
 const fetchWeather = require('./Helpers/fetchWeather')
+
+
+
+
 //connect to the database
 dbConnect()
 //seed the super admin user
@@ -72,6 +77,7 @@ app.get('/api/feature/weather',async(req,res)=>{
 })
 
 app.use('/api', userRoutes)
+app.use('/api/superAdmin', superAdminRoutes)
 
 const port = process.env.PORT || 3000
 app.listen(port, () => {
