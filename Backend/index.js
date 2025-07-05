@@ -46,8 +46,8 @@ app.use(cors({
 
 app.get('/', async (req, res) => {
     try {
-        // await fetch('https://keepalive-jmgo.onrender.com');
-        await fetch('https://keepalive-5ujp.onrender.com');
+        await fetch('https://keepalive-jmgo.onrender.com');
+        // await fetch('https://keepalive-5ujp.onrender.com');
         res.json({ message: 'Its working' })
     }
     catch (err) {
