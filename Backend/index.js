@@ -29,7 +29,8 @@ const allowedOrigins = [
     'http://localhost:5173',
     'https://potatotrailsdashboard.vercel.app',
     'https://potatotrails.vercel.app',
-    'https://www.potatotrail.life'
+    'https://www.potatotrail.life',
+    'https://keepalive-jmgo.onrender.com'
 ];
 
 app.use(cors({
