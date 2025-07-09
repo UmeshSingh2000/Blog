@@ -30,7 +30,7 @@ const allowedOrigins = [
     'https://potatotrailsdashboard.vercel.app',
     'https://potatotrails.vercel.app',
     'https://www.potatotrail.life',
-    'https://keepalive-jmgo.onrender.com'
+    'https://keepalive-hbed.onrender.com'
 ];
 
 app.use(cors({
@@ -47,7 +47,7 @@ app.use(cors({
 
 app.get('/', async (req, res) => {
     try {
-        await fetch('https://keepalive-jmgo.onrender.com');
+        await fetch('https://keepalive-hbed.onrender.com/')
         // await fetch('https://keepalive-5ujp.onrender.com');
         res.json({ message: 'Its working' })
     }
