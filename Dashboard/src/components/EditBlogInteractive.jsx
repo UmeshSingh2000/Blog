@@ -279,21 +279,29 @@ const EditBlogInteractive = () => {
       const baseSection = {
         id: section.id,
         type: section.type,
-        value: section.value,
+        subtitle: section.subtitle?.trim() || ""
       };
 
-      // Add subtitle for image sections
-      if (section.type === "image" && section.subtitle) {
-        baseSection.subtitle = section.subtitle;
-      }
-      if (section.imageFile instanceof File) {
+      if (section.type === "image") {
 
-        formData.append("images", section.imageFile);
-        baseSection.file = section.imageFile.name;
+        if (section.file instanceof File) {
+          formData.append("images", section.file);
+
+          baseSection.file = section.file.name;
+          baseSection.value = section.file.name; // ✅ MUST overwrite empty value here
+
+        } else if (section.value) {
+          baseSection.value = section.value;
+        } else {
+          baseSection.value = "";
+        }
+      } else {
+        baseSection.value = section.value?.trim() || "";
       }
 
       return baseSection;
     });
+
 
     // Add all data to formData
     formData.append("sections", JSON.stringify(sectionsData));

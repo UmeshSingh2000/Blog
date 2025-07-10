@@ -40,12 +40,17 @@ const blogSchema = new Schema({
             required: true,
             trim: true
         },
+        public_id: {
+            type: String,
+            trim: true,
+        },
         subtitle: {
             type: String,
             trim: true,
             maxlength: 200,
         }
     },
+
     excerpt: {
         type: String,
         trim: true,
@@ -67,7 +72,7 @@ const blogSchema = new Schema({
     }],
     comments: [
         {
-            authorName:{
+            authorName: {
                 type: String,
                 trim: true
             },

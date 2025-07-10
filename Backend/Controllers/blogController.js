@@ -127,6 +127,7 @@ const createBlog = async (req, res) => {
       author,
       coverImage: {
         url: coverImageResult.secure_url,
+        public_id: coverImageResult.public_id,
         subtitle: coverImageSubtitle?.trim() || "" // optional subtitle
       },
       tags: insertedIds
@@ -200,13 +201,13 @@ const updateBlog = async (req, res) => {
   try {
     const { blogId } = req.params;
     const author = req.user.id;
-
     const coverImageSubtitle = req.body.coverImageSubtitle;
+
     // Validate required fields
     if (!req.body.sections) {
       return res.status(400).json({ message: "Sections are required" });
     }
-    // Parse incoming data
+
     const parsedSections = JSON.parse(req.body.sections);
     const tagsIds = JSON.parse(req.body.tagsIds || '[]');
 
@@ -229,94 +230,102 @@ const updateBlog = async (req, res) => {
       return res.status(400).json({ message: "Title and excerpt are required" });
     }
 
-    // Process cover image
-    let coverImageUrl = existingBlog.coverImage;
-    if (req.file) { // Assuming single file for cover image ---------------------fix later-----------
-      // Delete old cover image if exists
-      if (coverImageUrl) {
-        const publicId = coverImageUrl.split('/').pop().split('.')[0];
-        await cloudinary.uploader.destroy(`blog_images/cover/${publicId}`);
+    // ✅ Process cover image (if uploaded)
+    let updatedCoverImage = existingBlog.coverImage;
+
+    if (req.files?.coverImage?.[0]) {
+      const file = req.files.coverImage[0];
+
+      // Delete old image from Cloudinary if available
+      if (existingBlog.coverImage?.public_id) {
+        await cloudinary.uploader.destroy(existingBlog.coverImage.public_id);
       }
 
-      // Upload new cover image
-      const result = await cloudinary.uploader.upload(req.file.path, {
+      const result = await cloudinary.uploader.upload(file.path, {
         folder: "blog_images/cover",
+        transformation: [
+          { width: 1200, crop: "limit" },
+          { quality: "auto" },
+          { fetch_format: "auto" }
+        ]
       });
-      fs.unlinkSync(req.file.path);
-      coverImageUrl = result.secure_url;
+      fs.unlinkSync(file.path);
+
+      updatedCoverImage = {
+        url: result.secure_url,
+        public_id: result.public_id,
+        subtitle: coverImageSubtitle?.trim() || ""
+      };
+    } else {
+      // Only update subtitle if image not changed
+      updatedCoverImage.subtitle = coverImageSubtitle?.trim() || updatedCoverImage.subtitle;
     }
 
-    // Process content images
-    const contentImages = parsedSections
-      .filter(s => s.type === "image")
-      .map(img => ({ id: img.id, file: img.file, subtitle: img.subtitle }));
-
+    // ✅ Upload new content images
     const imageUpdates = {};
-    for (const img of contentImages) {
-      if (img.file) {
-        // This would need to match your actual file handling
-        // You might need to adjust based on how files are sent
-        const result = await cloudinary.uploader.upload(img.file.path, {
-          folder: "blog_images/content",
-        });
-        fs.unlinkSync(img.file.path);
-        imageUpdates[img.id] = result.secure_url;
-      }
+    const imageFiles = req.files?.images || [];
+
+    for (const file of imageFiles) {
+      const result = await cloudinary.uploader.upload(file.path, {
+        folder: "blog_images/content",
+        transformation: [
+          { width: 1200, crop: "limit" },
+          { quality: "auto" },
+          { fetch_format: "auto" }
+        ]
+      });
+
+      fs.unlinkSync(file.path);
+      imageUpdates[file.originalname] = result.secure_url;
     }
 
-    // Process tags
+    // ✅ Process tags (existing + new)
     const validTagIds = [];
-    for (const tagId of tagsIds) {
-      if (validateId(tagId)) {
-        const tagExists = await Tag.exists({ _id: tagId });
-        if (tagExists) {
-          validTagIds.push(tagId);
-        }
+    for (const tag of tagsIds) {
+      if (validateId(tag)) {
+        const tagExists = await Tag.exists({ _id: tag });
+        if (tagExists) validTagIds.push(tag);
       } else {
-        // Handle string tags (create new if needed)
-        const normalizedTag = tagId.trim().toLowerCase();
-        let tag = await Tag.findOne({ name: normalizedTag });
-        if (!tag) {
-          tag = new Tag({ name: normalizedTag });
-          await tag.save();
+        const normalized = tag.trim().toLowerCase();
+        let tagDoc = await Tag.findOne({ name: normalized });
+        if (!tagDoc) {
+          tagDoc = new Tag({ name: normalized });
+          await tagDoc.save();
         }
-        validTagIds.push(tag._id);
+        validTagIds.push(tagDoc._id);
       }
     }
 
-    // Reconstruct content sections
+    // ✅ Rebuild blog content sections
     const updatedContent = parsedSections
-      .filter(s => s.type === 'content' || s.type === 'image')
+      .filter(s => s.type === "content" || s.type === "image")
       .map(section => {
-        if (section.type === 'image') {
+        if (section.type === "image") {
           return {
-            type: 'image',
-            value: imageUpdates[section.id] || section.value, // Use new URL or existing
-            subtitle: section.subtitle || ''
+            type: "image",
+            value: imageUpdates[section.value] || section.value, // match by filename
+            subtitle: section.subtitle || ""
           };
         }
         return {
-          type: 'content',
+          type: "content",
           value: section.value
         };
       });
 
-    // Update blog document
+    // ✅ Update blog document
     const updatedBlog = await Blog.findByIdAndUpdate(
       blogId,
       {
         title: titleSection.value.trim(),
         excerpt: excerptSection.value.trim(),
         content: updatedContent,
-        coverImage: {
-          url: coverImageUrl.url,
-          subtitle: coverImageSubtitle ? coverImageSubtitle.trim() : ''
-        },
+        coverImage: updatedCoverImage,
         tags: validTagIds,
         updatedAt: new Date()
       },
       { new: true }
-    ).populate('tags', 'name');
+    ).populate("tags", "name");
 
     res.status(200).json({
       success: true,
@@ -333,6 +342,7 @@ const updateBlog = async (req, res) => {
     });
   }
 };
+
 
 const getBlogs = async (req, res) => {
   try {
