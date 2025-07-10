@@ -37,6 +37,9 @@ const userSchema = new Schema({
     profilePicture: {
         type: String
     },
+    profilePicturePublicId:{
+        type: String
+    },
     subscribers: [{ // list of users emails who subscribed 
         type: String,
     }],

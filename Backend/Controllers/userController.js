@@ -156,6 +156,9 @@ const updateProfilePicture = async (req, res) => {
         if (!profilePictureFile) {
             return res.status(400).json({ message: "Profile picture is required" });
         }
+        if (user.profilePicturePublicId) {
+            await cloudinary.uploader.destroy(user.profilePicturePublicId);
+        }
         const profilePictureResult = await cloudinary.uploader.upload(profilePictureFile.path, {
             folder: "blog_images/profile_pictures",
             transformation: [
@@ -166,6 +169,7 @@ const updateProfilePicture = async (req, res) => {
         });
         fs.unlinkSync(profilePictureFile.path);
         user.profilePicture = profilePictureResult.secure_url;
+        user.profilePicturePublicId = profilePictureResult.public_id;
         await user.save();
         res.status(200).json({ message: 'Profile picture updated successfully', user });
     } catch (error) {
