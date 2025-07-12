@@ -129,7 +129,7 @@ export default function BlogDetailPage({ params }) {
               <img
                 src={blog.coverImage.url || blog.coverImage}
                 alt={blog.title}
-                className="rounded-xl w-full h-auto mb-2 transition-transform group-hover:scale-[1.02]"
+                className="rounded-xl w-full h-auto mb-2"
               />
               {/* Overlay on hover */}
               <div className="absolute inset-0  bg-opacity-0 group-hover:bg-opacity-20 transition-all duration-300 rounded-xl flex items-center justify-center">
@@ -163,7 +163,7 @@ export default function BlogDetailPage({ params }) {
                           loading="lazy"
                           src={block.value}
                           alt={`Blog Image ${idx + 1}`}
-                          className="rounded-xl w-full h-auto transition-transform group-hover:scale-[1.02]"
+                          className="rounded-xl w-full h-auto"
                         />
                         {/* Overlay on hover */}
                         <div className="absolute inset-0 bg-opacity-0 group-hover:bg-opacity-20 transition-all duration-300 rounded-xl flex items-center justify-center">

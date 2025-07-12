@@ -20,7 +20,7 @@ const Navbar = () => {
             <a href="#blogs">Blogs</a>
           </li>
           <li className="hover:text-blue-500 transition-colors duration-200">
-            <a href="/merch">Merch</a>
+            <a href="/shop">Shop</a>
           </li>
           <li className="hover:text-blue-500 transition-colors duration-200">
             <a href="#contact">Contact</a>

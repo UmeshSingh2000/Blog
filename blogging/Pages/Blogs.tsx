@@ -27,7 +27,7 @@ export default async function Blogs() {
     let blogs: Blog[] = [];
 
     try {
-        const response = await fetch(`${URL}/getBlogs`, {
+        const response = await fetch(`${URL}/getBlogs?limit=4`, {
             cache: 'no-store',
         });
 
