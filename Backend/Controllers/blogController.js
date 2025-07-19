@@ -130,7 +130,8 @@ const createBlog = async (req, res) => {
         public_id: coverImageResult.public_id,
         subtitle: coverImageSubtitle?.trim() || "" // optional subtitle
       },
-      tags: insertedIds
+      tags: insertedIds,
+      status: "published", // default to published, can be changed later
     });
 
     await newBlog.save();
