@@ -26,7 +26,7 @@ const CreateBlogInteractive = () => {
   const [coverImage, setCoverImage] = useState(null)
   const [coverSubtitle, setCoverSubtitle] = useState("")
 
-  // Restore from localStorage draft on mount (excluding images)
+  // Restore (only text fields) from localStorage on mount
   useEffect(() => {
     const savedDraft = localStorage.getItem(LOCAL_STORAGE_KEY)
     if (savedDraft) {
@@ -43,12 +43,11 @@ const CreateBlogInteractive = () => {
     }
   }, [])
 
-  // Autosave sections/tags/fields to localStorage (NOT images)
+  // Autosave text fields to localStorage (NOT images)
   useEffect(() => {
     const timeout = setTimeout(() => {
       const draft = { sections, tags, tagInput, coverSubtitle }
       localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(draft))
-      // console.log("Draft autosaved to localStorage")
     }, 2000)
     return () => clearTimeout(timeout)
   }, [sections, tags, tagInput, coverSubtitle])
@@ -161,7 +160,7 @@ const CreateBlogInteractive = () => {
     return () => clearTimeout(delayDebounce)
   }, [tagInput])
 
-  // Keep your submission logic intact!
+  // Standard submit logic
   const handleSubmit = async () => {
     if (tags.length === 0) {
       toast.error("Please add at least one tag.")
@@ -230,7 +229,7 @@ const CreateBlogInteractive = () => {
             accept="image/*"
             onChange={handleCoverImageChange}
           />
-          {coverImage && (
+          {coverImage instanceof File && (
             <img
               src={URL.createObjectURL(coverImage)}
               alt="Cover Preview"
@@ -381,7 +380,7 @@ const CreateBlogInteractive = () => {
                                 )
                               }
                             />
-                            {section.file && (
+                            {section.file instanceof File && (
                               <img
                                 src={URL.createObjectURL(section.file)}
                                 alt="Preview"
@@ -507,7 +506,7 @@ const CreateBlogInteractive = () => {
           )
         )}
 
-        {/* Extra! Manual clear draft button */}
+        {/* Manual clear draft button */}
         <Button
           variant="destructive"
           className="w-full mt-4"
