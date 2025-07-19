@@ -8,6 +8,7 @@ import toast from "react-hot-toast"
 import axios from "axios"
 
 const api = import.meta.env.VITE_BACKEND_URL
+const LOCAL_STORAGE_KEY = "BLOG_DRAFT"
 
 const sectionOptions = [
   { type: "title", label: "Title" },
@@ -17,15 +18,40 @@ const sectionOptions = [
 ]
 
 const CreateBlogInteractive = () => {
-  // const [search, setSearch] = useState("")
   const [results, setResults] = useState([])
-  const [tags, setTags] = useState([]);
-  const [tagInput, setTagInput] = useState("");
+  const [tags, setTags] = useState([])
+  const [tagInput, setTagInput] = useState("")
   const [loading, setLoading] = useState(false)
   const [sections, setSections] = useState([])
   const [coverImage, setCoverImage] = useState(null)
   const [coverSubtitle, setCoverSubtitle] = useState("")
 
+  // Restore from localStorage draft on mount (excluding images)
+  useEffect(() => {
+    const savedDraft = localStorage.getItem(LOCAL_STORAGE_KEY)
+    if (savedDraft) {
+      try {
+        const { sections, tags, tagInput, coverSubtitle } = JSON.parse(savedDraft)
+        if (sections) setSections(sections)
+        if (tags) setTags(tags)
+        if (tagInput) setTagInput(tagInput)
+        if (coverSubtitle) setCoverSubtitle(coverSubtitle)
+        toast.success("Recovered saved blog draft.")
+      } catch (e) {
+        console.error("Couldn't parse saved blog draft", e)
+      }
+    }
+  }, [])
+
+  // Autosave sections/tags/fields to localStorage (NOT images)
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      const draft = { sections, tags, tagInput, coverSubtitle }
+      localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(draft))
+      // console.log("Draft autosaved to localStorage")
+    }, 2000)
+    return () => clearTimeout(timeout)
+  }, [sections, tags, tagInput, coverSubtitle])
 
   const handleAddSection = (type) => {
     setSections((prev) => [
@@ -45,11 +71,11 @@ const CreateBlogInteractive = () => {
       prev.map((s) =>
         s.id === id
           ? {
-            ...s,
-            value: value !== undefined ? value : s.value,
-            file: file !== null ? file : s.file,
-            ...(subtitle !== null ? { subtitle } : {}),
-          }
+              ...s,
+              value: value !== undefined ? value : s.value,
+              file: file !== null ? file : s.file,
+              ...(subtitle !== null ? { subtitle } : {}),
+            }
           : s
       )
     )
@@ -60,9 +86,7 @@ const CreateBlogInteractive = () => {
     if (file) setCoverImage(file)
   }
 
-  const handleDelete = (id) => {
-    setSections((prev) => prev.filter((s) => s.id !== id))
-  }
+  const handleDelete = (id) => setSections((prev) => prev.filter((s) => s.id !== id))
 
   const onDragEnd = (result) => {
     if (!result.destination) return
@@ -75,7 +99,6 @@ const CreateBlogInteractive = () => {
   const applyFormatting = (id, type) => {
     const textarea = document.getElementById(id)
     if (!textarea) return
-
     const start = textarea.selectionStart
     const end = textarea.selectionEnd
     const selected = textarea.value.slice(start, end)
@@ -97,7 +120,7 @@ const CreateBlogInteractive = () => {
       case "link":
         const url = prompt("Enter URL for the link:")
         if (url) {
-          formatted = `[${selected || 'click'}](${url})`
+          formatted = `[${selected || "click"}](${url})`
         } else {
           toast.error("URL is required for links.")
           return
@@ -109,7 +132,6 @@ const CreateBlogInteractive = () => {
       textarea.value.slice(0, start) +
       formatted +
       textarea.value.slice(end)
-
     handleChange(id, updatedValue)
 
     setTimeout(() => {
@@ -124,44 +146,31 @@ const CreateBlogInteractive = () => {
       const response = await axios.get(`${api}/getTags?search=${tagInput}`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
-        }
+        },
       })
-      if (response.status === 200) {
-        setResults(response.data)
-      } else {
-        toast.error("Failed to fetch tags. Please try again.")
-      }
-    }
-    catch (err) {
-      console.log(err)
-      toast.error("Failed to fetch tags. Please try again.")
+      setResults(response.data)
+    } catch (err) {
+      toast.error("Failed to fetch tags.")
     }
   }
 
   useEffect(() => {
-    const delayDebouce = setTimeout(() => {
-      if (tagInput.trim()) {
-        handleSearchTags()
-      }
-    }, 500);
-
-    return () => clearTimeout(delayDebouce)
+    const delayDebounce = setTimeout(() => {
+      if (tagInput.trim()) handleSearchTags()
+    }, 500)
+    return () => clearTimeout(delayDebounce)
   }, [tagInput])
 
-
+  // Keep your submission logic intact!
   const handleSubmit = async () => {
     if (tags.length === 0) {
       toast.error("Please add at least one tag.")
       return
     }
-    const formData = new FormData()
-    if (coverImage) {
-      formData.append("coverImage", coverImage)
-    }
-    if (coverSubtitle) {
-      formData.append("coverImageSubtitle", coverSubtitle)
-    }
 
+    const formData = new FormData()
+    if (coverImage) formData.append("coverImage", coverImage)
+    if (coverSubtitle) formData.append("coverImageSubtitle", coverSubtitle)
     const sectionsData = []
 
     for (const section of sections) {
@@ -181,24 +190,28 @@ const CreateBlogInteractive = () => {
     }
 
     formData.append("sections", JSON.stringify(sectionsData))
-    formData.append("tagsIds", JSON.stringify(tags));
+    formData.append("tagsIds", JSON.stringify(tags))
 
     try {
       setLoading(true)
-      const response = await axios.post(`${api}/createBlog`, formData, {
+      await axios.post(`${api}/createBlog`, formData, {
         headers: {
           "Content-Type": "multipart/form-data",
           Authorization: `Bearer ${localStorage.getItem("token")}`,
-        }
+        },
       })
-
       toast.success("Blog submitted successfully!")
+      // ✅ Clear local storage draft only on success
+      localStorage.removeItem(LOCAL_STORAGE_KEY)
+      setSections([])
+      setTags([])
+      setCoverImage(null)
+      setCoverSubtitle("")
+      setTagInput("")
     } catch (error) {
       toast.error("Failed to submit blog. Please try again.")
     } finally {
       setLoading(false)
-      setSections([])
-      setCoverImage(null)
     }
   }
 
@@ -224,7 +237,7 @@ const CreateBlogInteractive = () => {
               className="mt-2 h-52 w-full rounded-md object-cover border"
             />
           )}
-          {coverImage &&
+          {coverImage && (
             <>
               <Label htmlFor="coverSubtitle">Cover Image Subtitle</Label>
               <Input
@@ -234,7 +247,7 @@ const CreateBlogInteractive = () => {
                 onChange={(e) => setCoverSubtitle(e.target.value)}
               />
             </>
-          }
+          )}
         </div>
 
         <DragDropContext onDragEnd={onDragEnd}>
@@ -299,40 +312,49 @@ const CreateBlogInteractive = () => {
                               <Button
                                 type="button"
                                 variant="outline"
-                                onClick={() => applyFormatting(section.id, "h1")}
+                                onClick={() =>
+                                  applyFormatting(section.id, "h1")
+                                }
                               >
                                 H1
                               </Button>
                               <Button
                                 type="button"
                                 variant="outline"
-                                onClick={() => applyFormatting(section.id, "h2")}
+                                onClick={() =>
+                                  applyFormatting(section.id, "h2")
+                                }
                               >
                                 H2
                               </Button>
                               <Button
                                 type="button"
                                 variant="outline"
-                                onClick={() => applyFormatting(section.id, "bold")}
+                                onClick={() =>
+                                  applyFormatting(section.id, "bold")
+                                }
                               >
                                 Bold
                               </Button>
                               <Button
                                 type="button"
                                 variant="outline"
-                                onClick={() => applyFormatting(section.id, "italic")}
+                                onClick={() =>
+                                  applyFormatting(section.id, "italic")
+                                }
                               >
                                 Italic
                               </Button>
                               <Button
                                 type="button"
                                 variant="outline"
-                                onClick={() => applyFormatting(section.id, "link")}
+                                onClick={() =>
+                                  applyFormatting(section.id, "link")
+                                }
                               >
                                 Link
                               </Button>
                             </div>
-
                             <Textarea
                               id={section.id}
                               rows={8}
@@ -366,7 +388,6 @@ const CreateBlogInteractive = () => {
                                 className="mt-2 h-48 w-full rounded-md border object-cover"
                               />
                             )}
-
                             <div className="mt-2">
                               <Label>Image Subtitle</Label>
                               <Input
@@ -415,6 +436,7 @@ const CreateBlogInteractive = () => {
             })}
           </div>
         </div>
+
         <div className="space-y-2">
           <Label htmlFor="tags">Tags</Label>
           <div className="flex gap-2 relative">
@@ -422,9 +444,7 @@ const CreateBlogInteractive = () => {
               id="tags"
               placeholder="Enter tag and press Enter"
               value={tagInput}
-              onChange={(e) => {
-                setTagInput(e.target.value)
-              }}
+              onChange={(e) => setTagInput(e.target.value)}
               onKeyDown={(e) => {
                 if (e.key === "Enter" && tagInput.trim()) {
                   e.preventDefault();
@@ -454,7 +474,6 @@ const CreateBlogInteractive = () => {
               </ul>
             )}
           </div>
-
           <div className="flex flex-wrap gap-2 mt-2">
             {tags.map((tag, idx) => (
               <span
@@ -476,7 +495,6 @@ const CreateBlogInteractive = () => {
           </div>
         </div>
 
-
         {loading ? (
           <Button className="w-full mt-6" disabled>
             Submitting...
@@ -488,6 +506,23 @@ const CreateBlogInteractive = () => {
             </Button>
           )
         )}
+
+        {/* Extra! Manual clear draft button */}
+        <Button
+          variant="destructive"
+          className="w-full mt-4"
+          onClick={() => {
+            localStorage.removeItem(LOCAL_STORAGE_KEY)
+            setSections([])
+            setTags([])
+            setCoverImage(null)
+            setCoverSubtitle("")
+            setTagInput("")
+            toast.success("Draft cleared.")
+          }}
+        >
+          Clear Draft
+        </Button>
       </div>
     </div>
   )
