@@ -43,6 +43,11 @@ const Login = () => {
                 toast.error("Invalid credentials. Please try again.");
             } else if (error.response?.status === 404) {
                 toast.error("User not found.");
+            }
+            else if (error.response?.status === 403) {
+                toast.error("Your account is blocked. Please contact support.");
+            } else if (error.response?.status === 500) {
+                toast.error("Server error. Please try again later.");
             } else {
                 toast.error("Login failed. Please try again.");
             }
