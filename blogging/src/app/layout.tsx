@@ -23,11 +23,14 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
-        <meta name="google-adsense-account" content="ca-pub-7004317414119715"></meta>
+        {/* Update the AdSense meta tag with the new client ID if needed */}
+        <meta name="google-adsense-account" content="ca-pub-3694311444107571" />
       </head>
       <body>
         {children}
         <Analytics />
+        
+        {/* Google Analytics Script */}
         <Script
           async
           src="https://www.googletagmanager.com/gtag/js?id=G-RHQB1PGJLF"
@@ -40,9 +43,11 @@ export default function RootLayout({
             gtag('config', 'G-RHQB1PGJLF');
           `}
         </Script>
+
+        {/* Updated Google AdSense script with new client ID */}
         <Script
           async
-          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7004317414119715"
+          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3694311444107571"
           crossOrigin="anonymous"
         />
       </body>
