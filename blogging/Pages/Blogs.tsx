@@ -57,15 +57,14 @@ export default async function Blogs() {
                     <p className="text-gray-600 underline italic">Our Latest Trails</p>
                 </div>
                 <div className="w-full flex flex-col items-center sm:flex-row sm:justify-between">
-                    <h1 className="text-4xl underline font-black text-center sm:w-full">Blogs</h1>
+                    <h1 className="text-4xl underline font-black text-center sm:w-full mb-3">Latest Blogs</h1>
                 </div>
-
             </div>
-            {/* <hr /> */}
+            <hr />
             <div>
-                <div className="">
+                {/* <div className="">
                     <SearchBar />
-                </div>
+                </div> */}
                 <div className="container grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mt-4">
 
                     {blogs.length > 0 ? (
@@ -74,6 +73,12 @@ export default async function Blogs() {
                         <p className="text-center text-gray-500 col-span-full">No blogs available.</p>
                     )}
                 </div>
+            </div>
+            <div className='flex justify-center mt-6'>
+
+                <button className="mt-4 px-4 py-2 cursor-pointer bg-[#2B7FFF] text-white rounded-lg hover:bg-blue-700 transition-colors">
+                    <Link href="/blogs">View All Blogs</Link>
+                </button>
             </div>
         </section>
     );
