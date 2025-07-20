@@ -135,7 +135,8 @@ const Card: React.FC<CardProps> = ({ blog }) => {
           </div>
 
           {/* Read & Views */}
-          <div className="flex flex-col items-end text-blue-600 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-x-2 group-hover:translate-x-0 space-y-1 text-sm">
+          <div className="flex flex-col items-end text-blue-600 opacity-100 md:opacity-0 group-hover:opacity-100
+ transition-all duration-300 transform translate-x-2 group-hover:translate-x-0 space-y-1 text-sm">
             {/* Read */}
             <div className="flex items-center">
               <span className="mr-1 font-medium">Read</span>

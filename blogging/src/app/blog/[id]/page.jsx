@@ -26,8 +26,8 @@ export default function BlogDetailPage({ params }) {
   const incrementCount = async () => {
     try {
       const res = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/incrementCount/${id}`);
-      if (!res.ok) {
-        throw new Error('Failed to increment view count');
+      if(res.status === 200) {
+        console.log("View count incremented successfully");
       }
     } catch (error) {
       console.error("Error incrementing view count:", error);
