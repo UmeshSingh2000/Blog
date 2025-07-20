@@ -70,6 +70,10 @@ const blogSchema = new Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Tags'
     }],
+    views:{
+        type: Number,
+        default: 0
+    },
     comments: [
         {
             authorName: {

@@ -8,7 +8,7 @@ interface Blog {
   author: {
     _id: string
     name: string
-    email: string,
+    email: string
     profilePicture?: string
   }
   tags: {
@@ -17,9 +17,10 @@ interface Blog {
   }[]
   excerpt: string
   coverImage: {
-    url: string,
+    url: string
     subtitle: string
   }
+  views: number
 }
 
 interface CardProps {
@@ -33,10 +34,9 @@ const Card: React.FC<CardProps> = ({ blog }) => {
   const coverImageUrl =
     typeof blog.coverImage === 'string' ? blog.coverImage : blog.coverImage.url || ''
 
-
   return (
     <article className="group relative max-w-sm bg-white rounded-2xl shadow-sm hover:shadow-xl transition-all duration-500 cursor-pointer border border-gray-100 hover:border-gray-200">
-      {/* Image Container with Gradient Overlay */}
+      {/* Image */}
       <div className="relative overflow-hidden rounded-t-2xl">
         <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
         <Image
@@ -47,7 +47,6 @@ const Card: React.FC<CardProps> = ({ blog }) => {
           height={300}
         />
 
-        {/* Floating Tag Preview on Hover */}
         {hasMoreTags && (
           <div className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-2 group-hover:translate-y-0 z-20">
             <div className="bg-white/90 backdrop-blur-sm rounded-lg px-3 py-1 shadow-lg">
@@ -59,21 +58,18 @@ const Card: React.FC<CardProps> = ({ blog }) => {
         )}
       </div>
 
-      {/* Content Container */}
+      {/* Content */}
       <div className="p-6 space-y-2">
-        {/* Title */}
         <h2 className="text-xl font-bold text-gray-900 leading-tight group-hover:text-blue-600 transition-colors duration-300 line-clamp-2">
           {blog.title}
         </h2>
 
-        {/* Excerpt - Always visible on mobile, hover-only on desktop */}
         <div className="overflow-hidden transition-all duration-300 max-h-20 opacity-100 md:max-h-0 md:opacity-0 md:group-hover:max-h-20 md:group-hover:opacity-100">
           <p className="text-gray-600 text-sm leading-relaxed line-clamp-3 group-hover:text-gray-700 transition-colors duration-300">
             {blog.excerpt}
           </p>
         </div>
 
-        {/* Tags Section */}
         <div className="relative transition-all duration-300 max-h-20 opacity-100 md:max-h-0 md:opacity-0 md:group-hover:max-h-20 md:group-hover:opacity-100">
           <div className="flex flex-wrap gap-2">
             {visibleTags.map((tag, index) => (
@@ -99,7 +95,7 @@ const Card: React.FC<CardProps> = ({ blog }) => {
                   +{hiddenTags.length} more
                 </span>
 
-                {/* Enhanced Tooltip */}
+                {/* Tooltip */}
                 <div className="invisible group-hover/tooltip:visible opacity-0 group-hover/tooltip:opacity-100 absolute bottom-full left-1/2 transform -translate-x-1/2 mb-3 z-50 transition-all duration-300">
                   <div className="bg-gray-900 text-white text-xs rounded-lg px-3 py-2 shadow-xl max-w-xs whitespace-nowrap">
                     <div className="flex flex-wrap gap-1">
@@ -109,7 +105,6 @@ const Card: React.FC<CardProps> = ({ blog }) => {
                         </span>
                       ))}
                     </div>
-                    {/* Tooltip Arrow */}
                     <div className="absolute top-full left-1/2 transform -translate-x-1/2 border-4 border-transparent border-t-gray-900"></div>
                   </div>
                 </div>
@@ -118,18 +113,18 @@ const Card: React.FC<CardProps> = ({ blog }) => {
           </div>
         </div>
 
-        {/* Author Section */}
+        {/* Author + Read & Views */}
         <div className="flex items-center justify-between pt-4 border-t border-gray-100">
+          {/* Author Info */}
           <div className="flex items-center space-x-3">
             <div className="relative">
               <Image
                 className="w-10 h-10 rounded-full object-cover"
-                src={blog.author.profilePicture ||defaultUser}
+                src={blog.author.profilePicture || defaultUser}
                 alt="Author avatar"
                 width={40}
                 height={40}
               />
-              {/* <div className="absolute -bottom-0.5 -right-0.5 w-3 h-3 bg-green-400 rounded-full border-2 border-white"></div> */}
             </div>
             <div>
               <p className="text-sm font-semibold text-gray-900 hover:text-blue-600 transition-colors duration-300 cursor-pointer">
@@ -139,12 +134,24 @@ const Card: React.FC<CardProps> = ({ blog }) => {
             </div>
           </div>
 
-          {/* Read More Indicator */}
-          <div className="flex items-center text-blue-600 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-x-2 group-hover:translate-x-0">
-            <span className="text-sm font-medium mr-1">Read</span>
-            <svg className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-            </svg>
+          {/* Read & Views */}
+          <div className="flex flex-col items-end text-blue-600 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-x-2 group-hover:translate-x-0 space-y-1 text-sm">
+            {/* Read */}
+            <div className="flex items-center">
+              <span className="mr-1 font-medium">Read</span>
+              <svg className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+              </svg>
+            </div>
+
+            {/* Views */}
+            <div className="flex items-center text-gray-500 text-xs">
+              <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5s8.268 2.943 9.542 7c-1.274 4.057-5.065 7-9.542 7s-8.268-2.943-9.542-7z" />
+              </svg>
+              {blog.views} views
+            </div>
           </div>
         </div>
       </div>

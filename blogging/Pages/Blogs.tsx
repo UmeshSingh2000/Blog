@@ -20,6 +20,7 @@ interface Blog {
         url: string;
         subtitle: string;
     };
+    views: number;
 }
 
 export default async function Blogs() {

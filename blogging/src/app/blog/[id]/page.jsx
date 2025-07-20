@@ -12,6 +12,7 @@ import AboutTheAuthor from '@/Components/AboutTheAuthor'
 import CommentSection from '@/Components/CommentSection'
 import ImageModal from '@/Components/ImageModal'
 import BlogSuggestion from '@/Components/BlogSuggestion'
+import axios from 'axios'
 export default function BlogDetailPage({ params }) {
   const [blog, setBlog] = useState(null)
   const [loading, setLoading] = useState(true)
@@ -22,7 +23,19 @@ export default function BlogDetailPage({ params }) {
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [currentImageIndex, setCurrentImageIndex] = useState(0)
   const [images, setImages] = useState([])
-
+  const incrementCount = async () => {
+    try {
+      const res = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/incrementCount/${id}`);
+      if (!res.ok) {
+        throw new Error('Failed to increment view count');
+      }
+    } catch (error) {
+      console.error("Error incrementing view count:", error);
+    }
+  }
+  useEffect(() => {
+    incrementCount();
+  }, [])
   useEffect(() => {
     async function fetchData() {
       try {
@@ -197,7 +210,7 @@ export default function BlogDetailPage({ params }) {
 
       <Subscribe userId={userId} />
       <AboutTheAuthor author={blog.author} />
-      <BlogSuggestion blogId = {blog.author._id}/>
+      <BlogSuggestion blogId={blog.author._id} />
       <Footer />
 
       {/* Image Modal */}

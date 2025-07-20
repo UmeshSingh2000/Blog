@@ -522,6 +522,24 @@ const getBlogSuggestion = async (req, res) => {
 }
 
 
+const incrementCount = async (req,res)=>{
+  try {
+    const {id} = req.params;
+    if (!validateId(id)) {
+      return res.status(400).json({ message: 'Invalid blog ID' });
+    }
+    const blog = await Blog.findByIdAndUpdate(id, { $inc: { views: 1 } }, { new: true });
+    if (!blog) {
+      return res.status(404).json({ message: 'Blog not found' });
+    }
+    res.status(200).json({ message: 'Blog views incremented successfully', views: blog.views });
+  } catch (error) {
+    console.error('Error incrementing blog views:', error);
+    res.status(500).json({ message: 'Server error', error: error.message });
+    
+  }
+}
+
 
 
 module.exports = {
@@ -534,5 +552,6 @@ module.exports = {
   // addCommentToBlog,
   addCommentsToBlog,
   getblogComments,
-  getBlogSuggestion
+  getBlogSuggestion,
+  incrementCount
 }
