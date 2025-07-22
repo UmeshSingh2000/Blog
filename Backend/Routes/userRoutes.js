@@ -1,7 +1,7 @@
 const express = require('express');
 const multer = require('multer');
 const router = express.Router();
-const { loginUser, sendOtp, verifyOtp, resetPassword, getMyData, verifyPassword, updateProfile, subscribeToNewsletter, unsubscribeFromNewsletter, contactMeEmailSender, updateProfilePicture, updateUserAbout } = require('../Controllers/userController');
+const { loginUser, sendOtp, verifyOtp, resetPassword, getMyData, verifyPassword, updateProfile, subscribeToNewsletter, unsubscribeFromNewsletter, contactMeEmailSender, updateProfilePicture, updateUserAbout, updateEducation } = require('../Controllers/userController');
 const { loginLimiter } = require('../Helpers/rateLimiter');
 const authenticateToken = require('../Middlewares/authenticateToken');
 const { createBlog, deleteBlog, updateBlog, getBlogs, getBlogById, getMyBlogs, addCommentToBlog, addCommentsToBlog, getblogComments, getBlogSuggestion, incrementCount } = require('../Controllers/blogController');
@@ -26,6 +26,7 @@ router.post('/verifyPassword', authenticateToken, loginLimiter, verifyPassword) 
 router.get('/getMyData', authenticateToken, getMyData);
 router.put('/updateUserAbout', authenticateToken, loginLimiter, updateUserAbout)
 router.put('/updateProfile', authenticateToken, loginLimiter, updateProfile)
+router.put('/updateEducation', authenticateToken, loginLimiter, updateEducation)
 router.put('/updateProfilePicture', upload.fields([
     { name: 'profilePicture', maxCount: 1 },
 ]), authenticateToken, loginLimiter, updateProfilePicture)
@@ -86,9 +87,9 @@ router.get('/getWeather', loginLimiter, async (req, res) => {
 
     }
 })
-router.post('/addCommentsToBlog/:id',loginLimiter,addCommentsToBlog);
-router.get('/getblogComments/:id',getblogComments);
-router.post('/incrementCount/:id',incrementCount);
+router.post('/addCommentsToBlog/:id', loginLimiter, addCommentsToBlog);
+router.get('/getblogComments/:id', getblogComments);
+router.post('/incrementCount/:id', incrementCount);
 
 
 module.exports = router;

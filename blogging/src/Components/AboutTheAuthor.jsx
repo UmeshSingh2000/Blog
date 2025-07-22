@@ -7,11 +7,11 @@ export default function AboutAuthor({ author }) {
 
                 {/* Header Section */}
                 <div className="text-center mb-16">
-                    <div className="inline-block w-px h-12 bg-gradient-to-b from-transparent via-slate-400 to-transparent mb-8"></div>
+                    <div className="inline-block w-px h-12 bg-gradient-to-b from-transparent via-slate-400 to-transparent mb-8" />
                     <h1 className="text-4xl md:text-5xl font-light text-slate-800 tracking-wide">
                         About the Author
                     </h1>
-                    <div className="inline-block w-px h-12 bg-gradient-to-b from-slate-400 via-transparent to-transparent mt-8"></div>
+                    <div className="inline-block w-px h-12 bg-gradient-to-b from-slate-400 via-transparent to-transparent mt-8" />
                 </div>
 
                 {/* Main Content */}
@@ -28,7 +28,7 @@ export default function AboutAuthor({ author }) {
                                 />
                             </div>
                             <div className="absolute -bottom-2 -right-2 w-12 h-12 bg-teal-600 rounded-full flex items-center justify-center shadow-lg">
-                                <div className="w-6 h-6 bg-white rounded-sm transform rotate-45"></div>
+                                <div className="w-6 h-6 bg-white rounded-sm transform rotate-45" />
                             </div>
                         </div>
 
@@ -36,10 +36,12 @@ export default function AboutAuthor({ author }) {
                             {author?.name}
                         </h2>
 
-                        <div className="flex items-center mt-4 text-teal-600">
-                            <div className="w-2 h-2 bg-teal-600 rounded-full mr-3"></div>
-                            <span className="text-sm font-medium tracking-wider uppercase">{author?.title}</span>
-                        </div>
+                        {author?.title && (
+                            <div className="flex items-center mt-4 text-teal-600">
+                                <div className="w-2 h-2 bg-teal-600 rounded-full mr-3" />
+                                <span className="text-sm font-medium tracking-wider uppercase">{author?.title}</span>
+                            </div>
+                        )}
                     </div>
 
                     {/* Content Section */}
@@ -51,47 +53,36 @@ export default function AboutAuthor({ author }) {
                             </p>
                         </div>
 
-                        {/* Key Focus Areas */}
-                        {/* <div className="space-y-6">
-                            <h3 className="text-xl font-light text-slate-800 border-b border-slate-200 pb-3">
-                                Areas of Focus
-                            </h3>
-
-                            <div className="grid gap-4">
-                                {[
-                                    'Traditional Architectural Approaches',
-                                    'Sustainability in Modern Design',
-                                    'Nature Integration',
-                                    'Contemporary-Traditional Synthesis'
-                                ].map((focus, index) => (
-                                    <div key={index} className="flex items-center group">
-                                        <div className="w-1 h-6 bg-gradient-to-b from-teal-500 to-slate-400 mr-4 group-hover:from-teal-600 transition-colors"></div>
-                                        <span className="text-slate-700 font-light tracking-wide">{focus}</span>
-                                    </div>
-                                ))}
-                            </div>
-                        </div> */}
-
-                        {/* Institution */}
+                        {/* Education - Dynamic */}
                         <div className="bg-white/60 backdrop-blur-sm rounded-2xl p-6 border border-white/20 shadow-lg">
                             <div className="flex items-center mb-3">
-                                <div className="w-3 h-3 bg-teal-600 rounded-full mr-3"></div>
+                                <div className="w-3 h-3 bg-teal-600 rounded-full mr-3" />
                                 <h3 className="text-lg font-medium text-slate-800">Education</h3>
                             </div>
-                            <p className="text-slate-700 font-light">
-                                German University in Cairo, Egypt
-                            </p>
-                            <p className="text-sm text-slate-500 mt-1">
-                                Bachelor's in Architecture and Urban Design
-                            </p>
+                            
+                            {author?.education?.length > 0 ? (
+                                author.education.map((entry, index) => (
+                                    <React.Fragment key={index}>
+                                        <p className="text-slate-700 font-light">
+                                            {entry}
+                                        </p>
+                                        {index < author.education.length - 1 && (
+                                            <hr className="my-3 border-gray-200" />
+                                        )}
+                                    </React.Fragment>
+                                ))
+                            ) : (
+                                <p className="text-slate-500 font-light italic">
+                                    No education information provided.
+                                </p>
+                            )}
                         </div>
-
                     </div>
                 </div>
 
                 {/* Bottom Accent */}
                 <div className="flex justify-center mt-20">
-                    <div className="w-24 h-px bg-gradient-to-r from-transparent via-slate-300 to-transparent"></div>
+                    <div className="w-24 h-px bg-gradient-to-r from-transparent via-slate-300 to-transparent" />
                 </div>
             </div>
         </div>

@@ -298,6 +298,27 @@ const contactMeEmailSender = async (req, res) => {
     }
 }
 
+const updateEducation = async(req,res)=>{
+    try {
+        const { id } = req.user;
+        const { education } = req.body;
+        if (!education || !Array.isArray(education)) {
+            return res.status(400).json({ message: 'Education data is required and should be an array' });
+        }
+        const user = await User.findById(id);
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+        user.education = education;
+        await user.save();
+        res.status(200).json({ message: 'Education updated successfully', user });
+    } catch (error) {
+        console.error('Error updating education:', error);
+        res.status(500).json({ message: 'Server error', error: error.message });
+        
+    }
+}
+
 
 module.exports = {
     loginUser,
@@ -311,5 +332,6 @@ module.exports = {
     unsubscribeFromNewsletter,
     contactMeEmailSender,
     updateProfilePicture,
-    updateUserAbout
+    updateUserAbout,
+    updateEducation
 }

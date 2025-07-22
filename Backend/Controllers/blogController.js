@@ -409,7 +409,7 @@ const getBlogById = async (req, res) => {
     if (!validateId(id)) {
       return res.status(400).json({ message: 'Invalid blog ID' });
     }
-    const blog = await Blog.findById(id).populate('author', 'name email about profilePicture title').populate('tags', 'name');
+    const blog = await Blog.findById(id).populate('author', 'name email about profilePicture title education').populate('tags', 'name');
     if (!blog) {
       return res.status(404).json({ message: 'Blog not found' });
     }

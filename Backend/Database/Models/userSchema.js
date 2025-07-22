@@ -37,17 +37,24 @@ const userSchema = new Schema({
     profilePicture: {
         type: String
     },
-    profilePicturePublicId:{
+    profilePicturePublicId: {
         type: String
     },
     subscribers: [{ // list of users emails who subscribed 
         type: String,
     }],
-    status:{
+    status: {
         type: String,
         enum: ['active', 'blocked'],
         default: 'active'
-    }
+    },
+    education: [
+        {
+            type: String,
+            required: true
+        }
+    ]
+
 }, {
     timestamps: true
 })
