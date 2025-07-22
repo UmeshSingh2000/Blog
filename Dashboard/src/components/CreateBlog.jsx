@@ -11,8 +11,6 @@ const api = import.meta.env.VITE_BACKEND_URL
 const LOCAL_STORAGE_KEY = "BLOG_DRAFT"
 
 const sectionOptions = [
-  { type: "title", label: "Title" },
-  { type: "excerpt", label: "Excerpt" },
   { type: "content", label: "Content" },
   { type: "image", label: "Image" },
 ]
@@ -22,7 +20,22 @@ const CreateBlogInteractive = () => {
   const [tags, setTags] = useState([])
   const [tagInput, setTagInput] = useState("")
   const [loading, setLoading] = useState(false)
-  const [sections, setSections] = useState([])
+  const [sections, setSections] = useState([
+    // Default title section
+    {
+      id: "title-default",
+      type: "title",
+      value: "",
+      file: null,
+    },
+    // Default excerpt section
+    {
+      id: "excerpt-default",
+      type: "excerpt",
+      value: "",
+      file: null,
+    }
+  ])
   const [coverImage, setCoverImage] = useState(null)
   const [coverSubtitle, setCoverSubtitle] = useState("")
 
@@ -32,7 +45,9 @@ const CreateBlogInteractive = () => {
     if (savedDraft) {
       try {
         const { sections, tags, tagInput, coverSubtitle } = JSON.parse(savedDraft)
-        if (sections) setSections(sections)
+        if (sections && sections.length > 0) {
+          setSections(sections)
+        }
         if (tags) setTags(tags)
         if (tagInput) setTagInput(tagInput)
         if (coverSubtitle) setCoverSubtitle(coverSubtitle)
@@ -85,7 +100,18 @@ const CreateBlogInteractive = () => {
     if (file) setCoverImage(file)
   }
 
-  const handleDelete = (id) => setSections((prev) => prev.filter((s) => s.id !== id))
+  const handleDelete = (id) => {
+    // Prevent deletion of the default title and excerpt fields
+    if (id === "title-default") {
+      toast.error("Title field cannot be deleted.")
+      return
+    }
+    if (id === "excerpt-default") {
+      toast.error("Excerpt field cannot be deleted.")
+      return
+    }
+    setSections((prev) => prev.filter((s) => s.id !== id))
+  }
 
   const onDragEnd = (result) => {
     if (!result.destination) return
@@ -125,6 +151,24 @@ const CreateBlogInteractive = () => {
           return
         }
         break
+      case "bullet":
+        // Add bullet point formatting
+        if (selected) {
+          const lines = selected.split('\n')
+          formatted = lines.map(line => line.trim() ? `- ${line.trim()}` : line).join('\n')
+        } else {
+          formatted = "- "
+        }
+        break
+      case "numbered":
+        // Add numbered list formatting
+        if (selected) {
+          const lines = selected.split('\n').filter(line => line.trim())
+          formatted = lines.map((line, index) => `${index + 1}. ${line.trim()}`).join('\n')
+        } else {
+          formatted = "1. "
+        }
+        break
     }
 
     const updatedValue =
@@ -162,6 +206,18 @@ const CreateBlogInteractive = () => {
 
   // Standard submit logic
   const handleSubmit = async () => {
+    const titleSection = sections.find(s => s.type === "title")
+    if (!titleSection || !titleSection.value.trim()) {
+      toast.error("Please add a title for your blog.")
+      return
+    }
+
+    const excerptSection = sections.find(s => s.type === "excerpt")
+    if (!excerptSection || !excerptSection.value.trim()) {
+      toast.error("Please add an excerpt for your blog.")
+      return
+    }
+
     if (tags.length === 0) {
       toast.error("Please add at least one tag.")
       return
@@ -202,7 +258,20 @@ const CreateBlogInteractive = () => {
       toast.success("Blog submitted successfully!")
       // ✅ Clear local storage draft only on success
       localStorage.removeItem(LOCAL_STORAGE_KEY)
-      setSections([])
+      setSections([
+        {
+          id: "title-default",
+          type: "title",
+          value: "",
+          file: null,
+        },
+        {
+          id: "excerpt-default",
+          type: "excerpt",
+          value: "",
+          file: null,
+        }
+      ])
       setTags([])
       setCoverImage(null)
       setCoverSubtitle("")
@@ -213,9 +282,6 @@ const CreateBlogInteractive = () => {
       setLoading(false)
     }
   }
-
-  const hasTitle = sections.some((s) => s.type === "title")
-  const hasExcerpt = sections.some((s) => s.type === "excerpt")
 
   return (
     <div className="min-h-screen bg-white p-8">
@@ -270,12 +336,15 @@ const CreateBlogInteractive = () => {
                         {...provided.dragHandleProps}
                         className="p-4 border rounded-md bg-gray-50 relative"
                       >
-                        <button
-                          onClick={() => handleDelete(section.id)}
-                          className="absolute top-2 right-2 text-red-600 hover:text-red-800 font-bold"
-                        >
-                          ✕
-                        </button>
+                        {/* Only show delete button for non-default sections */}
+                        {section.id !== "title-default" && section.id !== "excerpt-default" && (
+                          <button
+                            onClick={() => handleDelete(section.id)}
+                            className="absolute top-2 right-2 text-red-600 hover:text-red-800 font-bold"
+                          >
+                            ✕
+                          </button>
+                        )}
 
                         {section.type === "title" && (
                           <>
@@ -353,6 +422,24 @@ const CreateBlogInteractive = () => {
                               >
                                 Link
                               </Button>
+                              <Button
+                                type="button"
+                                variant="outline"
+                                onClick={() =>
+                                  applyFormatting(section.id, "bullet")
+                                }
+                              >
+                                • Bullet
+                              </Button>
+                              <Button
+                                type="button"
+                                variant="outline"
+                                onClick={() =>
+                                  applyFormatting(section.id, "numbered")
+                                }
+                              >
+                                1. Numbered
+                              </Button>
                             </div>
                             <Textarea
                               id={section.id}
@@ -418,21 +505,15 @@ const CreateBlogInteractive = () => {
         <div className="space-y-2">
           <Label>Add New Section</Label>
           <div className="flex flex-wrap gap-2">
-            {sectionOptions.map((opt) => {
-              const isDisabled =
-                (opt.type === "title" && hasTitle) ||
-                (opt.type === "excerpt" && hasExcerpt)
-              return (
-                <Button
-                  key={opt.type}
-                  variant="outline"
-                  onClick={() => handleAddSection(opt.type)}
-                  disabled={isDisabled}
-                >
-                  + {opt.label}
-                </Button>
-              )
-            })}
+            {sectionOptions.map((opt) => (
+              <Button
+                key={opt.type}
+                variant="outline"
+                onClick={() => handleAddSection(opt.type)}
+              >
+                + {opt.label}
+              </Button>
+            ))}
           </div>
         </div>
 
@@ -499,11 +580,9 @@ const CreateBlogInteractive = () => {
             Submitting...
           </Button>
         ) : (
-          sections.length > 0 && (
-            <Button className="w-full mt-6" onClick={handleSubmit}>
-              Submit Blog
-            </Button>
-          )
+          <Button className="w-full mt-6" onClick={handleSubmit}>
+            Submit Blog
+          </Button>
         )}
 
         {/* Manual clear draft button */}
@@ -512,7 +591,20 @@ const CreateBlogInteractive = () => {
           className="w-full mt-4"
           onClick={() => {
             localStorage.removeItem(LOCAL_STORAGE_KEY)
-            setSections([])
+            setSections([
+              {
+                id: "title-default",
+                type: "title",
+                value: "",
+                file: null,
+              },
+              {
+                id: "excerpt-default",
+                type: "excerpt",
+                value: "",
+                file: null,
+              }
+            ])
             setTags([])
             setCoverImage(null)
             setCoverSubtitle("")
