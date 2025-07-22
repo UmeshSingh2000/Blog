@@ -45,6 +45,7 @@ const Card: React.FC<CardProps> = ({ blog }) => {
           className="w-full h-64 object-cover transform transition-transform duration-700 group-hover:scale-110"
           width={500}
           height={300}
+          unoptimized
         />
 
         {hasMoreTags && (
