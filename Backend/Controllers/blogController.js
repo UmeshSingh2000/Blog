@@ -499,14 +499,15 @@ const getblogComments = async (req, res) => {
 const getBlogSuggestion = async (req, res) => {
   try {
     const { id } = req.params; // author Id
+    const { blogId } = req.query;
     if (!validateId(id)) {
       return res.status(400).json({ message: 'Invalid author ID' });
     }
-    const blogs = await Blog.find({ author: id, status: "published" })
+    const blogs = await Blog.find({ author: id, status: "published", _id: { $ne: blogId } })
       .select('title excerpt coverImage author createdAt')
       .populate('author', 'name profilePicture')
       .sort({ createdAt: -1 }) // optional: sort by newest
-      .limit(5); // limit to 5 suggestions
+      .limit(1); // limit to 5 suggestions
     if (!blogs.length) {
       return res.status(404).json({ message: 'No blog suggestions found for this author' });
     }
@@ -522,9 +523,9 @@ const getBlogSuggestion = async (req, res) => {
 }
 
 
-const incrementCount = async (req,res)=>{
+const incrementCount = async (req, res) => {
   try {
-    const {id} = req.params;
+    const { id } = req.params;
     if (!validateId(id)) {
       return res.status(400).json({ message: 'Invalid blog ID' });
     }
@@ -536,7 +537,7 @@ const incrementCount = async (req,res)=>{
   } catch (error) {
     console.error('Error incrementing blog views:', error);
     res.status(500).json({ message: 'Server error', error: error.message });
-    
+
   }
 }
 

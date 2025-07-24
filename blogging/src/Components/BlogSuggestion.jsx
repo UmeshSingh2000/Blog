@@ -5,19 +5,19 @@ import Card from './Card'
 import axios from 'axios'
 import Link from 'next/link'
 
-const BlogSuggestion = ({ blogId }) => {
+const BlogSuggestion = ({ blogId, authorId }) => {
     const [blogs, setBlogs] = useState([])
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState(null)
 
     const fetchBlogSuggestions = async () => {
-        if (!blogId) return
+        if (!authorId) return
         
         setLoading(true)
         setError(null)
         
         try {
-            const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/getBlogSuggestion/${blogId}`)
+            const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/getBlogSuggestion/${authorId}?blogId=${blogId}`)
             if (response.status === 200) {
                 setBlogs(response.data.blogs || [])
             }
@@ -31,7 +31,7 @@ const BlogSuggestion = ({ blogId }) => {
 
     useEffect(() => {
         fetchBlogSuggestions()
-    }, [blogId])
+    }, [authorId])
 
     // Loading skeleton component
     const LoadingSkeleton = () => (
@@ -85,7 +85,7 @@ const BlogSuggestion = ({ blogId }) => {
     )
 
     // Don't render anything if no blogId
-    if (!blogId) return null
+    if (!authorId) return null
 
     return (
         <section className="mt-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto mb-5">

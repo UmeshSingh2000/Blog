@@ -210,7 +210,7 @@ export default function BlogDetailPage({ params }) {
 
       <Subscribe userId={userId} />
       <AboutTheAuthor author={blog.author} />
-      <BlogSuggestion blogId={blog.author._id} />
+      <BlogSuggestion blogId={id} authorId={blog.author._id} />
       <Footer />
 
       {/* Image Modal */}
