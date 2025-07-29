@@ -1,17 +1,16 @@
 import Navbar from '@/Components/Navbar'
-import React from 'react'
 import Blogs from '../../Pages/Blogs'
 import Footer from '@/Components/Footer'
 import ContactUs from '@/Components/ContactUs'
-import { FaArrowDown } from 'react-icons/fa';
+import { FaArrowDown } from 'react-icons/fa'
 import Weather from '@/Components/Weather'
 import DetectAdblocker from '@/Components/DetectAdblocker'
-const page = () => {
+
+const Page = () => {
   return (
-    <>
-      <main className=''>
+    <DetectAdblocker>
+      <main>
         <Navbar />
-        <DetectAdblocker />
         <section className='hero flex items-center h-screen pl-4 mb-4'>
           <div className='text-center w-full'>
             <p className='text-white text-3xl md:text-6xl font-bold italic'>
@@ -36,8 +35,8 @@ const page = () => {
         <ContactUs />
         <Footer />
       </main>
-    </>
+    </DetectAdblocker>
   )
 }
 
-export default page
+export default Page
