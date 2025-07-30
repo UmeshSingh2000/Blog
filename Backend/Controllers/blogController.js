@@ -11,9 +11,8 @@ const sendEmail = require('../Helpers/mailer');
 
 const createBlog = async (req, res) => {
   try {
-    const { sections } = req.body; // tags containing an array of tags IDs
+    const { sections, category } = req.body; // tags containing an array of tags IDs
     const author = req.user.id;
-
     if (!sections) {
       return res.status(400).json({ message: "Sections are required" });
     }
@@ -130,6 +129,7 @@ const createBlog = async (req, res) => {
         public_id: coverImageResult.public_id,
         subtitle: coverImageSubtitle?.trim() || "" // optional subtitle
       },
+      category,
       tags: insertedIds,
       status: "published", // default to published, can be changed later
     });

@@ -224,6 +224,10 @@ const CreateBlogInteractive = () => {
       toast.error("Please add at least one tag.")
       return
     }
+    if (!category) {
+      toast.error('Select category')
+      return
+    }
 
     const formData = new FormData()
     if (coverImage) formData.append("coverImage", coverImage)
@@ -285,9 +289,7 @@ const CreateBlogInteractive = () => {
       setLoading(false)
     }
   }
-  useEffect(() => {
-    console.log(category)
-  }, [category])
+
   return (
     <div className="min-h-screen bg-white p-8">
       <h1 className="text-3xl mb-5 font-bold text-center">Create a New Blog</h1>
