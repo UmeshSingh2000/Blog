@@ -6,6 +6,7 @@ import { Textarea } from "@/components/ui/textarea"
 import { Label } from "@/components/ui/label"
 import toast from "react-hot-toast"
 import axios from "axios"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "./ui/select"
 
 const api = import.meta.env.VITE_BACKEND_URL
 const LOCAL_STORAGE_KEY = "BLOG_DRAFT"
@@ -16,6 +17,7 @@ const sectionOptions = [
 ]
 
 const CreateBlogInteractive = () => {
+  const [category, setCategory] = useState('')
   const [results, setResults] = useState([])
   const [tags, setTags] = useState([])
   const [tagInput, setTagInput] = useState("")
@@ -85,11 +87,11 @@ const CreateBlogInteractive = () => {
       prev.map((s) =>
         s.id === id
           ? {
-              ...s,
-              value: value !== undefined ? value : s.value,
-              file: file !== null ? file : s.file,
-              ...(subtitle !== null ? { subtitle } : {}),
-            }
+            ...s,
+            value: value !== undefined ? value : s.value,
+            file: file !== null ? file : s.file,
+            ...(subtitle !== null ? { subtitle } : {}),
+          }
           : s
       )
     )
@@ -246,6 +248,7 @@ const CreateBlogInteractive = () => {
 
     formData.append("sections", JSON.stringify(sectionsData))
     formData.append("tagsIds", JSON.stringify(tags))
+    formData.append("category", category)
 
     try {
       setLoading(true)
@@ -282,7 +285,9 @@ const CreateBlogInteractive = () => {
       setLoading(false)
     }
   }
-
+  useEffect(() => {
+    console.log(category)
+  }, [category])
   return (
     <div className="min-h-screen bg-white p-8">
       <h1 className="text-3xl mb-5 font-bold text-center">Create a New Blog</h1>
@@ -517,63 +522,82 @@ const CreateBlogInteractive = () => {
           </div>
         </div>
 
-        <div className="space-y-2">
-          <Label htmlFor="tags">Tags</Label>
-          <div className="flex gap-2 relative">
-            <Input
-              id="tags"
-              placeholder="Enter tag and press Enter"
-              value={tagInput}
-              onChange={(e) => setTagInput(e.target.value)}
-              onKeyDown={(e) => {
-                if (e.key === "Enter" && tagInput.trim()) {
-                  e.preventDefault();
-                  if (!tags.includes(tagInput.trim())) {
-                    setTags([...tags, tagInput.trim()]);
+        <div className="flex items-start gap-6">
+          {/* Category Section */}
+          <div className="flex flex-col gap-2 w-1/3">
+            <Label>Category</Label>
+            <Select onValueChange={setCategory} value={category}>
+              <SelectTrigger className="w-full">
+                <SelectValue placeholder="Select a category" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="travel">Travel</SelectItem>
+                <SelectItem value="architecture">Architecture</SelectItem>
+                <SelectItem value="tech">Tech</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+
+          {/* Tags Section */}
+          <div className="flex-1">
+            <Label htmlFor="tags">Tags</Label>
+            <div className="flex gap-2 relative mt-2">
+              <Input
+                id="tags"
+                placeholder="Enter tag and press Enter"
+                value={tagInput}
+                onChange={(e) => setTagInput(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" && tagInput.trim()) {
+                    e.preventDefault();
+                    if (!tags.includes(tagInput.trim())) {
+                      setTags([...tags, tagInput.trim()]);
+                    }
+                    setTagInput("");
                   }
-                  setTagInput("");
-                }
-              }}
-            />
-            {tagInput && results.length > 0 && (
-              <ul className="absolute z-10 top-full bg-white border rounded shadow mt-1 w-full flex flex-wrap gap-2 p-2">
-                {results.map((tag) => (
-                  <li
-                    key={tag._id}
-                    className="px-3 py-1 bg-gray-200 text-sm rounded-full cursor-pointer hover:bg-gray-300"
+                }}
+              />
+              {tagInput && results.length > 0 && (
+                <ul className="absolute z-10 top-full bg-white border rounded shadow mt-1 w-full flex flex-wrap gap-2 p-2">
+                  {results.map((tag) => (
+                    <li
+                      key={tag._id}
+                      className="px-3 py-1 bg-gray-200 text-sm rounded-full cursor-pointer hover:bg-gray-300"
+                      onClick={() => {
+                        if (!tags.includes(tag.name)) {
+                          setTags((prev) => [...prev, tag.name]);
+                        }
+                        setTagInput("");
+                      }}
+                    >
+                      {tag.name}
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </div>
+            <div className="flex flex-wrap gap-2 mt-2">
+              {tags.map((tag, idx) => (
+                <span
+                  key={idx}
+                  className="px-3 py-1 text-sm bg-gray-200 rounded-full flex items-center"
+                >
+                  {tag}
+                  <button
+                    type="button"
+                    className="ml-2 text-red-500 hover:text-red-700"
                     onClick={() => {
-                      if (!tags.includes(tag.name)) {
-                        setTags((prev) => [...prev, tag.name]);
-                      }
-                      setTagInput(""); // input cleared
+                      setTags((prev) => prev.filter((t) => t !== tag));
                     }}
                   >
-                    {tag.name}
-                  </li>
-                ))}
-              </ul>
-            )}
-          </div>
-          <div className="flex flex-wrap gap-2 mt-2">
-            {tags.map((tag, idx) => (
-              <span
-                key={idx}
-                className="px-3 py-1 text-sm bg-gray-200 rounded-full flex items-center"
-              >
-                {tag}
-                <button
-                  type="button"
-                  className="ml-2 text-red-500 hover:text-red-700"
-                  onClick={() => {
-                    setTags((prev) => prev.filter((t) => t !== tag));
-                  }}
-                >
-                  &times;
-                </button>
-              </span>
-            ))}
+                    &times;
+                  </button>
+                </span>
+              ))}
+            </div>
           </div>
         </div>
+
 
         {loading ? (
           <Button className="w-full mt-6" disabled>

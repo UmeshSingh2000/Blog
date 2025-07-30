@@ -30,7 +30,8 @@ const allowedOrigins = [
     'https://potatotrailsdashboard.vercel.app',
     'https://potatotrails.vercel.app',
     'https://www.potatotrail.life',
-    'https://keepalive-hbed.onrender.com'
+    'https://keepalive-hbed.onrender.com',
+    'https://dashboard.potatotrail.life'
 ];
 
 app.use(cors({

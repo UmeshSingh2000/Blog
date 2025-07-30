@@ -70,9 +70,13 @@ const blogSchema = new Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Tags'
     }],
-    views:{
+    views: {
         type: Number,
         default: 0
+    },
+    category: {
+        type: String,
+        enum: ['travel', 'architecture', 'tech']
     },
     comments: [
         {
