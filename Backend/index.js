@@ -10,6 +10,7 @@ const cloudinaryConfig = require('./Cloudinary/Config')
 const cors = require('cors')
 const authenticateToken = require('./Middlewares/authenticateToken')
 const fetchWeather = require('./Helpers/fetchWeather')
+const deleteLogger = require('./Middlewares/logger')
 
 
 
@@ -23,6 +24,7 @@ cloudinaryConfig()
 app.set('trust proxy', 1);
 app.use(express.json())
 app.use(cookieParser())
+app.use(deleteLogger)
 
 const allowedOrigins = [
     'http://localhost:3000',
