@@ -15,17 +15,18 @@ body {
   box-shadow: 0px 2px 2px 0px rgba(0, 0, 0, 0.25);
 }
 .hero{
+  margin: 20px;
   /* background-image: url('../../public/american-green-travel-166umbWL6Ec-unsplash.jpg'); */
-  background-image: url('../../public/Bg__1.jpg');
+  background-image: url('../../public/iskra-photography-AtRYCQGiJ_w-unsplash.jpg');
   /* background-position: center bottom; */
   background-repeat: no-repeat;
+  background-position: center bottom;
   background-size: cover;
 }
 .hero::before {
   content: '';
   position: absolute;
   inset: 0; /* top: 0; right: 0; bottom: 0; left: 0 */
-  background-color: rgba(0, 0, 0, 0.1); /* Change 0.4 to control opacity */
   z-index: 0;
 }
 .scrollbar-hide {
@@ -36,12 +37,4 @@ body {
 .hero > * {
   position: relative;
   z-index: 1;
-}
-@media (max-width: 768px) {
-  .hero {
-    background-image: url('../../public/bg.jpg');
-    /* background-position: center bottom; */
-    background-repeat: no-repeat;
-    background-size: cover;
-  }
 }

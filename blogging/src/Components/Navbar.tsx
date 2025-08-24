@@ -8,21 +8,21 @@ const Navbar = () => {
       <nav className="max-w-7xl mx-auto flex items-center justify-between py-3 px-2">
         {/* Logo */}
         <div className="text-3xl font-extrabold text-gray-800 tracking-tight">
-          <a href="/">Potato<span className="text-blue-500">trails</span></a>
+          <a href="/">Potato<span className="text-[#F04952]">trails</span></a>
         </div>
 
         {/* Desktop Nav Links */}
         <ul className="hidden md:flex items-center gap-8 text-sm font-medium text-gray-700">
-          <li className="hover:text-blue-500 transition-colors duration-200">
+          <li className="hover:text-[#F04952] transition-colors duration-200">
             <a href="/">Home</a>
           </li>
-          <li className="hover:text-blue-500 transition-colors duration-200">
+          <li className="hover:text-[#F04952] transition-colors duration-200">
             <a href="#blogs">Blogs</a>
           </li>
-          <li className="hover:text-blue-500 transition-colors duration-200">
+          <li className="hover:text-[#F04952] transition-colors duration-200">
             <a href="/shop">Shop</a>
           </li>
-          <li className="hover:text-blue-500 transition-colors duration-200">
+          <li className="hover:text-[#F04952] transition-colors duration-200">
             <a href="#contact">Contact</a>
           </li>
         </ul>
@@ -41,10 +41,10 @@ const Navbar = () => {
           <a
             href={process.env.NEXT_PUBLIC_ADMIN_URL}
             target="_blank"
-            className="hidden md:inline-flex  items-center gap-2 px-4 py-2 bg-gray-950 text-white text-sm font-semibold rounded-md shadow-md hover:bg-gray-900 transition-all duration-200"
+            className="hidden md:inline-flex  items-center gap-2 px-4 py-2 bg-[#F04952] text-white text-sm font-semibold rounded-md shadow-md hover:bg-[#f9545c] transition-all duration-200"
           >
             <FontAwesomeIcon icon={faRightToBracket} className="w-4 h-4" />
-            Login
+            Admin
           </a>
         </div>
 
@@ -72,7 +72,7 @@ const Navbar = () => {
                 className="flex items-center justify-center gap-2 w-full px-4 py-2 bg-gray-950 text-white text-sm font-semibold rounded-md shadow hover:bg-gray-900 transition-all duration-200"
               >
                 <FontAwesomeIcon icon={faRightToBracket} className="w-4 h-4" />
-                <span>Login</span>
+                <span>Admin</span>
               </a>
 
             </div>

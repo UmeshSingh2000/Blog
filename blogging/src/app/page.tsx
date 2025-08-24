@@ -11,22 +11,20 @@ const Page = () => {
     <DetectAdblocker>
       <main>
         <Navbar />
-        <section className='hero flex items-center h-screen pl-4 mb-4'>
-          <div className='text-center w-full'>
-            <p className='text-white text-3xl md:text-6xl font-bold italic'>
-              “Go where you <br />
-              feel most <br />
-              alive.”
+        <section className='hero flex items-center md:items-start h-screen pl-4 mb-4 rounded-tl-2xl rounded-tr-2xl'>
+          <div className='w-full'>
+            <p className='text-white text-5xl md:text-9xl font-bold italic pt-5'>
+              “Go where you
+              feel <br /> most 
+              <span className='text-[#F04952]'> alive.</span>
             </p>
-            <p className='text-white text-lg md:text-2xl mt-4 font-light tracking-wide'>
+            <p className='text-white text-xl md:text-2xl mt-4 font-light tracking-wide'>
               Discover stories that spark your next adventure
             </p>
-            <div className='mt-6 absolute left-1/2 transform -translate-x-1/2'>
-              <a href="#blogs">
-                <button className='flex cursor-pointer items-center justify-center gap-2 px-4 py-2 bg-white text-gray-800 font-semibold rounded-full shadow hover:bg-gray-200 transition'>
-                  Explore <FaArrowDown className='animate-bounce' />
+            <div className='mt-6'>
+                <button className='flex cursor-pointer items-center justify-center gap-2 px-4 py-2 bg-[#F04952] text-white font-semibold rounded-md shadow transition'>
+                  <a href="#blogs">Explore</a>
                 </button>
-              </a>
             </div>
           </div>
         </section>
