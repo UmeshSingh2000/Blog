@@ -2,7 +2,7 @@ import Navbar from '@/Components/Navbar'
 import Blogs from '../../Pages/Blogs'
 import Footer from '@/Components/Footer'
 import ContactUs from '@/Components/ContactUs'
-import { FaArrowDown } from 'react-icons/fa'
+// import { FaArrowDown } from 'react-icons/fa'
 import Weather from '@/Components/Weather'
 import DetectAdblocker from '@/Components/DetectAdblocker'
 
@@ -28,7 +28,7 @@ const Page = () => {
             </div>
           </div>
         </section>
-        <Weather />
+        {/* <Weather /> */}
         <Blogs />
         <ContactUs />
         <Footer />
