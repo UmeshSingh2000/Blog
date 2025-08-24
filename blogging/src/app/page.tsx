@@ -12,7 +12,7 @@ const Page = () => {
     <DetectAdblocker>
       <main>
         <Navbar />
-        <HomePage />
+        <HomePage/>
         {/* <Weather /> */}
         <Blogs />
         <ContactUs />
