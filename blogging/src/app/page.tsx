@@ -11,14 +11,14 @@ const Page = () => {
     <DetectAdblocker>
       <main>
         <Navbar />
-        <section className='hero flex items-center md:items-start h-screen pl-4 mb-4 rounded-tl-2xl rounded-tr-2xl'>
+        <section className='hero flex items-center md:items-start h-96 md:h-screen pl-4 mb-4 rounded-tl-2xl rounded-tr-2xl'>
           <div className='w-full'>
-            <p className='text-white text-5xl md:text-9xl font-bold italic pt-5'>
+            <p className='text-white text-4xl md:text-9xl font-bold italic pt-5'>
               “Go where you
               feel <br /> most 
               <span className='text-[#F04952]'> alive.</span>
             </p>
-            <p className='text-white text-xl md:text-2xl mt-4 font-light tracking-wide'>
+            <p className='text-white text-md md:text-2xl mt-4 font-light tracking-wide'>
               Discover stories that spark your next adventure
             </p>
             <div className='mt-6'>
