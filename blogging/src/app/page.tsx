@@ -7,6 +7,7 @@ import Weather from '@/Components/Weather'
 import DetectAdblocker from '@/Components/DetectAdblocker'
 import HomePage from '../../Pages/HomePage'
 import About from '../../Pages/About'
+import PopularBlogs from '../../Pages/PopularBlogs'
 
 
 const Page = () => {
@@ -17,7 +18,8 @@ const Page = () => {
         <HomePage />
         {/* <Weather /> */}
         <About />
-        <Blogs />
+        <PopularBlogs />
+        {/* <Blogs /> */}
         <ContactUs />
         <Footer />
       </main>

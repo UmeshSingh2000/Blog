@@ -11,21 +11,24 @@ const About = () => {
     });
 
 
-    const textScale = useTransform(scrollYProgress, [0, 0.5], [1.5, 1])
-    const imageScale = useTransform(scrollYProgress, [0, 0.5], [2, 1])
+    const textScale = useTransform(scrollYProgress, [0, 0.5], [0.7, 1])
+    // const imageScale = useTransform(scrollYProgress, [0, 0.5], [2, 1])
     const infoTransform = useTransform(scrollYProgress, [0, 0.5], ['-100px', '0px'])
 
     const footerTransform = useTransform(scrollYProgress, [0, 1], ['200px', '-100px'])
 
+    const bgColorTransform = useTransform(scrollYProgress, [0, 0.7], ['#ffffff', '#E8E8E8'])
+
+
     return (
-        <section ref={ref} className="px-8 py-20">
+        <motion.section ref={ref} className="px-8 py-20" style={{ backgroundColor: bgColorTransform }}>
             {/* Top Grid */}
             <div className="grid md:grid-cols-2 gap-12 items-start">
                 {/* Left */}
-                <div className="space-y-6 px-11 md:px-20">
+                <div className="space-y-6 md:px-20">
                     <header>
                         <motion.h1 className="text-4xl md:text-6xl font-bold leading-snug" style={{ scale: textScale }}>
-                            Who we are <br />
+                            Who we are 
                             and{" "}
                             <span className="bg-[#F04952] text-white px-2">
                                 what we do
@@ -46,10 +49,9 @@ const About = () => {
                         <motion.img
                             src="https://res.cloudinary.com/dtxqmoevl/image/upload/f_auto,q_auto,w_100/v1750961474/blog_images/profile_pictures/civ76ydodgjmiuvlzehr.jpg"
                             alt="Admin Profile"
-                            width={50}
-                            height={50}
-                            className="rounded-full object-cover z-10"
-                            style={{ scale: imageScale }}
+                            className="rounded-full object-cover z-10 w-10"
+                            initial={{ opacity: 0 }}
+                            whileInView={{ opacity: 1 }}
                         />
                         <motion.div
                             style={{ x: infoTransform }}
@@ -63,8 +65,7 @@ const About = () => {
                 {/* Right */}
                 <div className="text-gray-700 text-lg leading-relaxed space-y-6 w-3/4">
                     <motion.p
-                        initial={{ scale: 0.8 }}
-                        whileInView={{ scale: 1 }}
+                        style={{ scale: textScale }}
                     >
                         We are passionate travelers and storytellers, exploring unique
                         destinations and sharing our experiences with the world. Our goal
@@ -72,8 +73,7 @@ const About = () => {
                         tips, and insights into local culture.
                     </motion.p>
                     <motion.p
-                        initial={{ scale: 0.7 }}
-                        whileInView={{ scale: 1 }}
+                        style={{ scale: textScale }}
                     >
                         We also focus on promoting sustainable and responsible travel,
                         helping readers discover the beauty of the world while preserving
@@ -83,8 +83,8 @@ const About = () => {
             </div>
 
             {/* Bottom Tagline */}
-            <div className="mt-20 text-left md:text-center overflow-hidden">
-                <motion.h2 className="text-4xl md:text-8xl font-extrabold tracking-tight"
+            <div className="text-left md:text-center overflow-hidden">
+                <motion.h2 className="text-4xl md:text-8xl font-extrabold tracking-tight whitespace-nowrap"
                     style={{ x: footerTransform }}
                 >
                     Your Next{" "}
@@ -92,7 +92,7 @@ const About = () => {
                     Awaits
                 </motion.h2>
             </div>
-        </section>
+        </motion.section>
     );
 };
 

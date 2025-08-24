@@ -16,7 +16,7 @@ const HomePage = () => {
   const buttonScale = useTransform(scrollYProgress, [0, 1], [1, 0.5]);
 
   return (
-    <section className="relative h-[400px] md:h-[600px] flex items-center md:items-start pl-4 m-4 rounded-xl overflow-hidden">
+    <section className="relative h-[500px] md:h-[600px] flex items-center md:items-start pl-4 m-4 rounded-xl overflow-hidden">
       {/* Background Image with scroll zoom */}
       <motion.div style={{ scale: bgScale }} className="absolute inset-0 -z-10">
         <Image
