@@ -4,18 +4,19 @@ import { motion, useScroll, useTransform } from "framer-motion";
 import Image from "next/image";
 
 const HomePage = () => {
+  
   const { scrollYProgress } = useScroll();
 
   // Scale background between 1 and 1.6 as you scroll
   const bgScale = useTransform(scrollYProgress, [0, 1], [1, 1.6]);
-  const textScale1 = useTransform(scrollYProgress, [0, 1], [1, 0.5]);
-  const textScale2 = useTransform(scrollYProgress, [0, 1], [1, 0.4]);
+  const textScale1 = useTransform(scrollYProgress, [0, 1], [1, 0.7]);
+  const textScale2 = useTransform(scrollYProgress, [0, 1], [1, 0.6]);
 
   // Button scales same way as text
-  const buttonScale = useTransform(scrollYProgress, [0, 1], [1, 0.3]);
+  const buttonScale = useTransform(scrollYProgress, [0, 1], [1, 0.5]);
 
   return (
-    <section className="relative h-[400px] md:h-screen flex items-center md:items-start pl-4 m-4 rounded-xl overflow-hidden">
+    <section className="relative h-[400px] md:h-[600px] flex items-center md:items-start pl-4 m-4 rounded-xl overflow-hidden">
       {/* Background Image with scroll zoom */}
       <motion.div style={{ scale: bgScale }} className="absolute inset-0 -z-10">
         <Image

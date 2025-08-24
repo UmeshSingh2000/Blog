@@ -5,15 +5,18 @@ import ContactUs from '@/Components/ContactUs'
 // import { FaArrowDown } from 'react-icons/fa'
 import Weather from '@/Components/Weather'
 import DetectAdblocker from '@/Components/DetectAdblocker'
-import HomePage from '@/Components/HomePage'
+import HomePage from '../../Pages/HomePage'
+import About from '../../Pages/About'
+
 
 const Page = () => {
   return (
     <DetectAdblocker>
       <main>
         <Navbar />
-        <HomePage/>
+        <HomePage />
         {/* <Weather /> */}
+        <About />
         <Blogs />
         <ContactUs />
         <Footer />
