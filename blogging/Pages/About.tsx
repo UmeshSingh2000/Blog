@@ -13,7 +13,7 @@ const About = () => {
 
     const textScale = useTransform(scrollYProgress, [0, 0.5], [0.7, 1])
     // const imageScale = useTransform(scrollYProgress, [0, 0.5], [2, 1])
-    const infoTransform = useTransform(scrollYProgress, [0, 0.5], ['-100px', '0px'])
+    const infoTransform = useTransform(scrollYProgress, [0, 0.5], ['-10px', '0px'])
 
     const footerTransform = useTransform(scrollYProgress, [0, 1], ['200px', '-100px'])
 
@@ -21,9 +21,9 @@ const About = () => {
 
 
     return (
-        <motion.section ref={ref} className="px-8 py-20" style={{ backgroundColor: bgColorTransform }}>
+        <motion.section ref={ref} className="p-5 md:px-8 md:py-20" style={{ backgroundColor: bgColorTransform }}>
             {/* Top Grid */}
-            <div className="grid md:grid-cols-2 gap-12 items-start">
+            <div className="grid md:grid-cols-2 gap-4 md:gap-12 items-start">
                 {/* Left */}
                 <div className="space-y-6 md:px-20">
                     <header>
@@ -54,6 +54,8 @@ const About = () => {
                             whileInView={{ opacity: 1 }}
                         />
                         <motion.div
+                            initial={{ opacity: 0 }}
+                            whileInView={{ opacity: 1 }}
                             style={{ x: infoTransform }}
                         >
                             <h2 className="font-semibold text-gray-900">Lalit Singh</h2>
