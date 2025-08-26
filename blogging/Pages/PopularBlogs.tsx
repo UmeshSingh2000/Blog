@@ -40,18 +40,22 @@ export interface Blog {
 }
 
 const PopularBlogs = () => {
+  const [loading, setLoading] = useState<boolean>(false);
   const [blogs, setBlogs] = useState<Blog[]>([]);
   const { scrollYProgress } = useScroll();
   const headingTransform = useTransform(scrollYProgress, [0, 0.5], ['-100px', '100px'])
 
   const fetchPopularBlog = async () => {
     try {
+      setLoading(true);
       const response = await axios.get<{ blogs: Blog[] }>(`${URL}/getBlogs?limit=4`);
       if (response.data.blogs.length) {
         setBlogs(response.data.blogs);
       }
     } catch (error) {
       console.error(error);
+    } finally {
+      setLoading(false);
     }
   }
 

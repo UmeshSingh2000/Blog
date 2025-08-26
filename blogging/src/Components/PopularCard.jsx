@@ -2,6 +2,7 @@
 import React from "react";
 import Image from "next/image";
 import { motion } from "framer-motion";
+import Link from "next/link";
 
 const PopularCard = ({ blog }) => {
     return (
@@ -63,9 +64,11 @@ const PopularCard = ({ blog }) => {
                     </div>
 
                     {/* Button */}
-                    <button className="bg-red-500 text-white text-sm font-medium px-4 py-1.5 rounded-md hover:bg-red-600 cursor-pointer transition">
-                        Read more
-                    </button>
+                    <Link href={`/blog/${blog._id}`}>
+                        <button className="bg-red-500 text-white text-sm font-medium px-4 py-1.5 rounded-md hover:bg-red-600 cursor-pointer transition">
+                            Read more
+                        </button>
+                    </Link>
                 </div>
             </div>
         </motion.div>
