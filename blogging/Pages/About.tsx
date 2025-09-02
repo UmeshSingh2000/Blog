@@ -29,13 +29,13 @@ const About = () => {
           <header>
             <motion.h1
               className="text-4xl md:text-6xl font-bold leading-snug"
-              style={{ scale: textScale1 }}
+              
             >
               Who we are and{" "}
               <span className="bg-[#F04952] text-white px-2">what we do</span>
             </motion.h1>
             <motion.p
-              style={{ scale: textScale1 }}
+              
               className="text-gray-700 text-lg"
             >
               Meet the Traveler Behind the Stories
@@ -57,7 +57,7 @@ const About = () => {
             <motion.div
               initial={{ opacity: 0 }}
               whileInView={{ opacity: 1 }}
-              style={{ x: infoTransform }}
+             
             >
               <h2 className="font-semibold text-gray-900">Lalit Singh</h2>
               <p className="text-sm text-[#F04952]">Town Planner</p>
@@ -68,7 +68,7 @@ const About = () => {
         {/* Right */}
         <div className="text-gray-700 text-lg leading-relaxed space-y-6 w-3/4">
           <motion.p
-            style={{ scale: textScale1 }}
+            
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
           >
@@ -78,7 +78,7 @@ const About = () => {
             tips, and insights into local culture.
           </motion.p>
           <motion.p
-            style={{ scale: textScale2 }}
+            
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
           >
