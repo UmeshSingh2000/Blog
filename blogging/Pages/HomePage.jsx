@@ -4,7 +4,7 @@ import { motion, useScroll, useTransform } from "framer-motion";
 import Image from "next/image";
 
 const HomePage = () => {
-  
+
   const { scrollYProgress } = useScroll();
 
   // Scale background between 1 and 1.6 as you scroll
@@ -16,9 +16,16 @@ const HomePage = () => {
   const buttonScale = useTransform(scrollYProgress, [0, 1], [1, 0.5]);
 
   return (
-    <section className="relative h-[500px] md:h-[600px] flex items-center md:items-start pl-4 m-4 rounded-xl overflow-hidden">
+    <section
+      className="relative w-full max-w-[1920px] mx-auto h-[500px] md:h-[600px] 
+             flex items-center md:items-start pl-4 mt-16 overflow-hidden"
+    >
+
       {/* Background Image with scroll zoom */}
-      <motion.div style={{ scale: bgScale }} className="absolute inset-0 -z-10">
+      <motion.div
+        style={{ scale: bgScale }}
+        className="absolute inset-0 -z-10 w-full h-full"
+      >
         <Image
           src="/iskra-photography-AtRYCQGiJ_w-unsplash.jpg"
           alt="Hero background"
@@ -32,7 +39,7 @@ const HomePage = () => {
       <div className="w-full relative z-10">
         <motion.p
           style={{ scale: textScale1 }}
-          className="text-white text-4xl md:text-8xl font-bold italic pt-10"
+          className="text-white text-4xl md:text-7xl font-bold italic pt-10"
         >
           “Go where you
           feel <br /> most
@@ -41,7 +48,7 @@ const HomePage = () => {
 
         <motion.p
           style={{ scale: textScale2 }}
-          className="text-white text-md md:text-2xl mt-4 font-light tracking-wide"
+          className="text-white text-md md:text-xl mt-4 font-light tracking-wide"
         >
           Discover stories that spark your next adventure
         </motion.p>

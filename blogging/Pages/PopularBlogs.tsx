@@ -64,24 +64,27 @@ const PopularBlogs = () => {
   }, [])
 
   return (
+      <div className="w-full max-w-[1920px] mx-auto">
     <div className='bg-[#E8E8E8] pb-2'>
-      <header className='bg-amber-500 overflow-hidden'>
-        <motion.h1
-          className='text-4xl md:text-6xl font-bold '
-          style={{ x: headingTransform }}
-        >
-          Top Stories.
-        </motion.h1>
-      </header>
-      <section>
-        {blogs.length > 0 ? (
-          blogs.map((blog) => (
-            <PopularCard key={blog._id} blog={blog} />
-          ))
-        ) : (
-          <p>No popular blogs found.</p>
-        )}
-      </section>
+
+        <header className='bg-amber-500 overflow-hidden'>
+          <motion.h1
+            className='text-4xl md:text-6xl font-bold '
+            style={{ x: headingTransform }}
+          >
+            Top Stories.
+          </motion.h1>
+        </header>
+        <section>
+          {blogs.length > 0 ? (
+            blogs.map((blog) => (
+              <PopularCard key={blog._id} blog={blog} />
+            ))
+          ) : (
+            <p>No popular blogs found.</p>
+          )}
+        </section>
+      </div>
     </div>
   )
 }

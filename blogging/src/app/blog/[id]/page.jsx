@@ -119,8 +119,8 @@ export default function BlogDetailPage({ params }) {
   return (
     <>
       <Navbar />
-      <ProgressBar />
-      <div className="max-w-7xl mx-auto px-4 py-10">
+      {/* <ProgressBar /> */}
+      <div className="max-w-7xl mx-auto px-4 mt-16 py-10">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Main Content - Left Side */}
           <div className="lg:col-span-2">

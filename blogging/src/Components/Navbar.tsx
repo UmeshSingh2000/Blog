@@ -17,8 +17,8 @@ const Navbar = () => {
 
   return (
     <header
-      className={`w-full sticky top-0 z-50 transition-all duration-300 ${
-        scrolled ? "bg-white/90 shadow-md py-2" : "bg-white py-4"
+      className={`w-full fixed top-0 z-50 transition-all duration-300 ${
+        scrolled ? "bg-white/90 shadow-md py-2" : "bg-wh ite py-4"
       }`}
     >
       <nav className="max-w-7xl mx-auto flex items-center justify-between px-2 transition-all duration-300">

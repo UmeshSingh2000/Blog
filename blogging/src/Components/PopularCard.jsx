@@ -7,7 +7,7 @@ import Link from "next/link";
 const PopularCard = ({ blog }) => {
     return (
         <motion.div
-            className="flex flex-col md:flex-row gap-4 p-4 mt-5 rounded-lg max-w-4xl mx-auto"
+            className="flex flex-col md:flex-row gap-4 p-4 mt-5 rounded-bl-2xl max-w-4xl mx-auto"
             initial={{ opacity: 0, x: 100 }}
             whileInView={{ opacity: 1, x: 0 }}
         >
