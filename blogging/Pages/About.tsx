@@ -66,7 +66,7 @@ const About = () => {
         </div>
 
         {/* Right */}
-        <div className="text-gray-700 text-lg leading-relaxed space-y-6 w-3/4">
+        <div className="text-gray-700 text-lg leading-relaxed space-y-6 md:w-3/4">
           <motion.p
             
             initial={{ opacity: 0 }}

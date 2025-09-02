@@ -28,7 +28,7 @@ export interface Blog {
   _id: string;
   title: string;
   excerpt: string;
-  status: "draft" | "published" | "archived";
+  status: "blocked" | "published" | "pending";
   author: BlogAuthor;
   coverImage: BlogCoverImage;
   tags: BlogTag[];
@@ -64,8 +64,8 @@ const PopularBlogs = () => {
   }, [])
 
   return (
-      <div className="w-full max-w-[1920px] mx-auto">
-    <div className='bg-[#E8E8E8] pb-2'>
+    <div className="w-full max-w-[1920px] mx-auto">
+      <div className='bg-[#E8E8E8] pb-2'>
 
         <header className='bg-amber-500 overflow-hidden'>
           <motion.h1
@@ -77,14 +77,25 @@ const PopularBlogs = () => {
         </header>
         <section>
           {blogs.length > 0 ? (
-            blogs.map((blog) => (
+            blogs.slice(0, 2).map((blog) => (
               <PopularCard key={blog._id} blog={blog} />
             ))
           ) : (
             <p>No popular blogs found.</p>
           )}
         </section>
+        <section className=''>
+          {blogs.length > 0 ? (
+            blogs.slice(2).map((blog) => (
+              <PopularCard key={blog._id} blog={blog} />
+            ))
+          ) : (
+            <p>No popular blogs found.</p>
+          )}
+        </section>
+
       </div>
+
     </div>
   )
 }
