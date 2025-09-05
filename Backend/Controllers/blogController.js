@@ -351,9 +351,9 @@ const getBlogs = async (req, res) => {
     const limit = parseInt(req.query.limit) || 10;
     const skip = (page - 1) * limit;
 
-    const totalBlogs = await Blog.countDocuments();
+    const totalBlogs = await Blog.countDocuments({ status: "published" });
 
-    const blogs = await Blog.find({ status: "published", category: { $ne: 'tech' } })
+    const blogs = await Blog.find({ status: "published" })
       .skip(skip)
       .limit(limit)
       .populate('author', 'name email profilePicture')

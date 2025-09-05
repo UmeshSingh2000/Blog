@@ -1,6 +1,7 @@
 import React from 'react'
 import Image from 'next/image'
 import defaultUser from '../../public/default User.png'
+import Link from 'next/link'
 
 interface Blog {
   title: string
@@ -35,23 +36,22 @@ const Card: React.FC<CardProps> = ({ blog }) => {
     typeof blog.coverImage === 'string' ? blog.coverImage : blog.coverImage.url || ''
 
   return (
-    <article className="group relative max-w-sm bg-white rounded-2xl shadow-sm hover:shadow-xl transition-all duration-500 cursor-pointer border border-gray-100 hover:border-gray-200">
+    <article className="relative bg-white h-full flex flex-col">
       {/* Image */}
-      <div className="relative overflow-hidden rounded-t-2xl">
-        <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+      <div className="relative overflow-hidden">
         <Image
           src={coverImageUrl}
           alt="Blog cover"
-          className="w-full h-64 object-cover transform transition-transform duration-700 group-hover:scale-110"
+          className="w-full h-48 object-cover"
           width={500}
           height={300}
           unoptimized
         />
 
         {hasMoreTags && (
-          <div className="absolute top-4 right-4 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-2 group-hover:translate-y-0 z-20">
-            <div className="bg-white/90 backdrop-blur-sm rounded-lg px-3 py-1 shadow-lg">
-              <span className="text-xs font-medium text-gray-700">
+          <div className="absolute top-4 right-4 z-20">
+            <div className="bg-[#F04952] backdrop-blur-sm rounded-lg px-3 py-1 shadow-md">
+              <span className="text-xs font-medium text-white">
                 +{hiddenTags.length} tags
               </span>
             </div>
@@ -60,75 +60,50 @@ const Card: React.FC<CardProps> = ({ blog }) => {
       </div>
 
       {/* Content */}
-      <div className="p-6 space-y-2">
-        <h2 className="text-xl font-bold text-gray-900 leading-tight group-hover:text-blue-600 transition-colors duration-300 line-clamp-2">
+      <div className="p-4 flex flex-col flex-1">
+        <h2 className="text-lg font-bold text-gray-900 leading-tight line-clamp-2">
           {blog.title}
         </h2>
 
-        <div className="overflow-hidden transition-all duration-300 max-h-20 opacity-100 md:max-h-0 md:opacity-0 md:group-hover:max-h-20 md:group-hover:opacity-100">
-          <p className="text-gray-600 text-sm leading-relaxed line-clamp-3 group-hover:text-gray-700 transition-colors duration-300">
-            {blog.excerpt}
-          </p>
+        <p className="text-gray-600 text-sm leading-relaxed line-clamp-2 mt-2">
+          {blog.excerpt}
+        </p>
+
+        {/* Tags */}
+        <div className="flex flex-wrap gap-2 mt-3">
+          {visibleTags.map((tag, index) => (
+            <span
+              key={tag._id}
+              className={`px-3 py-1.5 text-xs font-medium rounded-full
+            ${index === 0
+                  ? 'bg-blue-50 text-[#F04952]'
+                  : 'bg-gray-50 text-gray-600'}
+          `}
+            >
+              {tag.name}
+            </span>
+          ))}
+
+          {hasMoreTags && (
+            <span className="px-3 py-1.5 text-xs font-medium bg-gray-100 text-gray-600 rounded-full border border-gray-200">
+              +{hiddenTags.length} more
+            </span>
+          )}
         </div>
 
-        <div className="relative transition-all duration-300 max-h-20 opacity-100 md:max-h-0 md:opacity-0 md:group-hover:max-h-20 md:group-hover:opacity-100">
-          <div className="flex flex-wrap gap-2">
-            {visibleTags.map((tag, index) => (
-              <span
-                key={tag._id}
-                className={`
-                  px-3 py-1.5 text-xs font-medium rounded-full transition-all duration-300
-                  ${index === 0
-                    ? 'bg-blue-50 text-blue-700 hover:bg-blue-100'
-                    : 'bg-gray-50 text-gray-600 hover:bg-gray-100'
-                  }
-                  hover:scale-105 cursor-pointer
-                `}
-                title={tag.name}
-              >
-                {tag.name}
-              </span>
-            ))}
-
-            {hasMoreTags && (
-              <div className="relative group/tooltip">
-                <span className="px-3 py-1.5 text-xs font-medium bg-gradient-to-r from-gray-50 to-gray-100 text-gray-600 rounded-full hover:from-gray-100 hover:to-gray-150 transition-all duration-300 hover:scale-105 cursor-pointer border border-gray-200">
-                  +{hiddenTags.length} more
-                </span>
-
-                {/* Tooltip */}
-                <div className="invisible group-hover/tooltip:visible opacity-0 group-hover/tooltip:opacity-100 absolute bottom-full left-1/2 transform -translate-x-1/2 mb-3 z-50 transition-all duration-300">
-                  <div className="bg-gray-900 text-white text-xs rounded-lg px-3 py-2 shadow-xl max-w-xs whitespace-nowrap">
-                    <div className="flex flex-wrap gap-1">
-                      {hiddenTags.map((tag, index) => (
-                        <span key={tag._id}>
-                          {tag.name}{index < hiddenTags.length - 1 ? ', ' : ''}
-                        </span>
-                      ))}
-                    </div>
-                    <div className="absolute top-full left-1/2 transform -translate-x-1/2 border-4 border-transparent border-t-gray-900"></div>
-                  </div>
-                </div>
-              </div>
-            )}
-          </div>
-        </div>
-
-        {/* Author + Read & Views */}
-        <div className="flex items-center justify-between pt-4 border-t border-gray-100">
+        {/* Footer (Author + Read & Views) */}
+        <div className="flex items-center justify-between pt-4 border-t border-gray-100 mt-auto">
           {/* Author Info */}
           <div className="flex items-center space-x-3">
-            <div className="relative">
-              <Image
-                className="w-10 h-10 rounded-full object-cover"
-                src={blog.author.profilePicture || defaultUser}
-                alt="Author avatar"
-                width={40}
-                height={40}
-              />
-            </div>
+            <Image
+              className="w-10 h-10 rounded-full object-cover"
+              src={blog.author.profilePicture || defaultUser}
+              alt="Author avatar"
+              width={40}
+              height={40}
+            />
             <div>
-              <p className="text-sm font-semibold text-gray-900 hover:text-blue-600 transition-colors duration-300 cursor-pointer">
+              <p className="text-sm font-semibold text-gray-900">
                 {blog.author.name}
               </p>
               <p className="text-xs text-gray-500">Author</p>
@@ -136,18 +111,16 @@ const Card: React.FC<CardProps> = ({ blog }) => {
           </div>
 
           {/* Read & Views */}
-          <div className="flex flex-col items-end text-blue-600 opacity-100 md:opacity-0 group-hover:opacity-100
- transition-all duration-300 transform translate-x-2 group-hover:translate-x-0 space-y-1 text-sm">
-            {/* Read */}
-            <div className="flex items-center">
-              <span className="mr-1 font-medium">Read</span>
-              <svg className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-              </svg>
-            </div>
-
-            {/* Views */}
-            <div className="flex items-center text-gray-500 text-xs">
+          <div className="flex flex-col items-end text-sm text-gray-600 space-y-1">
+            <Link href={`/blog/${blog._id}`} className="text-decoration-none">
+              <div className="flex items-center">
+                <span className="mr-1 font-medium text-[#F04952]">Read</span>
+                <svg className="w-4 h-4 text-[#F04952]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                </svg>
+              </div>
+            </Link>
+            <div className="flex items-center text-xs text-gray-500">
               <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5s8.268 2.943 9.542 7c-1.274 4.057-5.065 7-9.542 7s-8.268-2.943-9.542-7z" />
@@ -158,6 +131,8 @@ const Card: React.FC<CardProps> = ({ blog }) => {
         </div>
       </div>
     </article>
+
+
   )
 }
 

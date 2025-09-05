@@ -59,7 +59,7 @@ const HomePage = () => {
             className="flex cursor-pointer items-center justify-center gap-2 px-4 py-2 
              bg-[#F04952] text-white font-semibold rounded-md shadow-lg"
           >
-            <a href="#blogs">Explore</a>
+            <a href="/blogs">Explore</a>
           </button>
         </motion.div>
       </div>

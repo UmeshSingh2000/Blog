@@ -49,16 +49,14 @@ const Navbar = () => {
 
   return (
     <header
-      className={`w-full fixed top-0 z-50 transition-all duration-300 ${
-        scrolled ? "bg-white/90 shadow-md py-2" : "bg-white py-4"
-      }`}
+      className={`w-full fixed top-0 z-50 transition-all duration-300 ${scrolled ? "bg-white/90 shadow-md py-2" : "bg-white py-4"
+        }`}
     >
       <nav className="max-w-7xl mx-auto flex items-center justify-between px-4 transition-all duration-300">
         {/* Logo */}
         <div
-          className={`font-extrabold tracking-tight transition-all duration-300 ${
-            scrolled ? "text-2xl text-gray-900" : "text-3xl text-gray-800"
-          }`}
+          className={`font-extrabold tracking-tight transition-all duration-300 ${scrolled ? "text-2xl text-gray-900" : "text-3xl text-gray-800"
+            }`}
         >
           <a href="/">
             Potato<span className="text-[#F04952]">trails</span>
@@ -67,28 +65,34 @@ const Navbar = () => {
 
         {/* Desktop Nav Links */}
         <ul className="hidden md:flex items-center gap-8 text-sm font-medium text-gray-700">
-          {["Home", "About", "Blogs", "Shop", "Contact"].map((item, idx) => (
+          {[
+            { name: "Home", href: "/" },
+            { name: "About", href: "/#about" },
+            { name: "Blogs", href: "/blogs" },
+            { name: "Shop", href: "/shop" },
+            { name: "Contact", href: "/#contact" },
+          ].map((item, idx) => (
             <li
               key={idx}
               className="hover:text-[#F04952] transition-colors duration-200"
             >
-              <a href={item === "Blogs" ? "#blogs" : `/${item.toLowerCase()}`}>
-                {item}
+              <a href={item.href}>
+                {item.name}
               </a>
             </li>
           ))}
         </ul>
+
 
         {/* Desktop Admin Button */}
         <div>
           <a
             href={process.env.NEXT_PUBLIC_ADMIN_URL}
             target="_blank"
-            className={`hidden md:inline-flex items-center gap-2 px-4 py-2 rounded-md shadow-md transition-all duration-300 ${
-              scrolled
-                ? "bg-[#F04952] text-white hover:bg-[#f9545c]"
-                : "bg-[#F04952] text-white"
-            }`}
+            className={`hidden md:inline-flex items-center gap-2 px-4 py-2 rounded-md shadow-md transition-all duration-300 ${scrolled
+              ? "bg-[#F04952] text-white hover:bg-[#f9545c]"
+              : "bg-[#F04952] text-white"
+              }`}
           >
             <FontAwesomeIcon icon={faRightToBracket} className="w-4 h-4" />
             Admin
@@ -138,11 +142,7 @@ const Navbar = () => {
                 >
                   <a
                     href={
-                      item === "Blogs"
-                        ? "#blogs"
-                        : item === "Merch"
-                        ? "/merch"
-                        : `/${item.toLowerCase()}`
+                      `/${item.toLowerCase()}`
                     }
                   >
                     {item}

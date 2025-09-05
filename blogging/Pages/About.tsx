@@ -19,6 +19,7 @@ const About = () => {
   return (
     <motion.section
       ref={ref}
+      id="about"
       style={{ backgroundColor: bgColorTransform }}
       className="relative w-full max-w-[1920px] mx-auto p-5 md:px-8 md:py-20"
     >
@@ -66,7 +67,7 @@ const About = () => {
         </div>
 
         {/* Right */}
-        <div className="text-gray-700 text-lg leading-relaxed space-y-6 md:w-3/4">
+        <div className="text-gray-700 text-md leading-relaxed space-y-6 md:w-3/4">
           <motion.p
             
             initial={{ opacity: 0 }}

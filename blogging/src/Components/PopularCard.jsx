@@ -46,7 +46,7 @@ const PopularCard = ({ blog }) => {
                 </div>
 
                 {/* Author + Button */}
-                <div className="flex items-center justify-between mt-4">
+                <div className="flex flex-col justify-center gap-2 mt-4">
                     {/* Author */}
                     <div className="flex items-center gap-2">
                         <div className="w-7 h-7 rounded-full overflow-hidden">
