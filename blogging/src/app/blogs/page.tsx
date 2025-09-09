@@ -24,7 +24,8 @@ interface Blog {
     url: string
     subtitle: string
   }
-  views: number
+  views: number,
+  slug: string
 }
 
 const PAGE_SIZE = 12 // Number of blogs per page

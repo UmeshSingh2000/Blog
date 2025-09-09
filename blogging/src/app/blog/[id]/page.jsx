@@ -26,7 +26,7 @@ export default function BlogDetailPage({ params }) {
   const incrementCount = async () => {
     try {
       const res = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/incrementCount/${id}`);
-      if(res.status === 200) {
+      if (res.status === 200) {
         console.log("View count incremented successfully");
       }
     } catch (error) {
@@ -44,9 +44,11 @@ export default function BlogDetailPage({ params }) {
           cache: 'no-store',
         })
 
+
         if (!res.ok) return notFound()
 
         const data = await res.json()
+        console.log(data)
         setUserId(data.blog.author?._id || null)
         setBlog(data.blog)
 

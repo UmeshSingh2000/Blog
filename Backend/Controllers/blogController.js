@@ -6,6 +6,7 @@ const Blog = require("../Database/Models/blogSchema");
 const User = require('../Database/Models/userSchema');
 const Tag = require('../Database/Models/tagsSchema');
 const sendEmail = require('../Helpers/mailer');
+const generateSlug = require('../Helpers/generateSlug');
 
 // onblog Creation send email to all subscribers
 
@@ -118,12 +119,19 @@ const createBlog = async (req, res) => {
         }
       });
 
+
+    //create unique slug
+    const slug = generateSlug(title)
+
+
+
     // Create and save blog
     const newBlog = new Blog({
       title,
       excerpt,
       content,
       author,
+      slug,
       coverImage: {
         url: coverImageResult.secure_url,
         public_id: coverImageResult.public_id,
@@ -406,10 +414,12 @@ const getMyBlogs = async (req, res) => {
 const getBlogById = async (req, res) => {
   try {
     const { id } = req.params;
-    if (!validateId(id)) {
-      return res.status(400).json({ message: 'Invalid blog ID' });
-    }
-    const blog = await Blog.findById(id).populate('author', 'name email about profilePicture title education').populate('tags', 'name');
+    // if (!validateId(id)) {
+    //   return res.status(400).json({ message: 'Invalid blog ID' });
+    // }
+    const blog = await Blog.findOne({
+      slug: id
+    }).populate('author', 'name email about profilePicture title education').populate('tags', 'name');
     if (!blog) {
       return res.status(404).json({ message: 'Blog not found' });
     }
@@ -526,10 +536,10 @@ const getBlogSuggestion = async (req, res) => {
 const incrementCount = async (req, res) => {
   try {
     const { id } = req.params;
-    if (!validateId(id)) {
-      return res.status(400).json({ message: 'Invalid blog ID' });
-    }
-    const blog = await Blog.findByIdAndUpdate(id, { $inc: { views: 1 } }, { new: true });
+    // if (!validateId(id)) {
+    //   return res.status(400).json({ message: 'Invalid blog ID' });
+    // }
+    const blog = await Blog.findOneAndUpdate({ slug: id }, { $inc: { views: 1 } }, { new: true });
     if (!blog) {
       return res.status(404).json({ message: 'Blog not found' });
     }
@@ -538,6 +548,22 @@ const incrementCount = async (req, res) => {
     console.error('Error incrementing blog views:', error);
     res.status(500).json({ message: 'Server error', error: error.message });
 
+  }
+}
+
+
+//generateSlug for already created blogs
+const generateSlugs = async () => {
+  try {
+    const blogs = await Blog.find({ slug: { $exists: false } });
+    for (const blog of blogs) {
+      blog.slug = generateSlug(blog.title);
+      await blog.save();
+    }
+    res.status(200).json({ message: 'Slugs generated successfully for blogs without slugs' });
+  } catch (error) {
+    console.error('Error generating slugs for blogs:', error);
+    res.status(500).json({ message: 'Server error', error: error.message });
   }
 }
 
@@ -554,5 +580,6 @@ module.exports = {
   addCommentsToBlog,
   getblogComments,
   getBlogSuggestion,
-  incrementCount
+  incrementCount,
+  generateSlugs
 }

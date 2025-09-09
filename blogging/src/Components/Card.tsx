@@ -21,7 +21,8 @@ interface Blog {
     url: string
     subtitle: string
   }
-  views: number
+  views: number,
+  slug: string
 }
 
 interface CardProps {
@@ -112,7 +113,7 @@ const Card: React.FC<CardProps> = ({ blog }) => {
 
           {/* Read & Views */}
           <div className="flex flex-col items-end text-sm text-gray-600 space-y-1">
-            <Link href={`/blog/${blog._id}`} className="text-decoration-none">
+            <Link href={`/blog/${blog.slug}`} className="text-decoration-none">
               <div className="flex items-center">
                 <span className="mr-1 font-medium text-[#F04952]">Read</span>
                 <svg className="w-4 h-4 text-[#F04952]" fill="none" stroke="currentColor" viewBox="0 0 24 24">

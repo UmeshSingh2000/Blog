@@ -64,7 +64,7 @@ const PopularCard = ({ blog }) => {
                     </div>
 
                     {/* Button */}
-                    <Link href={`/blog/${blog._id}`}>
+                    <Link href={`/blog/${blog.slug}`}>
                         <button className="bg-red-500 text-white text-sm font-medium px-4 py-1.5 rounded-md hover:bg-red-600 cursor-pointer transition">
                             Read more
                         </button>
