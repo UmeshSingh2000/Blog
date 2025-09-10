@@ -21,6 +21,7 @@ interface Blog {
         subtitle: string;
     };
     views: number;
+    slug:string;
 }
 
 export default async function Blogs() {
