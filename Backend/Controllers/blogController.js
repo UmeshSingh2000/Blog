@@ -510,14 +510,14 @@ const getBlogSuggestion = async (req, res) => {
   try {
     const { id } = req.params; // author Id
     const { blogId } = req.query;
-    if (!validateId(id)) {
-      return res.status(400).json({ message: 'Invalid author ID' });
-    }
-    const blogs = await Blog.find({ author: id, status: "published", _id: { $ne: blogId } })
-      .select('title excerpt coverImage author createdAt')
+    // if (!validateId(id)) {
+    //   return res.status(400).json({ message: 'Invalid author ID' });
+    // }
+    const blogs = await Blog.find({ author: id, status: "published", slug: { $ne: blogId } })
+      .select('title excerpt coverImage author createdAt slug')
       .populate('author', 'name profilePicture')
       .sort({ createdAt: -1 }) // optional: sort by newest
-      .limit(1); // limit to 5 suggestions
+      .limit(1); // limit to 1 suggestions
     if (!blogs.length) {
       return res.status(404).json({ message: 'No blog suggestions found for this author' });
     }

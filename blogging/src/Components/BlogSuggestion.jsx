@@ -116,7 +116,7 @@ const BlogSuggestion = ({ blogId, authorId }) => {
                         {blogs.map((blog, index) => (
                             <Link 
                                 key={blog._id} 
-                                href={`/blog/${blog._id}`}
+                                href={`/blog/${blog.slug}`}
                                 className="group block transform transition-all duration-300 hover:scale-105"
                             >
                                 <div className="relative">
