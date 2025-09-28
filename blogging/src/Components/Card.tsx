@@ -37,7 +37,7 @@ const Card: React.FC<CardProps> = ({ blog }) => {
     typeof blog.coverImage === 'string' ? blog.coverImage : blog.coverImage.url || ''
 
   return (
-    <article className="relative bg-white h-full flex flex-col">
+    <article className="relative bg-gray-100 rounded-2xl h-full flex flex-col">
       {/* Image */}
       <div className="relative overflow-hidden">
         <Image
@@ -49,7 +49,7 @@ const Card: React.FC<CardProps> = ({ blog }) => {
           unoptimized
         />
 
-        {hasMoreTags && (
+        {/* {hasMoreTags && (
           <div className="absolute top-4 right-4 z-20">
             <div className="bg-[#F04952] backdrop-blur-sm rounded-lg px-3 py-1 shadow-md">
               <span className="text-xs font-medium text-white">
@@ -57,7 +57,7 @@ const Card: React.FC<CardProps> = ({ blog }) => {
               </span>
             </div>
           </div>
-        )}
+        )} */}
       </div>
 
       {/* Content */}
@@ -75,11 +75,7 @@ const Card: React.FC<CardProps> = ({ blog }) => {
           {visibleTags.map((tag, index) => (
             <span
               key={tag._id}
-              className={`px-3 py-1.5 text-xs font-medium rounded-full
-            ${index === 0
-                  ? 'bg-blue-50 text-[#F04952]'
-                  : 'bg-gray-50 text-gray-600'}
-          `}
+              className={`px-3 py-1.5 text-xs font-medium rounded-full bg-gray-50 text-gray-600`}
             >
               {tag.name}
             </span>
