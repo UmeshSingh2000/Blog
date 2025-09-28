@@ -309,7 +309,7 @@ const EditBlogInteractive = () => {
 
     try {
       setLoading(true);
-      const response = await axios.put(`${api}/updateBlog/${blogId}`, formData, {
+      const response = await axios.put(`${api}/updateBlog/${blogData._id}`, formData, {
         headers: {
           "Content-Type": "multipart/form-data",
           Authorization: `Bearer ${localStorage.getItem("token")}`,
