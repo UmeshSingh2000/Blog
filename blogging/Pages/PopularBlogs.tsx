@@ -72,7 +72,7 @@ const PopularBlogs = () => {
             className='text-4xl md:text-6xl font-bold '
             style={{ x: headingTransform }}
           >
-            Top Stories.
+            Trending Trails.
           </motion.h1>
         </header>
         <section>
