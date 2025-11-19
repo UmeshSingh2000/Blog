@@ -37,25 +37,35 @@ export default function AllBlogs() {
   const [search, setSearch] = useState('')
   const [filterExpanded, setFilterExpanded] = useState(true)
   const [selectedCategory, setSelectedCategory] = useState<string>('')
+  const [currentPage, setCurrentPage] = useState(1)
+  const [totalPages, setTotalPages] = useState(1)
+
 
   const URL = process.env.NEXT_PUBLIC_API_URL
 
   // Fetch once
-  async function fetchBlogs() {
+  async function fetchBlogs(page = 1) {
     try {
       setIsLoading(true)
       setError('')
-      const res = await fetch(`${URL}/getBlogs`, { cache: 'no-store' })
+      const res = await fetch(`${URL}/getBlogs?page=${page}&limit=6`, {
+        cache: 'no-store'
+      })
       if (!res.ok) throw new Error('Failed to fetch')
       const data = await res.json()
       setAllBlogs(data.blogs ?? [])
       setBlogs(data.blogs ?? [])
+      setTotalPages(data.totalPages || 1)
+      setCurrentPage(data.currentPage || 1)
     } catch (err: any) {
       setError(err.message || 'Something went wrong')
     } finally {
       setIsLoading(false)
     }
   }
+  useEffect(() => {
+    fetchBlogs(currentPage)
+  }, [currentPage])
 
   useEffect(() => {
     fetchBlogs()
@@ -187,7 +197,42 @@ export default function AllBlogs() {
           ) : (
             <p className="text-center mt-10">No blogs found.</p>
           )}
+          {totalPages > 1 && (
+            <div className="flex justify-end w-full mt-10 gap-2">
+              {/* Prev Button */}
+              <button
+                disabled={currentPage === 1}
+                onClick={() => setCurrentPage((p) => p - 1)}
+                className="px-3 py-1 border rounded cursor-pointer disabled:cursor-not-allowed disabled:opacity-50"
+              >
+                Prev
+              </button>
+
+              {/* Page Numbers */}
+              {Array.from({ length: totalPages }, (_, i) => (
+                <button
+                  key={i}
+                  onClick={() => setCurrentPage(i + 1)}
+                  className={`px-3 py-1 border cursor-pointer rounded ${currentPage === i + 1 ? 'bg-black text-white' : 'bg-white'
+                    }`}
+                >
+                  {i + 1}
+                </button>
+              ))}
+
+              {/* Next Button */}
+              <button
+                disabled={currentPage === totalPages}
+                onClick={() => setCurrentPage((p) => p + 1)}
+                className="px-3 py-1 border rounded cursor-pointer disabled:cursor-not-allowed disabled:opacity-50"
+              >
+                Next
+              </button>
+            </div>
+          )}
         </main>
+
+
       </section>
     </>
   )
