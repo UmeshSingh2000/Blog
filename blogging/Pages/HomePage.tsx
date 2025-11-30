@@ -186,7 +186,7 @@ function FeaturedArticles() {
     <section className="w-full flex flex-col items-center mt-9 mb-20 ">
 
       <div className="mb-4">
-        <Image src="/pt.png" alt="PT Logo" width={70} height={70} />
+        <Image src="/PT.png" alt="PT Logo" width={70} height={70} />
       </div>
 
       <h2 className="text-3xl font-bold text-center tracking-tight">

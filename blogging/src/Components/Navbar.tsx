@@ -147,7 +147,7 @@ const Navbar = () => {
 
           {/* Logo */}
           <a href="/" className="flex items-center gap-2">
-            <Image src="/pt.png" width={48} height={48} alt="Logo" />
+            <Image src="/PT.png" width={48} height={48} alt="Logo" />
             <span className="font-semibold tracking-tight text-lg text-gray-800 hidden sm:inline">
               Potato<span className="text-[#F04952]">Trails</span>
             </span>
