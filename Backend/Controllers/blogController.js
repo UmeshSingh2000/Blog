@@ -355,6 +355,7 @@ const updateBlog = async (req, res) => {
 
 const getBlogs = async (req, res) => {
   try {
+    // console.log('running')
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 10;
     const skip = (page - 1) * limit;
@@ -514,7 +515,7 @@ const getBlogSuggestion = async (req, res) => {
     //   return res.status(400).json({ message: 'Invalid author ID' });
     // }
     const blogs = await Blog.find({ author: id, status: "published", slug: { $ne: blogId } })
-      .select('title excerpt coverImage author createdAt slug')
+      .select('title excerpt coverImage author createdAt slug category views')
       .populate('author', 'name profilePicture')
       .sort({ createdAt: -1 }) // optional: sort by newest
       .limit(1); // limit to 1 suggestions
@@ -567,6 +568,29 @@ const generateSlugs = async () => {
   }
 }
 
+const getRandomBlogs = async (req, res) => {
+  try {
+    const randomBlogs = await Blog.aggregate([
+      { $match: { status: "published" } },
+      { $sample: { size: 5 } }, // get 5 random blogs
+      {
+        $project: {
+          title: 1,
+          coverImage: 1,
+          createdAt: 1,
+          slug: 1,
+        }
+      }
+    ])
+    res.status(200).json({ message: 'Random blogs retrieved successfully', blogs: randomBlogs });
+  }
+  catch (error) {
+    console.error('Error retrieving random blogs:', error);
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+}
+
+
 
 
 module.exports = {
@@ -581,5 +605,6 @@ module.exports = {
   getblogComments,
   getBlogSuggestion,
   incrementCount,
-  generateSlugs
+  generateSlugs,
+  getRandomBlogs
 }

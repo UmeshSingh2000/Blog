@@ -49,7 +49,7 @@ app.use(cors({
 
 app.get('/', async (req, res) => {
     try {
-        await fetch('https://keepalive-hbed.onrender.com/')
+        // await fetch('https://keepalive-hbed.onrender.com/')
         // await fetch('https://keepalive-5ujp.onrender.com');
         res.json({ message: 'Its working' })
     }

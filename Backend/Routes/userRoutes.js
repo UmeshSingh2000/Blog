@@ -1,10 +1,10 @@
 const express = require('express');
 const multer = require('multer');
 const router = express.Router();
-const { loginUser, sendOtp, verifyOtp, resetPassword, getMyData, verifyPassword, updateProfile, subscribeToNewsletter, unsubscribeFromNewsletter, contactMeEmailSender, updateProfilePicture, updateUserAbout, updateEducation } = require('../Controllers/userController');
+const { loginUser, sendOtp, verifyOtp, resetPassword, getMyData, verifyPassword, updateProfile, subscribeToNewsletter, unsubscribeFromNewsletter, contactMeEmailSender, updateProfilePicture, updateUserAbout, updateEducation, getWriters } = require('../Controllers/userController');
 const { loginLimiter } = require('../Helpers/rateLimiter');
 const authenticateToken = require('../Middlewares/authenticateToken');
-const { createBlog, deleteBlog, updateBlog, getBlogs, getBlogById, getMyBlogs, addCommentToBlog, addCommentsToBlog, getblogComments, getBlogSuggestion, incrementCount, generateSlugs } = require('../Controllers/blogController');
+const { createBlog, deleteBlog, updateBlog, getBlogs, getBlogById, getMyBlogs, addCommentToBlog, addCommentsToBlog, getblogComments, getBlogSuggestion, incrementCount, generateSlugs, getRandomBlogs } = require('../Controllers/blogController');
 const { getTags } = require('../Controllers/tagController');
 const otpIsVerified = require('../Middlewares/otpIsVerified');
 const fetchWeather = require('../Helpers/fetchWeather');
@@ -39,6 +39,9 @@ router.post('/verifyOtp', loginLimiter, verifyOtp) // verify otp for password re
 router.post('/resetPassword', loginLimiter, otpIsVerified, resetPassword); // reset password after otp verification
 
 
+
+router.get('/getWriters',getWriters); // for landing page
+router.get('/getRandomBlogs', getRandomBlogs);
 
 
 

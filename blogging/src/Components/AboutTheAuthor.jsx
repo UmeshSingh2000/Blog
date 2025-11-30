@@ -1,90 +1,57 @@
-import React from 'react';
+import React from "react";
 
 export default function AboutAuthor({ author }) {
     return (
-        <div className="min-h-screen bg-gradient-to-br from-slate-50 to-stone-100">
-            <div className="container mx-auto px-6 py-16 max-w-4xl">
+        <section className="max-w-6xl flex flex-col items-center mx-auto px-4 py-10">
 
-                {/* Header Section */}
-                <div className="text-center mb-16">
-                    <div className="inline-block w-px h-12 bg-gradient-to-b from-transparent via-slate-400 to-transparent mb-8" />
-                    <h1 className="text-4xl md:text-5xl font-light text-slate-800 tracking-wide">
-                        About the Author
-                    </h1>
-                    <div className="inline-block w-px h-12 bg-gradient-to-b from-slate-400 via-transparent to-transparent mt-8" />
+            <h2 className="text-xl font-semibold text-gray-900 mb-6">
+                About the Author
+            </h2>
+
+            <div className="flex items-start gap-5 p-5 ">
+
+                {/* Avatar */}
+                <div className="w-20 h-20 rounded-full overflow-hidden flex-shrink-0">
+                    <img
+                        src={author?.profilePicture}
+                        alt={author?.name}
+                        className="w-full h-full object-cover"
+                    />
                 </div>
 
-                {/* Main Content */}
-                <div className="grid md:grid-cols-5 gap-12 items-start">
+                {/* Info */}
+                <div className="flex-1">
+                    <h3 className="text-lg font-medium text-gray-900">
+                        {author?.name}
+                    </h3>
 
-                    {/* Profile Image Section */}
-                    <div className="md:col-span-2 flex flex-col items-center">
-                        <div className="relative">
-                            <div className="w-48 h-48 rounded-full overflow-hidden shadow-2xl ring-4 ring-white">
-                                <img
-                                    src={author?.profilePicture}
-                                    alt={author?.name}
-                                    className="w-full h-full object-cover"
-                                />
-                            </div>
-                            <div className="absolute -bottom-2 -right-2 w-12 h-12 bg-teal-600 rounded-full flex items-center justify-center shadow-lg">
-                                <div className="w-6 h-6 bg-white rounded-sm transform rotate-45" />
-                            </div>
+                    {author?.title && (
+                        <p className="text-sm text-gray-600 mb-2">{author.title}</p>
+                    )}
+
+                    {/* Short bio */}
+                    <p className="text-sm text-gray-700 leading-relaxed line-clamp-3">
+                        {author?.about || "This author has not added their bio yet."}
+                    </p>
+
+                    {/* Education small and clean */}
+                    {author?.education?.length > 0 && (
+                        <div className="mt-3">
+                            <h4 className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1">
+                                Education
+                            </h4>
+
+                            <ul className="text-xs text-gray-600 space-y-1">
+                                {author.education.map((item, i) => (
+                                    <li key={i} className="leading-snug">
+                                        • {item}
+                                    </li>
+                                ))}
+                            </ul>
                         </div>
-
-                        <h2 className="text-2xl font-light text-slate-800 mt-8 text-center tracking-wide">
-                            {author?.name}
-                        </h2>
-
-                        {author?.title && (
-                            <div className="flex items-center mt-4 text-teal-600">
-                                <div className="w-2 h-2 bg-teal-600 rounded-full mr-3" />
-                                <span className="text-sm font-medium tracking-wider uppercase">{author?.title}</span>
-                            </div>
-                        )}
-                    </div>
-
-                    {/* Content Section */}
-                    <div className="md:col-span-3 space-y-8">
-                        {/* Bio */}
-                        <div className="prose prose-lg max-w-none">
-                            <p className="text-slate-700 leading-relaxed text-lg font-light">
-                                {author?.about}
-                            </p>
-                        </div>
-
-                        {/* Education - Dynamic */}
-                        <div className="bg-white/60 backdrop-blur-sm rounded-2xl p-6 border border-white/20 shadow-lg">
-                            <div className="flex items-center mb-3">
-                                <div className="w-3 h-3 bg-teal-600 rounded-full mr-3" />
-                                <h3 className="text-lg font-medium text-slate-800">Education</h3>
-                            </div>
-                            
-                            {author?.education?.length > 0 ? (
-                                author.education.map((entry, index) => (
-                                    <React.Fragment key={index}>
-                                        <p className="text-slate-700 font-light">
-                                            {entry}
-                                        </p>
-                                        {index < author.education.length - 1 && (
-                                            <hr className="my-3 border-gray-200" />
-                                        )}
-                                    </React.Fragment>
-                                ))
-                            ) : (
-                                <p className="text-slate-500 font-light italic">
-                                    No education information provided.
-                                </p>
-                            )}
-                        </div>
-                    </div>
-                </div>
-
-                {/* Bottom Accent */}
-                <div className="flex justify-center mt-20">
-                    <div className="w-24 h-px bg-gradient-to-r from-transparent via-slate-300 to-transparent" />
+                    )}
                 </div>
             </div>
-        </div>
+        </section>
     );
 }

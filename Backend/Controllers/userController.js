@@ -298,7 +298,7 @@ const contactMeEmailSender = async (req, res) => {
     }
 }
 
-const updateEducation = async(req,res)=>{
+const updateEducation = async (req, res) => {
     try {
         const { id } = req.user;
         const { education } = req.body;
@@ -315,7 +315,21 @@ const updateEducation = async(req,res)=>{
     } catch (error) {
         console.error('Error updating education:', error);
         res.status(500).json({ message: 'Server error', error: error.message });
-        
+
+    }
+}
+
+const getWriters = async (req, res) => {
+    try {
+        const writers = await User.find({
+            status: 'active',
+            role: { $ne: 'superAdmin' }
+        })
+        res.status(200).json(writers);
+    }
+    catch (error) {
+        console.error('Error fetching writers:', error);
+        res.status(500).json({ message: 'Server error', error: error.message });
     }
 }
 
@@ -333,5 +347,6 @@ module.exports = {
     contactMeEmailSender,
     updateProfilePicture,
     updateUserAbout,
-    updateEducation
+    updateEducation,
+    getWriters
 }

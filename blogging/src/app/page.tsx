@@ -8,20 +8,23 @@ import DetectAdblocker from '@/Components/DetectAdblocker'
 import HomePage from '../../Pages/HomePage'
 import About from '../../Pages/About'
 import PopularBlogs from '../../Pages/PopularBlogs'
+import RecentArticles from '@/Components/RecentArticles'
+import UsersList from '@/Components/UsersList'
 
 
 const Page = () => {
   return (
     <DetectAdblocker>
       <main>
-        <Navbar />
+        {/* <Navbar /> */}
         <HomePage />
-        {/* <Weather /> */}
-        <About />
+        <RecentArticles />
+        <UsersList />
+        {/* <About />
         <PopularBlogs />
-        {/* <Blogs /> */}
-        <ContactUs />
-        <Footer />
+
+        <ContactUs /> */}
+
       </main>
     </DetectAdblocker>
   )
