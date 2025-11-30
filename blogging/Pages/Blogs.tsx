@@ -20,6 +20,7 @@ interface Blog {
         url: string;
         subtitle: string;
     };
+    category: string;
     views: number;
     slug:string;
 }
