@@ -101,10 +101,7 @@ export default function Footer() {
 
         {/* COPYRIGHT BOTTOM */}
         <div className="border-t pt-6 flex flex-col md:flex-row gap-3 md:gap-0 items-center justify-between text-sm text-gray-500 dark:text-gray-400">
-          <p>&copy; {new Date().getFullYear()} Potato Trails. All rights reserved.</p>
-          <p className="text-xs text-gray-400 dark:text-gray-500">
-            Crafted with ❤️ for travelers & creators.
-          </p>
+          <p>&copy; {new Date().getFullYear()} PotatoTrail. All rights reserved. By using this website, you agree to our User Agreement, Privacy Policy, and Cookie Policy. We respect applicable privacy and data protection laws in the regions where our visitors reside and are committed to honoring your rights. Some of the links on this site are affiliate links, which means we may earn a commission if you purchase through them, at no extra cost to you. Any reproduction, distribution, or transmission of content from PotatoTrail is not allowed without our prior written permission.</p>
         </div>
       </div>
     </footer>

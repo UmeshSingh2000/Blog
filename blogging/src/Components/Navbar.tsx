@@ -2,8 +2,16 @@
 import React, { useEffect, useState, useRef } from "react";
 import { motion, AnimatePresence, Variants } from "framer-motion";
 import Image from "next/image";
-import { Menu, ArrowLeft, Instagram, Github, Linkedin, AmpersandIcon, KeyRound } from "lucide-react";
-import { Moon, Sun } from "lucide-react";
+import {
+  Menu,
+  ArrowLeft,
+  Instagram,
+  Github,
+  Linkedin,
+  KeyRound,
+  Moon,
+  Sun,
+} from "lucide-react";
 import axios from "axios";
 
 const categories = [
@@ -11,36 +19,40 @@ const categories = [
   "Food", "Creativity", "Music",
 ];
 
-// You can fetch real blogs — here placeholders for UI demo
 const sampleBlogs = [
   { title: "10 Best Places to Travel in Winter", slug: "winter-travel" },
   { title: "Why Food Culture Matters", slug: "food-culture" },
   { title: "How Technology is Changing Travel", slug: "tech-travel" },
 ];
 
-
-
 const Navbar = () => {
   const [scrolled, setScrolled] = useState(false);
-  const [menuOpen, setMenuOpen] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);   // MOBILE MENU
   const [blogPopup, setBlogPopup] = useState(false);
   const [rightMenuOpen, setRightMenuOpen] = useState(false);
   const [theme, setTheme] = useState("light");
+
   const popupRef = useRef<HTMLDivElement | null>(null);
+  const mobileMenuRef = useRef<HTMLDivElement | null>(null);
+
   const [randomBlogs, setRandomBlogs] = useState([]);
+
   const fetchRandomBlogs = async () => {
     try {
-      const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/getRandomBlogs`);
+      const response = await axios.get(
+        `${process.env.NEXT_PUBLIC_API_URL}/getRandomBlogs`
+      );
       setRandomBlogs(response.data.blogs || []);
-    }
-    catch (error) {
+    } catch (error) {
       console.error("Failed to fetch random blogs:", error);
     }
-  }
+  };
 
   useEffect(() => {
     fetchRandomBlogs();
-  }, [])
+  }, []);
+
+  // SCROLL BEHAVIOR
   useEffect(() => {
     const handleScroll = () => {
       setScrolled(window.scrollY > 10);
@@ -51,6 +63,10 @@ const Navbar = () => {
       if (popupRef.current && !popupRef.current.contains(e.target)) {
         setBlogPopup(false);
       }
+
+      if (menuOpen && mobileMenuRef.current && !mobileMenuRef.current.contains(e.target)) {
+        setMenuOpen(false);
+      }
     };
 
     window.addEventListener("scroll", handleScroll);
@@ -60,19 +76,15 @@ const Navbar = () => {
       window.removeEventListener("scroll", handleScroll);
       document.removeEventListener("mousedown", handleOutside);
     };
-  }, []);
-
-  const popupVariants: Variants = {
-    hidden: { opacity: 0, y: -20 },
-    show: { opacity: 1, y: 0, transition: { duration: 0.3 } },
-    exit: { opacity: 0, y: -10, transition: { duration: 0.2 } },
-  };
+  }, [menuOpen]);
 
   const rightMenuVariants: Variants = {
     hidden: { x: "100%" },
     show: { x: "0%", transition: { duration: 0.35, ease: "easeOut" } },
     exit: { x: "100%", transition: { duration: 0.25 } },
   };
+
+  // DISABLE PAGE SCROLL WHEN RIGHT MENU OPEN
   useEffect(() => {
     const html = document.documentElement;
     const body = document.body;
@@ -84,15 +96,10 @@ const Navbar = () => {
       html.style.overflow = "auto";
       body.style.overflow = "auto";
     }
-
-    return () => {
-      html.style.overflow = "auto";
-      body.style.overflow = "auto";
-    };
   }, [rightMenuOpen]);
 
+  // ANIMATE PAGE WRAPPER WHEN RIGHT MENU OPEN
   useEffect(() => {
-
     const wrapper = document.getElementById("page-wrapper");
     const navbar = document.getElementById("navbar-wrapper");
 
@@ -102,18 +109,12 @@ const Navbar = () => {
       wrapper.style.transform = "translateX(-120px) scale(0.98)";
       navbar.style.transform = "translateX(-120px)";
     } else {
-      wrapper.style.transform = "translateX(0px) scale(1)";
+      wrapper.style.transform = "translateX(0px)";
       navbar.style.transform = "translateX(0px)";
     }
-
-    return () => {
-      wrapper.style.transform = "translateX(0px) scale(1)";
-      navbar.style.transform = "translateX(0px)";
-    };
   }, [rightMenuOpen]);
 
-
-
+  // THEME
   useEffect(() => {
     const saved = localStorage.getItem("theme");
     const current = saved || "light";
@@ -129,11 +130,6 @@ const Navbar = () => {
     document.documentElement.classList.toggle("dark", next === "dark");
   };
 
-
-
-
-
-
   return (
     <>
       {/* NAVBAR */}
@@ -143,8 +139,10 @@ const Navbar = () => {
           : "backdrop-blur-lg bg-white/30 py-4 border-b border-transparent"
           }`}
       >
-        <nav id="navbar-wrapper" className="max-w-7xl mx-auto flex items-center justify-between px-4 transition-all duration-500">
-
+        <nav
+          id="navbar-wrapper"
+          className="max-w-7xl mx-auto flex items-center justify-between px-4 transition-all duration-500"
+        >
           {/* Logo */}
           <a href="/" className="flex items-center gap-2">
             <Image src="/PT.png" width={48} height={48} alt="Logo" />
@@ -153,7 +151,7 @@ const Navbar = () => {
             </span>
           </a>
 
-          {/* Desktop navigation */}
+          {/* Desktop menu */}
           <ul className="hidden md:flex items-center gap-6">
             {[
               { name: "Home", href: "/" },
@@ -168,12 +166,15 @@ const Navbar = () => {
                 onMouseEnter={() => item.name === "Blogs" && setBlogPopup(true)}
                 onMouseLeave={() => setBlogPopup(false)}
               >
-                <a className="text-sm text-gray-700 hover:text-[#F04952]" href={item.href}>
+                <a
+                  className="text-sm text-gray-700 hover:text-[#F04952]"
+                  href={item.href}
+                >
                   {item.name}
                 </a>
                 <span className="absolute left-0 -bottom-[3px] w-0 h-[2px] bg-[#F04952] transition-all duration-300 group-hover:w-full"></span>
 
-                {/* CATEGORY DROPDOWN - NOW CORRECTLY POSITIONED */}
+                {/* BLOG CATEGORIES */}
                 <AnimatePresence>
                   {item.name === "Blogs" && blogPopup && (
                     <motion.div
@@ -182,22 +183,13 @@ const Navbar = () => {
                       animate={{ opacity: 1, y: 0 }}
                       exit={{ opacity: 0, y: -6 }}
                       transition={{ duration: 0.18 }}
-                      className="
-          absolute top-full left-0 mt-2
-          bg-white 
-          border border-gray-200 
-          py-3 w-48 z-[999]
-        "
+                      className="absolute top-full left-0 mt-2 bg-white border border-gray-200 py-3 w-48 z-[999]"
                     >
                       {categories.map((cat) => (
                         <a
                           key={cat}
                           href={`/blogs?category=${cat.toLowerCase()}`}
-                          className="
-              block px-4 py-2 text-sm text-gray-700 
-              hover:bg-[#F04952] hover:text-white 
-              transition
-            "
+                          className="block px-4 py-2 text-sm text-gray-700 hover:bg-[#F04952] hover:text-white transition"
                         >
                           {cat}
                         </a>
@@ -206,14 +198,15 @@ const Navbar = () => {
                   )}
                 </AnimatePresence>
               </li>
-
             ))}
+
             <button
               onClick={toggleTheme}
               className="p-2 rounded-full bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-700 transition"
             >
               {theme === "light" ? <Moon size={20} /> : <Sun size={20} />}
             </button>
+
             <button
               onClick={() => setRightMenuOpen(true)}
               className="text-gray-800 text-2xl cursor-pointer md:text-3xl"
@@ -222,17 +215,65 @@ const Navbar = () => {
             </button>
           </ul>
 
-          {/* RIGHT ICON → Open Right Menu */}
+          {/* MOBILE ICONS */}
+          <div className="md:hidden flex items-center gap-4">
+            {/* Theme Toggle */}
+            <button
+              onClick={toggleTheme}
+              className="p-2 rounded-full bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-200"
+            >
+              {theme === "light" ? <Moon size={20} /> : <Sun size={20} />}
+            </button>
 
+            {/* Hamburger */}
+            <button
+              onClick={() => setMenuOpen(!menuOpen)}
+              className="p-2 rounded-md border border-gray-300 dark:border-gray-700"
+            >
+              <Menu size={22} />
+            </button>
+          </div>
         </nav>
+
+        {/* MOBILE DROPDOWN MENU */}
+        <AnimatePresence>
+          {menuOpen && (
+            <motion.div
+              ref={mobileMenuRef}
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+              transition={{ duration: 0.2 }}
+              className="md:hidden absolute top-full left-0 w-full bg-white shadow-md z-[998]"
+            >
+              <ul className="flex flex-col p-4 space-y-3">
+                {[
+                  { name: "Home", href: "/" },
+                  { name: "About", href: "/about" },
+                  { name: "Blogs", href: "/blogs" },
+                  { name: "Shop", href: "/shop" },
+                  { name: "Contact", href: "/contact" },
+                ].map((item) => (
+                  <li key={item.name}>
+                    <a
+                      onClick={() => setMenuOpen(false)}
+                      href={item.href}
+                      className="block py-2 px-2 text-gray-800 hover:text-[#F04952] transition"
+                    >
+                      {item.name}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </header>
 
-
-
+      {/* RIGHT SLIDE MENU (unchanged) */}
       <AnimatePresence>
         {rightMenuOpen && (
           <>
-            {/* Overlay */}
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 0.4 }}
@@ -241,19 +282,14 @@ const Navbar = () => {
               onClick={() => setRightMenuOpen(false)}
             />
 
-            {/* Drawer */}
             <motion.div
               variants={rightMenuVariants}
               initial="hidden"
               animate="show"
               exit="exit"
-              className="
-          fixed right-0 top-0 h-full w-[330px]
-          bg-white shadow-xl z-[1100] 
-          flex flex-col p-5 overflow-y-auto
-        "
+              className="fixed right-0 top-0 h-full w-[330px] bg-white shadow-xl z-[1100] flex flex-col p-5 overflow-y-auto"
             >
-              {/* Close Button */}
+              {/* Close */}
               <button
                 className="text-xl text-gray-600 hover:text-gray-900 self-end mb-6"
                 onClick={() => setRightMenuOpen(false)}
@@ -261,10 +297,7 @@ const Navbar = () => {
                 ✕
               </button>
 
-              {/* ---------------------------------- */}
-              {/* LIST OF POSTS */}
-              {/* ---------------------------------- */}
-
+              {/* List of posts */}
               <h3 className="text-xs font-semibold text-gray-500 tracking-wider mb-3">
                 LIST OF POSTS
               </h3>
@@ -276,8 +309,6 @@ const Navbar = () => {
                       <img
                         src="https://demo.birdwp.com/orin/wp-content/uploads/2021/08/florencia-potter-QCRdeq27OEU-unsplash.jpg"
                         alt={post.title}
-                        width={400}
-                        height={200}
                         className="w-full h-full object-cover group-hover:scale-105 transition"
                       />
                     </div>
@@ -289,10 +320,7 @@ const Navbar = () => {
                 ))}
               </div>
 
-              {/* ---------------------------------- */}
-              {/* POPULAR POSTS */}
-              {/* ---------------------------------- */}
-
+              {/* Popular posts */}
               <h3 className="text-xs font-semibold text-gray-500 tracking-wider mb-3">
                 POPULAR POSTS
               </h3>
@@ -300,32 +328,28 @@ const Navbar = () => {
               <div className="space-y-4 mb-10">
                 {sampleBlogs.map((post, index) => (
                   <div key={index} className="flex items-center gap-3">
-                    <span className="
-                w-6 h-6 flex items-center justify-center 
-                rounded-full bg-gray-200 text-xs font-semibold text-gray-700
-              ">
+                    <span className="w-6 h-6 flex items-center justify-center rounded-full bg-gray-200 text-xs font-semibold text-gray-700">
                       {index + 1}
                     </span>
 
                     <a href={`/blog/${post.slug}`}>
-                      <p className="text-sm font-semibold text-gray-900">{post.title}</p>
+                      <p className="text-sm font-semibold text-gray-900">
+                        {post.title}
+                      </p>
                       <p className="text-xs text-gray-500">2 min read • 4.9k views</p>
                     </a>
                   </div>
                 ))}
               </div>
 
-              {/* ---------------------------------- */}
-              {/* RANDOM POSTS */}
-              {/* ---------------------------------- */}
-
+              {/* Random posts */}
               <h3 className="text-xs font-semibold text-gray-500 tracking-wider mb-3">
                 RANDOM POSTS
               </h3>
 
               <div className="space-y-4 mb-10">
                 {randomBlogs.length > 0 ? (
-                  randomBlogs.map((post: any, i) => (
+                  randomBlogs.map((post: any) => (
                     <a
                       key={post._id}
                       href={`/blog/${post.slug}`}
@@ -354,25 +378,25 @@ const Navbar = () => {
                 )}
               </div>
 
-              {/* ---------------------------------- */}
-              {/* SOCIAL ICONS */}
-              {/* ---------------------------------- */}
-
+              {/* Social */}
               <h3 className="text-xs font-semibold text-gray-500 tracking-wider mb-3">
                 LINKS
               </h3>
 
               <div className="flex gap-4 mb-6">
-                <a href="#" className="w-9 h-9 flex items-center justify-center rounded-full bg-gray-100 hover:bg-gray-200">
+                <a className="w-9 h-9 flex items-center justify-center rounded-full bg-gray-100 hover:bg-gray-200">
                   <Instagram size={18} />
                 </a>
-                <a href="#" className="w-9 h-9 flex items-center justify-center rounded-full bg-gray-100 hover:bg-gray-200">
+                <a className="w-9 h-9 flex items-center justify-center rounded-full bg-gray-100 hover:bg-gray-200">
                   <Github size={18} />
                 </a>
-                <a href="#" className="w-9 h-9 flex items-center justify-center rounded-full bg-gray-100 hover:bg-gray-200">
+                <a className="w-9 h-9 flex items-center justify-center rounded-full bg-gray-100 hover:bg-gray-200">
                   <Linkedin size={18} />
                 </a>
-                <a href={process.env.NEXT_PUBLIC_ADMIN_URL} className="w-9 h-9 flex items-center justify-center rounded-full bg-gray-100 hover:bg-gray-200">
+                <a
+                  href={process.env.NEXT_PUBLIC_ADMIN_URL}
+                  className="w-9 h-9 flex items-center justify-center rounded-full bg-gray-100 hover:bg-gray-200"
+                >
                   <KeyRound size={18} />
                 </a>
               </div>
@@ -381,7 +405,6 @@ const Navbar = () => {
           </>
         )}
       </AnimatePresence>
-
     </>
   );
 };

@@ -24,7 +24,7 @@ const Page = () => {
         <PopularBlogs />
 
         <ContactUs /> */}
-
+        <Footer />
       </main>
     </DetectAdblocker>
   )

@@ -32,7 +32,7 @@ interface CardProps {
 
 const Card: React.FC<CardProps> = ({ blog }) => {
   return (
-    <div className="w-full">
+    <div className="w-full bg-gray-100 rounded-md">
 
       {/* IMAGE */}
       <div className="w-full h-40 overflow-hidden rounded-md">
@@ -44,37 +44,39 @@ const Card: React.FC<CardProps> = ({ blog }) => {
           className="w-full h-full object-cover"
         />
       </div>
+      <div className="p-2">
 
-      {/* META INFO */}
-      <div className="flex items-center gap-3 mt-3 text-xs text-gray-600">
-        <span className="px-2 py-1 bg-gray-200 rounded capitalize">
-          {blog.category}
-        </span>
+        {/* META INFO */}
+        <div className="flex items-center gap-3 mt-3 text-xs text-gray-600">
+          <span className="px-2 py-1 bg-gray-200 rounded capitalize">
+            {blog.category}
+          </span>
 
-        <span>👤 {blog.author?.name}</span>
+          <span>👤 {blog.author?.name}</span>
 
-        <span className="flex items-center gap-1">
-          <Eye size={16} /> {blog.views}
-        </span>
+          <span className="flex items-center gap-1">
+            <Eye size={16} /> {blog.views}
+          </span>
+        </div>
+
+        {/* TITLE */}
+        <h3 className="text-sm font-semibold mt-2 mb-1">
+          {blog.title}
+        </h3>
+
+        {/* EXCERPT */}
+        <p className="text-xs text-gray-600 leading-relaxed line-clamp-3">
+          {blog.excerpt}
+        </p>
+
+        {/* READ MORE */}
+        <Link
+          href={`/blog/${blog.slug}`}
+          className="block text-xs mt-2 text-[#EB5359] font-medium hover:underline"
+        >
+          Read More
+        </Link>
       </div>
-
-      {/* TITLE */}
-      <h3 className="text-sm font-semibold mt-2 mb-1">
-        {blog.title}
-      </h3>
-
-      {/* EXCERPT */}
-      <p className="text-xs text-gray-600 leading-relaxed line-clamp-3">
-        {blog.excerpt}
-      </p>
-
-      {/* READ MORE */}
-      <Link
-        href={`/blog/${blog.slug}`}
-        className="block text-xs mt-2 text-gray-800 font-medium hover:underline"
-      >
-        Read More
-      </Link>
     </div>
   );
 };

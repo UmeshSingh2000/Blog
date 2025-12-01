@@ -80,8 +80,8 @@ export default function RecentArticles() {
 
                 {/* FEATURED (FIRST BLOG) */}
                 {blogs.length > 0 && (
-                    <div className="lg:col-span-2">
-                        <div className="w-full h-64 lg:h-80 overflow-hidden rounded-md">
+                    <div className="lg:col-span-2 bg-gray-50 rounded-md">
+                        <div className="w-full h-64 lg:h-80 overflow-hidden shadow-sm rounded-md">
                             <Image
                                 src={blogs[0].coverImage.url}
                                 alt={blogs[0].title}
@@ -90,37 +90,39 @@ export default function RecentArticles() {
                                 className="w-full h-full object-cover"
                             />
                         </div>
+                        <div className="p-2">
 
-                        {/* META */}
-                        <div className="flex items-center gap-3 mt-3 text-xs text-gray-600">
-                            <span className="px-2 py-1 bg-gray-200 rounded capitalize">
-                                {blogs[0].category}
-                            </span>
-                            <span>👤 {blogs[0].author?.name}</span>
-                            <span className="flex items-center gap-1"><Eye size={16} /> {blogs[0].views}</span>
+                            {/* META */}
+                            <div className="flex items-center gap-3 mt-3 text-xs text-gray-600">
+                                <span className="px-2 py-1 bg-gray-200 rounded capitalize">
+                                    {blogs[0].category}
+                                </span>
+                                <span>👤 {blogs[0].author?.name}</span>
+                                <span className="flex items-center gap-1"><Eye size={16} /> {blogs[0].views}</span>
+                            </div>
+
+                            <h3 className="text-lg font-semibold mt-2 mb-2">
+                                {blogs[0].title}
+                            </h3>
+
+                            <p className="text-sm text-gray-600 leading-relaxed">
+                                {blogs[0].excerpt}
+                            </p>
+
+                            <a
+                                href={`/blog/${blogs[0].slug}`}
+                                className="block text-[#EB5359] text-xs mt-3 font-medium hover:underline"
+                            >
+                                Read More
+                            </a>
                         </div>
-
-                        <h3 className="text-lg font-semibold mt-2 mb-2">
-                            {blogs[0].title}
-                        </h3>
-
-                        <p className="text-sm text-gray-600 leading-relaxed">
-                            {blogs[0].excerpt}
-                        </p>
-
-                        <a
-                            href={`/blog/${blogs[0].slug}`}
-                            className="block text-xs mt-3 text-gray-800 font-medium hover:underline"
-                        >
-                            Read More
-                        </a>
                     </div>
                 )}
 
                 {/* OTHER BLOGS */}
                 {blogs.slice(1).map((post, index) => (
-                    <div key={post._id || index}>
-                        <div className="w-full h-40 overflow-hidden rounded-md">
+                    <div key={post._id || index} className={`bg-gray-50 rounded-md ${index === 0 ? 'h-80' : "h-auto"} `}>
+                        <div className="w-full h-40 overflow-hidden shadow-sm rounded-md">
                             <Image
                                 src={post.coverImage.url}
                                 alt={post.title}
@@ -129,30 +131,33 @@ export default function RecentArticles() {
                                 className="w-full h-full object-cover"
                             />
                         </div>
+                        <div className="p-2">
 
-                        {/* META */}
-                        <div className="flex items-center gap-3 mt-3 text-xs text-gray-600">
-                            <span className="px-2 py-1 bg-gray-200 rounded capitalize">
-                                {post.category}
-                            </span>
-                            <span>👤 {post.author?.name}</span>
-                            <span className="flex items-center gap-1"><Eye size={16} /> {post.views}</span>
+
+                            {/* META */}
+                            <div className="flex items-center gap-3 mt-3 text-xs text-gray-600">
+                                <span className="px-2 py-1 bg-gray-200 rounded capitalize">
+                                    {post.category}
+                                </span>
+                                <span>👤 {post.author?.name}</span>
+                                <span className="flex items-center gap-1"><Eye size={16} /> {post.views}</span>
+                            </div>
+
+                            <h3 className="text-sm font-semibold mt-2 mb-1">
+                                {post.title}
+                            </h3>
+
+                            <p className="text-xs text-gray-600 leading-relaxed line-clamp-3">
+                                {post.excerpt}
+                            </p>
+
+                            <a
+                                href={`/blog/${post.slug}`}
+                                className="block text-[#EB5359] text-xs mt-2 font-medium hover:underline"
+                            >
+                                Read More
+                            </a>
                         </div>
-
-                        <h3 className="text-sm font-semibold mt-2 mb-1">
-                            {post.title}
-                        </h3>
-
-                        <p className="text-xs text-gray-600 leading-relaxed line-clamp-3">
-                            {post.excerpt}
-                        </p>
-
-                        <a
-                            href={`/blog/${post.slug}`}
-                            className="block text-xs mt-2 text-gray-800 font-medium hover:underline"
-                        >
-                            Read More
-                        </a>
                     </div>
                 ))}
             </div>

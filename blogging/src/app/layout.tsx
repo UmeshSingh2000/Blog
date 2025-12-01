@@ -38,8 +38,9 @@ export default function RootLayout({
         <Navbar />
         <div id="page-wrapper" className="transition-all duration-500">
           {children}
-          <Footer />
+
         </div>
+
 
         <Analytics />
 
