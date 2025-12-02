@@ -590,6 +590,17 @@ const getRandomBlogs = async (req, res) => {
   }
 }
 
+const getMostLikedBlogs = async (req, res) => {
+  try {
+    console.log('fethfing')
+    const mostLikedBlog = await Blog.find().sort({ views: -1 }).limit(3).populate('author', 'name');
+    res.status(200).json({ message: 'Most liked blogs retrieved successfully', blogs: mostLikedBlog });
+  }
+  catch (err) {
+
+  }
+}
+
 
 
 
@@ -606,5 +617,6 @@ module.exports = {
   getBlogSuggestion,
   incrementCount,
   generateSlugs,
-  getRandomBlogs
+  getRandomBlogs,
+  getMostLikedBlogs
 }

@@ -4,7 +4,7 @@ const router = express.Router();
 const { loginUser, sendOtp, verifyOtp, resetPassword, getMyData, verifyPassword, updateProfile, subscribeToNewsletter, unsubscribeFromNewsletter, contactMeEmailSender, updateProfilePicture, updateUserAbout, updateEducation, getWriters } = require('../Controllers/userController');
 const { loginLimiter } = require('../Helpers/rateLimiter');
 const authenticateToken = require('../Middlewares/authenticateToken');
-const { createBlog, deleteBlog, updateBlog, getBlogs, getBlogById, getMyBlogs, addCommentToBlog, addCommentsToBlog, getblogComments, getBlogSuggestion, incrementCount, generateSlugs, getRandomBlogs } = require('../Controllers/blogController');
+const { createBlog, deleteBlog, updateBlog, getBlogs, getBlogById, getMyBlogs, addCommentToBlog, addCommentsToBlog, getblogComments, getBlogSuggestion, incrementCount, generateSlugs, getRandomBlogs, getMostLikedBlogs } = require('../Controllers/blogController');
 const { getTags } = require('../Controllers/tagController');
 const otpIsVerified = require('../Middlewares/otpIsVerified');
 const fetchWeather = require('../Helpers/fetchWeather');
@@ -69,6 +69,8 @@ router.get('/getBlogs', getBlogs); // there is no user login required to get blo
 router.get('/getblog/:id', getBlogById);
 router.get('/getMyBlogs', authenticateToken, getMyBlogs) // this route is for getting blogs of the logged in user
 router.get('/getBlogSuggestion/:id', getBlogSuggestion)
+router.get('/getMostLikedBlogs',getMostLikedBlogs)
+
 
 //tags related routes
 router.get('/getTags', authenticateToken, getTags);

@@ -127,9 +127,9 @@ export default function AllBlogs() {
         {/* TOP BANNER */}
         <section className="w-full h-52 md:h-64 rounded-xl overflow-hidden relative mb-10 bg-black shadow-lg">
           <img
-            src="https://images.unsplash.com/photo-1515377905703-c4788e51af15?q=80&w=1200"
+            src="/WhatsApp Image 2025-12-01 at 22.29.35.jpeg"
             alt="Blog Banner"
-            className="w-full h-full object-cover opacity-70"
+            className="w-full h-full object-cover opacity-70 blur-[2px]"
           />
 
           <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-4">

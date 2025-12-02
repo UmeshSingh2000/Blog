@@ -129,7 +129,7 @@ function FeaturedArticles() {
 
   const CACHE_KEY = "recentBlogsCache";
   const CACHE_DURATION = 1000 * 60 * 5; // 5 minutes
-
+  const KEY = "mostLikedBlogsCache";
   const fetchBlogs = async () => {
     try {
       const response = await axios.get(
@@ -153,6 +153,25 @@ function FeaturedArticles() {
     }
   };
 
+  const fetchMostLikeBlogs = async () => {
+    try {
+      const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/getMostLikedBlogs`);
+      const data = response.data.blogs;
+
+      const cacheObj = {
+        timestamp: Date.now(),
+        data,
+      };
+      localStorage.setItem(KEY, JSON.stringify(cacheObj));
+      setBlogs(data);
+    }
+    catch (err) {
+      console.error("Error fetching most liked blogs:", err);
+    }
+  }
+
+
+
   useEffect(() => {
     // Check cache
     const cached = localStorage.getItem(CACHE_KEY);
@@ -163,7 +182,7 @@ function FeaturedArticles() {
 
       if (!isExpired) {
         // Use cached blogs — only first 3
-        setBlogs(parsed.data.slice(0, 3));
+        // setBlogs(parsed.data.slice(0, 3));
         return;
       }
     }
@@ -171,6 +190,19 @@ function FeaturedArticles() {
     // Otherwise fetch new
     fetchBlogs();
   }, []);
+
+  useEffect(() => {
+    const cached = localStorage.getItem(KEY);
+    if (cached) {
+      const parsed = JSON.parse(cached);
+      const isExpired = Date.now() - parsed.timestamp > CACHE_DURATION;
+      if (!isExpired) {
+        setBlogs(parsed.data);
+        return;
+      }
+    }
+    fetchMostLikeBlogs();
+  }, [])
 
   if (blogs.length === 0)
     return (
@@ -223,7 +255,7 @@ function FeaturedArticles() {
                   </span>
 
                   <span className="px-4 py-1.5 bg-white/15 rounded-full border border-white/20 flex items-center gap-2">
-                    <Eye/> {b.views}
+                    <Eye /> {b.views}
                   </span>
                 </div>
 
