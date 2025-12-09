@@ -1,18 +1,21 @@
+"use client"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faInstagram, faPinterest } from '@fortawesome/free-brands-svg-icons';
 import { faEnvelope } from '@fortawesome/free-solid-svg-icons';
+import { useTheme } from '@/context/ThemeContext';
 
 export default function Footer() {
+  const { theme } = useTheme();
   return (
-    <footer className="max-w-[1920px] mx-auto border-t bg-white dark:bg-gray-950">
+    <footer className={`max-w-[1920px] mx-auto border-t ${theme === "dark" ? "bg-gray-950" : "bg-white"}`}>
       <div className="max-w-7xl mx-auto px-6 py-20">
 
         {/* SUBSCRIBE SECTION */}
         <div className="text-center mb-20">
-          <h2 className="text-2xl md:text-3xl font-semibold text-gray-800 dark:text-gray-200 mb-4">
+          <h2 className={`text-2xl md:text-3xl font-semibold ${theme === "dark" ? "text-gray-200" : "text-gray-800"} mb-4`}>
             Join Our Newsletter
           </h2>
-          <p className="text-gray-500 dark:text-gray-400 mb-6">
+          <p className={`text-gray-500 ${theme === "dark" ? "text-gray-400" : "text-gray-500"} mb-6`}>
             Get the latest travel stories, tips, and blog updates — straight to your inbox.
           </p>
 
@@ -47,10 +50,10 @@ export default function Footer() {
 
           {/* Brand */}
           <div>
-            <h2 className="text-2xl font-semibold text-gray-800 dark:text-white tracking-tight">
+            <h2 className={`text-2xl font-semibold ${theme === "dark" ? "text-gray-200" : "text-gray-800"} tracking-tight`}>
               Potato<span className="text-[#F04952]">Trails</span>
             </h2>
-            <p className="text-sm text-gray-500 dark:text-gray-400 mt-3 max-w-xs">
+            <p className={`text-sm ${theme === "dark" ? "text-gray-400" : "text-gray-500"} mt-3 max-w-xs`}>
               Discover stories that spark your next adventure. Travel, lifestyle,
               culture — blogs that inspire and excite.
             </p>
@@ -58,10 +61,10 @@ export default function Footer() {
 
           {/* Quick Links */}
           <div>
-            <h3 className="text-lg font-medium text-gray-700 dark:text-gray-200 mb-4">
+            <h3 className={`text-lg font-medium ${theme === "dark" ? "text-gray-200" : "text-gray-700"} mb-4`}>
               Quick Links
             </h3>
-            <ul className="space-y-2 text-gray-500 dark:text-gray-400">
+            <ul className={`space-y-2 ${theme === "dark" ? "text-gray-400" : "text-gray-500"}`}>
               <li><a href="/" className="hover:text-[#F04952] transition">About</a></li>
               <li><a href="/" className="hover:text-[#F04952] transition">Contact</a></li>
               <li><a href="/blogs" className="hover:text-[#F04952] transition">Blogs</a></li>
@@ -71,7 +74,7 @@ export default function Footer() {
 
           {/* Social */}
           <div>
-            <h3 className="text-lg font-medium text-gray-700 dark:text-gray-200 mb-4">
+            <h3 className={`text-lg font-medium ${theme === "dark" ? "text-gray-200" : "text-gray-700"} mb-4`}>
               Connect With Us
             </h3>
             <div className="flex space-x-6">

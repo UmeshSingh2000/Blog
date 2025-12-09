@@ -5,6 +5,7 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 import Image from "next/image";
 import React, { useEffect, useState } from "react";
 import { Eye } from "lucide-react";
+import { useTheme } from "@/context/ThemeContext";
 /* --------------------------------------------------
    MAIN HOMEPAGE COMPONENT
 -------------------------------------------------- */
@@ -123,7 +124,10 @@ function HeroMinimal() {
 /* --------------------------------------------------
    SECTION 2 — FEATURED ARTICLES SLIDER (PREMIUM UI)
 -------------------------------------------------- */
+
 function FeaturedArticles() {
+  const { theme } = useTheme();
+
   const [blogs, setBlogs] = useState<any[]>([]);
   const [index, setIndex] = useState(0);
 
@@ -215,7 +219,7 @@ function FeaturedArticles() {
   const prev = () => setIndex((prev) => (prev - 1 + blogs.length) % blogs.length);
 
   return (
-    <section className="w-full flex flex-col items-center mt-9 mb-20 ">
+    <section className={`w-full flex flex-col items-center pt-5 pb-5 ${theme === "dark" ? "bg-[#1A1A1A] text-white" : "bg-white"}`}>
 
       <div className="mb-4">
         <Image src="/PT.png" alt="PT Logo" width={70} height={70} />

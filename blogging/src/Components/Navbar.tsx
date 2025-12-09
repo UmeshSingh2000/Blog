@@ -13,6 +13,8 @@ import {
   Sun,
 } from "lucide-react";
 import axios from "axios";
+import { useTheme } from "@/context/ThemeContext";
+import { usePathname } from "next/navigation";
 
 const categories = [
   "Travel", "Architecture", "Technology", "Culture",
@@ -26,12 +28,13 @@ const sampleBlogs = [
 ];
 
 const Navbar = () => {
+  const { theme, toggleTheme } = useTheme();
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);   // MOBILE MENU
   const [blogPopup, setBlogPopup] = useState(false);
   const [rightMenuOpen, setRightMenuOpen] = useState(false);
-  const [theme, setTheme] = useState("light");
-
+  const pathname = usePathname();
+  const isActive = (href: string) => pathname === href;
   const popupRef = useRef<HTMLDivElement | null>(null);
   const mobileMenuRef = useRef<HTMLDivElement | null>(null);
 
@@ -106,7 +109,7 @@ const Navbar = () => {
     if (!wrapper || !navbar) return;
 
     if (rightMenuOpen) {
-      wrapper.style.transform = "translateX(-120px) scale(0.98)";
+      wrapper.style.transform = "translateX(-120px)";
       navbar.style.transform = "translateX(-120px)";
     } else {
       wrapper.style.transform = "translateX(0px)";
@@ -114,30 +117,16 @@ const Navbar = () => {
     }
   }, [rightMenuOpen]);
 
-  // THEME
-  useEffect(() => {
-    const saved = localStorage.getItem("theme");
-    const current = saved || "light";
 
-    setTheme(current);
-    document.documentElement.classList.toggle("dark", current === "dark");
-  }, []);
-
-  const toggleTheme = () => {
-    const next = theme === "light" ? "dark" : "light";
-    setTheme(next);
-    localStorage.setItem("theme", next);
-    document.documentElement.classList.toggle("dark", next === "dark");
-  };
 
   return (
     <>
       {/* NAVBAR */}
       <header
         className={`fixed w-full top-0 z-[999] transition-all duration-300 ${scrolled
-          ? "backdrop-blur-xl bg-white/70 shadow-sm border-b border-white/20 py-2"
-          : "backdrop-blur-lg bg-white/30 py-4 border-b border-transparent"
-          }`}
+          ? "backdrop-blur-xl shadow-sm  py-2"
+          : "backdrop-blur-lg py-4 border-transparent"
+          } ${theme === "dark" ? "bg-[#1A1A1A] text-white" : "bg-white"} `}
       >
         <nav
           id="navbar-wrapper"
@@ -146,7 +135,7 @@ const Navbar = () => {
           {/* Logo */}
           <a href="/" className="flex items-center gap-2">
             <Image src="/PT.png" width={48} height={48} alt="Logo" />
-            <span className="font-semibold tracking-tight text-lg text-gray-800 hidden sm:inline">
+            <span className={`font-semibold tracking-tight text-lg hidden sm:inline ${theme === "dark" ? "text-white" : "text-gray-800"}`}>
               Potato<span className="text-[#F04952]">Trails</span>
             </span>
           </a>
@@ -167,12 +156,27 @@ const Navbar = () => {
                 onMouseLeave={() => setBlogPopup(false)}
               >
                 <a
-                  className="text-sm text-gray-700 hover:text-[#F04952]"
                   href={item.href}
+                  className={`
+    text-sm 
+    ${isActive(item.href)
+                      ? "text-[#F04952] font-semibold cursor-default pointer-events-none"
+                      : theme === "dark"
+                        ? "text-white hover:text-[#F04952]"
+                        : "text-gray-700 hover:text-[#F04952]"
+                    }
+  `}
                 >
+
                   {item.name}
                 </a>
-                <span className="absolute left-0 -bottom-[3px] w-0 h-[2px] bg-[#F04952] transition-all duration-300 group-hover:w-full"></span>
+                <span
+                  className={`
+    absolute left-0 -bottom-[3px] h-[2px] bg-[#F04952] transition-all duration-300
+    ${isActive(item.href) ? "w-full" : "w-0 group-hover:w-full"}
+  `}
+                />
+
 
                 {/* BLOG CATEGORIES */}
                 <AnimatePresence>
@@ -183,13 +187,13 @@ const Navbar = () => {
                       animate={{ opacity: 1, y: 0 }}
                       exit={{ opacity: 0, y: -6 }}
                       transition={{ duration: 0.18 }}
-                      className="absolute top-full left-0 mt-2 bg-white border border-gray-200 py-3 w-48 z-[999]"
+                      className={`absolute top-full left-0 mt-2 ${theme === "dark" ? "bg-[#1A1A1A] border-gray-700" : "bg-white border-gray-200"} py-3 w-48 z-[999]`}
                     >
                       {categories.map((cat) => (
                         <a
                           key={cat}
                           href={`/blogs?category=${cat.toLowerCase()}`}
-                          className="block px-4 py-2 text-sm text-gray-700 hover:bg-[#F04952] hover:text-white transition"
+                          className={`block px-4 py-2 text-sm ${theme === "dark" ? "text-white" : "text-gray-700"} hover:bg-[#F04952] hover:text-white transition`}
                         >
                           {cat}
                         </a>
@@ -209,7 +213,7 @@ const Navbar = () => {
 
             <button
               onClick={() => setRightMenuOpen(true)}
-              className="text-gray-800 text-2xl cursor-pointer md:text-3xl"
+              className={`text-2xl cursor-pointer md:text-3xl ${theme === "dark" ? "text-white" : "text-gray-800"}`}
             >
               <ArrowLeft size={20} />
             </button>
@@ -270,7 +274,7 @@ const Navbar = () => {
         </AnimatePresence>
       </header>
 
-      {/* RIGHT SLIDE MENU (unchanged) */}
+
       <AnimatePresence>
         {rightMenuOpen && (
           <>
@@ -287,7 +291,7 @@ const Navbar = () => {
               initial="hidden"
               animate="show"
               exit="exit"
-              className="fixed right-0 top-0 h-full w-[330px] bg-white shadow-xl z-[1100] flex flex-col p-5 overflow-y-auto"
+              className={`fixed right-0 top-0 h-full w-[330px] ${theme === "dark" ? "bg-[#1A1A1A] text-white" : "bg-white"} shadow-xl z-[1100] flex flex-col p-5 overflow-y-auto`}
             >
               {/* Close */}
               <button
@@ -298,7 +302,7 @@ const Navbar = () => {
               </button>
 
               {/* List of posts */}
-              <h3 className="text-xs font-semibold text-gray-500 tracking-wider mb-3">
+              <h3 className={`text-xs font-semibold ${theme === 'dark' ? 'text-white' : 'text-gray-500'} tracking-wider mb-3`}>
                 LIST OF POSTS
               </h3>
 
@@ -312,7 +316,7 @@ const Navbar = () => {
                         className="w-full h-full object-cover group-hover:scale-105 transition"
                       />
                     </div>
-                    <p className="text-sm font-semibold text-gray-800">
+                    <p className={`text-sm font-semibold ${theme === 'dark' ? 'text-white' : 'text-gray-800'}`}>
                       {post.title}
                     </p>
                     <p className="text-xs text-gray-500">August 15, 2024</p>
@@ -333,7 +337,7 @@ const Navbar = () => {
                     </span>
 
                     <a href={`/blog/${post.slug}`}>
-                      <p className="text-sm font-semibold text-gray-900">
+                      <p className={`text-sm font-semibold ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>
                         {post.title}
                       </p>
                       <p className="text-xs text-gray-500">2 min read • 4.9k views</p>
@@ -343,7 +347,7 @@ const Navbar = () => {
               </div>
 
               {/* Random posts */}
-              <h3 className="text-xs font-semibold text-gray-500 tracking-wider mb-3">
+              <h3 className={`text-xs font-semibold ${theme === 'dark' ? 'text-white' : 'text-gray-500'} tracking-wider mb-3`}>
                 RANDOM POSTS
               </h3>
 
@@ -364,7 +368,7 @@ const Navbar = () => {
                       </div>
 
                       <div className="w-3/4">
-                        <p className="text-sm font-semibold text-gray-800 group-hover:text-[#F04952] transition line-clamp-2">
+                        <p className={`text-sm font-semibold ${theme === 'dark' ? 'text-white' : 'text-gray-800'} group-hover:text-[#F04952] transition line-clamp-2`}>
                           {post.title}
                         </p>
                         <p className="text-xs text-gray-500">
@@ -379,25 +383,25 @@ const Navbar = () => {
               </div>
 
               {/* Social */}
-              <h3 className="text-xs font-semibold text-gray-500 tracking-wider mb-3">
+              <h3 className={`text-xs font-semibold ${theme === 'dark' ? 'text-white' : 'text-gray-500'} tracking-wider mb-3`}>
                 LINKS
               </h3>
 
               <div className="flex gap-4 mb-6">
                 <a className="w-9 h-9 flex items-center justify-center rounded-full bg-gray-100 hover:bg-gray-200">
-                  <Instagram size={18} />
+                  <Instagram className="text-black" size={18} />
                 </a>
                 <a className="w-9 h-9 flex items-center justify-center rounded-full bg-gray-100 hover:bg-gray-200">
-                  <Github size={18} />
+                  <Github className="text-black" size={18} />
                 </a>
                 <a className="w-9 h-9 flex items-center justify-center rounded-full bg-gray-100 hover:bg-gray-200">
-                  <Linkedin size={18} />
+                  <Linkedin className="text-black" size={18} />
                 </a>
                 <a
                   href={process.env.NEXT_PUBLIC_ADMIN_URL}
                   className="w-9 h-9 flex items-center justify-center rounded-full bg-gray-100 hover:bg-gray-200"
                 >
-                  <KeyRound size={18} />
+                  <KeyRound className="text-black" size={18} />
                 </a>
               </div>
 

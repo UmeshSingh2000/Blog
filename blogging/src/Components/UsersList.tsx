@@ -1,10 +1,12 @@
 "use client";
 
+import { useTheme } from "@/context/ThemeContext";
 import axios from "axios";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 
 export default function UsersList() {
+    const { theme } = useTheme();
     const [writers, setWriters] = useState([]);
 
     const DEFAULT_PIC =
@@ -39,7 +41,7 @@ export default function UsersList() {
     }, []);
 
     return (
-        <section className="w-full py-10">
+        <section className={`w-full py-10 ${theme === "dark" ? "bg-[#1A1A1A] text-white" : "bg-white"}`}>
             <div className="max-w-6xl mx-auto">
                 {/* Header */}
                 <h2 className="text-2xl font-semibold mb-10 text-center">Our Writers</h2>
@@ -62,8 +64,8 @@ export default function UsersList() {
                                 </div>
 
                                 {/* Text */}
-                                <p className="mt-3 text-gray-900 font-medium text-center">{user.name}</p>
-                                <p className="text-gray-600 text-sm text-center">{user.title}</p>
+                                <p className={`mt-3 font-medium text-center ${theme === "dark" ? "text-white" : "text-gray-900"}`}>{user.name}</p>
+                                <p className={`text-sm text-center ${theme === "dark" ? "text-white" : "text-gray-600"}`}>{user.title}</p>
                             </div>
                         ))
                     ) : (

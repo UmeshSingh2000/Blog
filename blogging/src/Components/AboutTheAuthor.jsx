@@ -1,10 +1,10 @@
 import React from "react";
 
-export default function AboutAuthor({ author }) {
+export default function AboutAuthor({ author, theme }) {
     return (
         <section className="max-w-6xl flex flex-col items-center mx-auto px-4 py-10">
 
-            <h2 className="text-xl font-semibold text-gray-900 mb-6">
+            <h2 className={`text-xl font-semibold mb-6 ${theme === "dark" ? "text-white" : "text-gray-900"}`}>
                 About the Author
             </h2>
 
@@ -21,27 +21,27 @@ export default function AboutAuthor({ author }) {
 
                 {/* Info */}
                 <div className="flex-1">
-                    <h3 className="text-lg font-medium text-gray-900">
+                    <h3 className={`text-lg font-medium ${theme === "dark" ? "text-white" : "text-gray-900"}`}>
                         {author?.name}
                     </h3>
 
                     {author?.title && (
-                        <p className="text-sm text-gray-600 mb-2">{author.title}</p>
+                        <p className={`text-sm mb-2 ${theme === "dark" ? "text-white" : "text-gray-600"}`}>{author.title}</p>
                     )}
 
                     {/* Short bio */}
-                    <p className="text-sm text-gray-700 leading-relaxed line-clamp-3">
+                    <p className={`text-sm leading-relaxed line-clamp-3 ${theme === "dark" ? "text-white" : "text-gray-700"}`}>
                         {author?.about || "This author has not added their bio yet."}
                     </p>
 
                     {/* Education small and clean */}
                     {author?.education?.length > 0 && (
                         <div className="mt-3">
-                            <h4 className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1">
+                            <h4 className={`text-xs font-semibold uppercase tracking-wide mb-1 ${theme === "dark" ? "text-white" : "text-gray-500"}`}>
                                 Education
                             </h4>
 
-                            <ul className="text-xs text-gray-600 space-y-1">
+                            <ul className={`text-xs space-y-1 ${theme === "dark" ? "text-white" : "text-gray-600"}`}>
                                 {author.education.map((item, i) => (
                                     <li key={i} className="leading-snug">
                                         • {item}

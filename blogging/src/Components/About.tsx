@@ -2,8 +2,11 @@
 
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
+import { useTheme } from "@/context/ThemeContext";
 
 export default function AboutPage() {
+    const { theme } = useTheme();
+
     const [writers, setWriters] = useState<any[]>([]);
     const DEFAULT_PIC = "/default User.png";
 
@@ -13,7 +16,7 @@ export default function AboutPage() {
     }, []);
 
     return (
-        <main className="min-h-screen bg-white mt-20">
+        <main className={`min-h-screen mt-20 ${theme === "dark" ? "bg-[#1A1A1A] text-white" : "bg-white text-black"}`}>
 
 
             {/* ---------------- HERO ---------------- */}
@@ -42,15 +45,15 @@ export default function AboutPage() {
                             <span className="text-[#F04952]">PotatoTrails</span>
                         </h1>
 
-                        <p className="text-lg leading-relaxed text-black">
+                        <p className={`text-lg leading-relaxed ${theme === "dark" ? "text-white" : "text-black"}`}>
                             PotatoTrails is your modern travel journal — where stories of adventure,
                             food, places, and cultures come together.
                         </p>
-                        <p className="text-lg leading-relaxed text-black">
+                        <p className={`text-lg leading-relaxed ${theme === "dark" ? "text-white" : "text-black"}`}>
                             Our mission: inspire exploration, celebrate cultures, and share meaningful
                             journeys.
                         </p>
-                        <p className="text-lg leading-relaxed text-black">
+                        <p className={`text-lg leading-relaxed ${theme === "dark" ? "text-white" : "text-black"}`}>
                             We bring real stories, honest experiences, and fresh perspectives from travelers
                             across the world.
                         </p>
@@ -109,7 +112,7 @@ export default function AboutPage() {
                                 className="p-8 bg-white rounded-xl border border-gray-200 shadow-sm"
                             >
                                 <div className="text-4xl mb-4">{value.icon}</div>
-                                <h3 className="text-xl font-medium mb-2">{value.title}</h3>
+                                <h3 className="text-xl font-medium mb-2 text-black">{value.title}</h3>
                                 <p className="text-gray-600 leading-relaxed">
                                     {value.desc}
                                 </p>

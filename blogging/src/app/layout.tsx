@@ -6,6 +6,7 @@ import "./globals.css";
 import "../../lib/fontawesome";
 import Navbar from "@/Components/Navbar";
 import Footer from "@/Components/Footer";
+import { ThemeProvider } from "@/context/ThemeContext";
 const exo = Exo({
   subsets: ["latin"],
   weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"],
@@ -32,14 +33,28 @@ export default function RootLayout({
       <head>
         {/* Update the AdSense meta tag with the new client ID if needed */}
         <meta name="google-adsense-account" content="ca-pub-3694311444107571" />
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+          const theme = localStorage.getItem('theme') || 'light';
+          if (theme === 'dark') {
+            document.documentElement.classList.add('dark');
+          } else {
+            document.documentElement.classList.remove('dark');
+          }
+        `
+          }}
+        />
       </head>
       <body className={`${exo.className}`}>
+        <ThemeProvider>
 
-        <Navbar />
-        <div id="page-wrapper" className="transition-all duration-500">
-          {children}
+          <Navbar />
+          <div id="page-wrapper" className="transition-all duration-500">
+            {children}
 
-        </div>
+          </div>
+        </ThemeProvider>
 
 
         <Analytics />

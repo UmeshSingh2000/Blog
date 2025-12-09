@@ -5,7 +5,7 @@ import axios from 'axios'
 import Link from 'next/link'
 import Card from './Card'
 
-const BlogSuggestion = ({ blogId, authorId }) => {
+const BlogSuggestion = ({ blogId, authorId, theme }) => {
     const [blogs, setBlogs] = useState([])
     const [loading, setLoading] = useState(true)
     const [error, setError] = useState(null)
@@ -66,7 +66,7 @@ const BlogSuggestion = ({ blogId, authorId }) => {
         <section className="mt-20 max-w-6xl mx-auto px-4 mb-10">
 
             {/* Section Title */}
-            <h2 className="text-2xl font-bold text-gray-900 mb-6 text-center">
+            <h2 className={`text-2xl font-bold mb-6 text-center ${theme === "dark" ? "text-white" : "text-gray-900"}`}>
                 You might also like
             </h2>
 

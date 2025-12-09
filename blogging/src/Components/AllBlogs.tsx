@@ -3,6 +3,7 @@ import React, { useEffect, useState, useMemo, Suspense } from 'react'
 import Card from '@/Components/Card'
 import Loader from '@/Components/Loader/Loader'
 import { useSearchParams } from "next/navigation";
+import { useTheme } from '@/context/ThemeContext';
 
 interface Blog {
   title: string
@@ -28,7 +29,7 @@ interface Blog {
 }
 
 export default function AllBlogs() {
-
+  const { theme } = useTheme();
   const searchParams = useSearchParams();
 
   const [allBlogs, setAllBlogs] = useState<Blog[]>([])
@@ -122,7 +123,7 @@ export default function AllBlogs() {
 
   return (
     <>
-      <section className="mt-20 w-full p-2">
+      <section className={`mt-20 w-full p-2 ${theme === "dark" ? "bg-[#1A1A1A] text-white" : "bg-white text-black"}`}>
 
         {/* TOP BANNER */}
         <section className="w-full h-52 md:h-64 rounded-xl overflow-hidden relative mb-10 bg-black shadow-lg">
@@ -163,7 +164,7 @@ export default function AllBlogs() {
               <button
                 disabled={currentPage === 1}
                 onClick={() => setCurrentPage((p) => p - 1)}
-                className="px-3 py-1 border rounded disabled:opacity-50"
+                className="px-3 py-1 border rounded disabled:opacity-50 cursor-pointer"
               >
                 Prev
               </button>
@@ -172,7 +173,7 @@ export default function AllBlogs() {
                 <button
                   key={i}
                   onClick={() => setCurrentPage(i + 1)}
-                  className={`px-3 py-1 border rounded ${currentPage === i + 1 ? 'bg-black text-white' : 'bg-white'
+                  className={`px-3 cursor-pointer py-1 border rounded ${currentPage === i + 1 ? 'bg-black text-white' : 'bg-white text-black'
                     }`}
                 >
                   {i + 1}
@@ -182,7 +183,7 @@ export default function AllBlogs() {
               <button
                 disabled={currentPage === totalPages}
                 onClick={() => setCurrentPage((p) => p + 1)}
-                className="px-3 py-1 border rounded disabled:opacity-50"
+                className="px-3 py-1 border rounded disabled:opacity-50 cursor-pointer"
               >
                 Next
               </button>

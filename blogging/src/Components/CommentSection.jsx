@@ -2,14 +2,15 @@ import axios from "axios"
 import { useEffect, useState } from "react"
 import toast from "react-hot-toast"
 
-export default function CommentSection({ blogId }) {
+export default function CommentSection({ blogId, theme }) {
+  
   const myName = localStorage.getItem('myName') || null
   const [comments, setComments] = useState([]) // allComments
   const [newComment, setNewComment] = useState('')
   const [authorName, setAuthorName] = useState(myName || '')
   const [loading, setLoading] = useState(false)
 
-  
+
   const handleSubmitComment = async (e) => {
     e.preventDefault()
     if (!newComment.trim() || !authorName.trim()) return
@@ -67,7 +68,7 @@ export default function CommentSection({ blogId }) {
   }
 
   return (
-    <div className="bg-white rounded-lg shadow-sm p-6 sticky top-20 max-h-[calc(100vh-100px)] overflow-y-auto">
+    <div className={`rounded-lg shadow-sm p-6 sticky top-20 max-h-[calc(100vh-100px)] overflow-y-auto ${theme === "dark" ? "bg-[#1A1A1A] text-white" : "bg-white text-black"}`}>
       <h3 className="text-xl font-bold mb-4">Comments ({comments.length})</h3>
 
       {/* Comment Form */}
@@ -131,7 +132,7 @@ export default function CommentSection({ blogId }) {
                             <span className="font-medium text-sm">{reply.author}</span>
                             <span className="text-xs text-gray-500">{formatDate(reply.createdAt)}</span>
                           </div>
-                          <p className="text-gray-600 text-sm">{reply.content}</p>
+                          <p className={`text-sm ${theme === "dark" ? "text-white" : "text-gray-600"}`}>{reply.content}</p>
                         </div>
                       </div>
                     ))}

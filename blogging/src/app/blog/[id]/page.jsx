@@ -10,8 +10,10 @@ import BlogSuggestion from '@/Components/BlogSuggestion'
 import { notFound, useParams } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import axios from 'axios'
+import { useTheme } from '@/context/ThemeContext'
 
 export default function BlogDetailPage() {
+  const { theme } = useTheme();
   const { id } = useParams()
 
   const [blog, setBlog] = useState(null)
@@ -117,133 +119,136 @@ export default function BlogDetailPage() {
 
   return (
     <>
-      <div className="max-w-6xl mx-auto px-4 mt-24 pb-20">
+      <div className={`${theme === "dark" ? "bg-[#1A1A1A] text-white" : "bg-white text-black"}`}>
 
-        {/* Title */}
-        <h1 className="text-4xl md:text-5xl font-bold leading-tight text-gray-900 mb-4">
-          {blog.title}
-        </h1>
+        <div className="max-w-6xl mx-auto px-4 pt-24 pb-20">
 
-        {/* Short description */}
-        {blog.excerpt && (
-          <p className="text-gray-600 text-lg leading-relaxed mb-4 max-w-3xl">
-            {blog.excerpt}
-          </p>
-        )}
+          {/* Title */}
+          <h1 className={`text-4xl md:text-5xl font-bold leading-tight ${theme === "dark" ? "text-white" : "text-gray-900"} mb-4`}>
+            {blog.title}
+          </h1>
 
-        {/* Read More Anchor */}
-        <a
-          href="#content"
-          className="text-blue-700 font-semibold text-sm hover:underline mb-10 block"
-        >
-          Read More
-        </a>
+          {/* Short description */}
+          {blog.excerpt && (
+            <p className={`text-gray-600 text-lg leading-relaxed mb-4 max-w-3xl ${theme === "dark" ? "text-white" : "text-gray-600"}`}>
+              {blog.excerpt}
+            </p>
+          )}
 
-        {/* MAIN GRID */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
+          {/* Read More Anchor */}
+          <a
+            href="#content"
+            className="text-blue-700 font-semibold text-sm hover:underline mb-10 block"
+          >
+            Read More
+          </a>
 
-          {/* LEFT CONTENT */}
-          <div className="lg:col-span-2">
+          {/* MAIN GRID */}
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
 
-            {/* Cover Image */}
-            <div
-              className="relative group rounded-xl overflow-hidden"
-              onClick={() => openModal(0)}
-            >
-              <img
-                src={blog.coverImage.url || blog.coverImage}
-                alt={blog.title}
-                className="rounded-xl w-full h-auto object-cover"
-              />
-            </div>
+            {/* LEFT CONTENT */}
+            <div className="lg:col-span-2">
 
-            {/* Meta */}
-            <div className="flex items-center gap-4 mt-4 text-sm text-gray-700">
-              <span className="px-3 py-1 bg-gray-200 rounded-md text-xs capitalize">
-                {blog.category}
-              </span>
+              {/* Cover Image */}
+              <div
+                className="relative group rounded-xl overflow-hidden"
+                onClick={() => openModal(0)}
+              >
+                <img
+                  src={blog.coverImage.url || blog.coverImage}
+                  alt={blog.title}
+                  className="rounded-xl w-full h-auto object-cover"
+                />
+              </div>
 
-              <span className="flex items-center gap-1 text-sm">
-                👤 {blog.author?.name}
-              </span>
+              {/* Meta */}
+              <div className={`flex items-center gap-4 mt-4 text-sm ${theme === "dark" ? "text-white" : "text-gray-700"}`}>
+                <span className={`px-3 py-1 rounded-md text-xs capitalize ${theme === "dark" ? "bg-gray-700" : "bg-gray-200"}`}>
+                  {blog.category}
+                </span>
 
-              <span className="flex items-center gap-1 text-sm">
-                👁 {blog.views}
-              </span>
-            </div>
+                <span className="flex items-center gap-1 text-sm">
+                  👤 {blog.author?.name}
+                </span>
 
-            <figcaption className="text-gray-500 text-sm italic mt-3">
-              {blog.coverImage.subtitle || "Cover Image"}
-            </figcaption>
+                <span className="flex items-center gap-1 text-sm">
+                  👁 {blog.views}
+                </span>
+              </div>
 
-            {/* Blog Content */}
-            <div id="content" className="mt-8 prose prose-lg max-w-none leading-relaxed text-gray-800">
+              <figcaption className="text-gray-500 text-sm italic mt-3">
+                {blog.coverImage.subtitle || "Cover Image"}
+              </figcaption>
 
-              {blog.content.map((block, idx) => {
-                if (block.type === 'content') {
-                  return (
-                    <div key={idx} className="mb-8">
-                      <MarkdownRenderer content={block.value} />
-                    </div>
-                  )
-                }
+              {/* Blog Content */}
+              <div id="content" className="mt-8 prose prose-lg max-w-none leading-relaxed text-gray-800">
 
-                if (block.type === 'image') {
-                  const imageIndex = images.findIndex(img => img.src === block.value)
-
-                  return (
-                    <figure key={idx} className="my-8">
-                      <div
-                        className="relative rounded-xl overflow-hidden group"
-                        onClick={() => openModal(imageIndex)}
-                      >
-                        <img
-                          src={block.value}
-                          alt={block.subtitle || "Blog Image"}
-                          className="w-full h-auto rounded-xl object-cover"
-                        />
+                {blog.content.map((block, idx) => {
+                  if (block.type === 'content') {
+                    return (
+                      <div key={idx} className="mb-8">
+                        <MarkdownRenderer theme={theme} content={block.value} />
                       </div>
+                    )
+                  }
 
-                      {block.subtitle && (
-                        <figcaption className="text-gray-500 text-sm italic text-center mt-2">
-                          {block.subtitle}
-                        </figcaption>
-                      )}
-                    </figure>
-                  )
-                }
+                  if (block.type === 'image') {
+                    const imageIndex = images.findIndex(img => img.src === block.value)
 
-                return null
-              })}
+                    return (
+                      <figure key={idx} className="my-8">
+                        <div
+                          className="relative rounded-xl overflow-hidden group"
+                          onClick={() => openModal(imageIndex)}
+                        >
+                          <img
+                            src={block.value}
+                            alt={block.subtitle || "Blog Image"}
+                            className="w-full h-auto rounded-xl object-cover"
+                          />
+                        </div>
+
+                        {block.subtitle && (
+                          <figcaption className="text-gray-500 text-sm italic text-center mt-2">
+                            {block.subtitle}
+                          </figcaption>
+                        )}
+                      </figure>
+                    )
+                  }
+
+                  return null
+                })}
+
+              </div>
 
             </div>
 
-          </div>
+            {/* RIGHT SIDEBAR */}
+            <div className="lg:col-span-1">
+              <CommentSection theme={theme} blogId={blog._id} />
+            </div>
 
-          {/* RIGHT SIDEBAR */}
-          <div className="lg:col-span-1">
-            <CommentSection blogId={blog._id} />
           </div>
 
         </div>
 
-      </div>
+        {/* Sections Below */}
+        <Subscribe userId={userId} />
+        <AboutTheAuthor theme={theme} author={blog.author} />
+        <BlogSuggestion theme={theme} blogId={id} authorId={blog.author._id} />
+        <Footer />
 
-      {/* Sections Below */}
-      <Subscribe userId={userId} />
-      <AboutTheAuthor author={blog.author} />
-      <BlogSuggestion blogId={id} authorId={blog.author._id} />
-      <Footer />
-
-      {/* Image Modal */}
-      {/* <ImageModal
+        {/* Image Modal */}
+        {/* <ImageModal
         isOpen={isModalOpen}
         onClose={closeModal}
         images={images}
         currentIndex={currentImageIndex}
         onPrevious={goToPrevious}
         onNext={goToNext}
-      /> */}
+        /> */}
+      </div>
     </>
   )
 }

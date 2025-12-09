@@ -1,7 +1,9 @@
+"use client"
 import React from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { Eye } from "lucide-react";
+import { useTheme } from "@/context/ThemeContext";
 
 interface Blog {
   title: string;
@@ -31,8 +33,9 @@ interface CardProps {
 }
 
 const Card: React.FC<CardProps> = ({ blog }) => {
+  const { theme } = useTheme();
   return (
-    <div className="w-full bg-gray-100 rounded-md">
+    <div className={`w-full rounded-md ${theme === "dark" ? "transparent text-white" : "bg-gray-100 text-black"}`}>
 
       {/* IMAGE */}
       <div className="w-full h-40 overflow-hidden rounded-md">
@@ -47,8 +50,8 @@ const Card: React.FC<CardProps> = ({ blog }) => {
       <div className="p-2">
 
         {/* META INFO */}
-        <div className="flex items-center gap-3 mt-3 text-xs text-gray-600">
-          <span className="px-2 py-1 bg-gray-200 rounded capitalize">
+        <div className={`flex items-center gap-3 mt-3 text-xs ${theme === "dark" ? "text-white" : "text-gray-600"}`}>
+          <span className={`px-2 py-1 rounded capitalize ${theme === "dark" ? "bg-gray-700" : "bg-gray-200"}`}>
             {blog.category}
           </span>
 
@@ -60,12 +63,12 @@ const Card: React.FC<CardProps> = ({ blog }) => {
         </div>
 
         {/* TITLE */}
-        <h3 className="text-sm font-semibold mt-2 mb-1">
+        <h3 className="text-sm font-semibold mt-2 mb-1 line-clamp-1">
           {blog.title}
         </h3>
 
         {/* EXCERPT */}
-        <p className="text-xs text-gray-600 leading-relaxed line-clamp-3">
+        <p className={`text-xs leading-relaxed line-clamp-3 ${theme === "dark" ? "text-gray-300" : "text-gray-600"}`}>
           {blog.excerpt}
         </p>
 
