@@ -65,10 +65,10 @@ export default function Footer() {
               Quick Links
             </h3>
             <ul className={`space-y-2 ${theme === "dark" ? "text-gray-400" : "text-gray-500"}`}>
-              <li><a href="/" className="hover:text-[#F04952] transition">About</a></li>
-              <li><a href="/" className="hover:text-[#F04952] transition">Contact</a></li>
+              <li><a href="/about" className="hover:text-[#F04952] transition">About</a></li>
+              <li><a href="/contact" className="hover:text-[#F04952] transition">Contact</a></li>
               <li><a href="/blogs" className="hover:text-[#F04952] transition">Blogs</a></li>
-              <li><a href="/" className="hover:text-[#F04952] transition">Privacy Policy</a></li>
+              <li><a href="/privacy-policy" className="hover:text-[#F04952] transition">Privacy Policy</a></li>
             </ul>
           </div>
 

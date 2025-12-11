@@ -46,6 +46,12 @@ export default function AllBlogs() {
 
   const URL = process.env.NEXT_PUBLIC_API_URL
 
+  // scroll to top on page change
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'smooth' })
+  }, [currentPage])
+
+
   // Fetch blogs from backend
   async function fetchBlogs() {
     try {

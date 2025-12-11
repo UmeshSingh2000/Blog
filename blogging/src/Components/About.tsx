@@ -59,7 +59,7 @@ export default function AboutPage() {
                         </p>
 
                         {/* Stats */}
-                        <div className="grid grid-cols-3 gap-8 pt-6 border-t border-gray-200 dark:border-gray-700">
+                        {/* <div className="grid grid-cols-3 gap-8 pt-6 border-t border-gray-200 dark:border-gray-700">
                             {[
                                 { label: "Stories", value: "500+" },
                                 { label: "Readers", value: "50k+" },
@@ -72,7 +72,7 @@ export default function AboutPage() {
                                     </div>
                                 </div>
                             ))}
-                        </div>
+                        </div> */}
                     </div>
                 </div>
             </section>
