@@ -32,6 +32,7 @@ export default function RootLayout({
     <html lang="en">
       <head>
         {/* Update the AdSense meta tag with the new client ID if needed */}
+        <meta name="theme-color" content="#FFE52A" />
         <meta name="google-adsense-account" content="ca-pub-3694311444107571" />
         <script
           dangerouslySetInnerHTML={{
