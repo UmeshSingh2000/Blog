@@ -178,33 +178,33 @@ function FeaturedArticles() {
 
   useEffect(() => {
     // Check cache
-    const cached = localStorage.getItem(CACHE_KEY);
+    // const cached = localStorage.getItem(CACHE_KEY);
 
-    if (cached) {
-      const parsed = JSON.parse(cached);
-      const isExpired = Date.now() - parsed.timestamp > CACHE_DURATION;
+    // if (cached) {
+    //   const parsed = JSON.parse(cached);
+    //   const isExpired = Date.now() - parsed.timestamp > CACHE_DURATION;
 
-      if (!isExpired) {
-        // Use cached blogs — only first 3
-        // setBlogs(parsed.data.slice(0, 3));
-        return;
-      }
-    }
+    //   if (!isExpired) {
+    //     // Use cached blogs — only first 3
+    //     // setBlogs(parsed.data.slice(0, 3));
+    //     return;
+    //   }
+    // }
 
     // Otherwise fetch new
     fetchBlogs();
   }, []);
 
   useEffect(() => {
-    const cached = localStorage.getItem(KEY);
-    if (cached) {
-      const parsed = JSON.parse(cached);
-      const isExpired = Date.now() - parsed.timestamp > CACHE_DURATION;
-      if (!isExpired) {
-        setBlogs(parsed.data);
-        return;
-      }
-    }
+    // const cached = localStorage.getItem(KEY);
+    // if (cached) {
+    //   const parsed = JSON.parse(cached);
+    //   const isExpired = Date.now() - parsed.timestamp > CACHE_DURATION;
+    //   if (!isExpired) {
+    //     setBlogs(parsed.data);
+    //     return;
+    //   }
+    // }
     fetchMostLikeBlogs();
   }, [])
 

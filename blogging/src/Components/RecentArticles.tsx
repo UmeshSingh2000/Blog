@@ -38,24 +38,21 @@ export default function RecentArticles() {
     };
 
     useEffect(() => {
-        const cached = localStorage.getItem(CACHE_KEY);
+        // const cached = localStorage.getItem(CACHE_KEY);
 
-        if (cached) {
-            const parsed = JSON.parse(cached);
-            const isExpired = Date.now() - parsed.timestamp > CACHE_DURATION;
+        // if (cached) {
+        //     const parsed = JSON.parse(cached);
+        //     const isExpired = Date.now() - parsed.timestamp > CACHE_DURATION;
 
-            if (!isExpired) {
-                setBlogs(parsed.data);
-                setLoading(false);
-                return;
-            }
-        }
+        //     if (!isExpired) {
+        //         setBlogs(parsed.data);
+        //         setLoading(false);
+        //         return;
+        //     }
+        // }
 
         fetchBlogs();
     }, []);
-    useEffect(() => {
-        console.log(theme)
-    }, [theme])
 
     if (loading)
         return (
