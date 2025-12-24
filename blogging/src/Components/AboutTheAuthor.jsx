@@ -13,7 +13,7 @@ export default function AboutAuthor({ author, theme }) {
                 {/* Avatar */}
                 <div className="w-20 h-20 rounded-full overflow-hidden flex-shrink-0">
                     <img
-                        src={author?.profilePicture}
+                        src={author?.profilePicture || "/default User.png"}
                         alt={author?.name}
                         className="w-full h-full object-cover"
                     />
