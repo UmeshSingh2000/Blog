@@ -12,13 +12,16 @@ import RecentArticles from '@/Components/RecentArticles'
 import UsersList from '@/Components/UsersList'
 
 
-const Page = () => {
+
+const Page = async () => {
+  const blogs = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/getBlogs?limit=8`)
+  const blogsData = await blogs.json()
   return (
     <DetectAdblocker>
       <main>
         {/* <Navbar /> */}
         <HomePage />
-        <RecentArticles />
+        <RecentArticles blogs={blogsData.blogs} />
         <UsersList />
         {/* <About />
         <PopularBlogs />

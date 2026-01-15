@@ -9,57 +9,57 @@ import { useTheme } from "@/context/ThemeContext";
 const CACHE_KEY = "recentBlogsCache";
 const CACHE_DURATION = 1000 * 60 * 5; // 5 minutes
 
-export default function RecentArticles() {
+export default function RecentArticles({blogs}:{blogs: any[]}) {
     const { theme } = useTheme();
-    const [blogs, setBlogs] = useState<any[]>([]);
-    const [loading, setLoading] = useState(true);
+    // const [blogs, setBlogs] = useState<any[]>([]);
+    // const [loading, setLoading] = useState(true);
 
-    const fetchBlogs = async () => {
-        try {
-            const response = await axios.get(
-                `${process.env.NEXT_PUBLIC_API_URL}/getBlogs?limit=8`
-            );
+    // const fetchBlogs = async () => {
+    //     try {
+    //         const response = await axios.get(
+    //             `${process.env.NEXT_PUBLIC_API_URL}/getBlogs?limit=8`
+    //         );
 
-            const data = response.data.blogs;
+    //         const data = response.data.blogs;
 
-            const cacheObject = {
-                timestamp: Date.now(),
-                data,
-            };
+    //         const cacheObject = {
+    //             timestamp: Date.now(),
+    //             data,
+    //         };
 
-            localStorage.setItem(CACHE_KEY, JSON.stringify(cacheObject));
+    //         localStorage.setItem(CACHE_KEY, JSON.stringify(cacheObject));
 
-            setBlogs(data);
-        } catch (error) {
-            console.error("Error fetching blogs:", error);
-        } finally {
-            setLoading(false);
-        }
-    };
+    //         setBlogs(data);
+    //     } catch (error) {
+    //         console.error("Error fetching blogs:", error);
+    //     } finally {
+    //         setLoading(false);
+    //     }
+    // };
 
-    useEffect(() => {
-        // const cached = localStorage.getItem(CACHE_KEY);
+    // useEffect(() => {
+    //     // const cached = localStorage.getItem(CACHE_KEY);
 
-        // if (cached) {
-        //     const parsed = JSON.parse(cached);
-        //     const isExpired = Date.now() - parsed.timestamp > CACHE_DURATION;
+    //     // if (cached) {
+    //     //     const parsed = JSON.parse(cached);
+    //     //     const isExpired = Date.now() - parsed.timestamp > CACHE_DURATION;
 
-        //     if (!isExpired) {
-        //         setBlogs(parsed.data);
-        //         setLoading(false);
-        //         return;
-        //     }
-        // }
+    //     //     if (!isExpired) {
+    //     //         setBlogs(parsed.data);
+    //     //         setLoading(false);
+    //     //         return;
+    //     //     }
+    //     // }
 
-        fetchBlogs();
-    }, []);
+    //     fetchBlogs();
+    // }, []);
 
-    if (loading)
-        return (
-            <section className="max-w-6xl mx-auto px-4 py-10">
-                <p className="text-center text-gray-500">Loading articles...</p>
-            </section>
-        );
+    // if (loading)
+    //     return (
+    //         <section className="max-w-6xl mx-auto px-4 py-10">
+    //             <p className="text-center text-gray-500">Loading articles...</p>
+    //         </section>
+    //     );
 
     if (blogs.length === 0)
         return (
