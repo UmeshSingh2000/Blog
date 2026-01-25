@@ -11,32 +11,32 @@ export default function CommentSection({ blogId, theme }) {
   const [loading, setLoading] = useState(false)
 
 
-  // const handleSubmitComment = async (e) => {
-  //   e.preventDefault()
-  //   if (!newComment.trim() || !authorName.trim()) return
-  //   try {
-  //     setLoading(true)
-  //     const res = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/addCommentsToBlog/${blogId}`, {
-  //       comments: newComment.trim(),
-  //       authorName: authorName.trim()
-  //     })
-  //     if (res.status === 200) {
-  //       localStorage.setItem('myName', authorName.trim())
-  //       await fetchComments()
-  //       toast.success('Comment submitted successfully:')
-  //     }
-  //   } catch (error) {
-  //     console.error('Error submitting comment:', error)
-  //   }
-  //   finally {
-  //     setLoading(false)
-  //     setNewComment('')
-  //   }
-  // }
-
-  const handleSubmitComment = (e) => {
+  const handleSubmitComment = async (e) => {
     e.preventDefault()
+    if (!newComment.trim() || !authorName.trim()) return
+    try {
+      setLoading(true)
+      const res = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/addCommentsToBlog/${blogId}`, {
+        comments: newComment.trim(),
+        authorName: authorName.trim()
+      })
+      if (res.status === 200) {
+        localStorage.setItem('myName', authorName.trim())
+        await fetchComments()
+        toast.success('Comment submitted successfully:')
+      }
+    } catch (error) {
+      console.error('Error submitting comment:', error)
+    }
+    finally {
+      setLoading(false)
+      setNewComment('')
+    }
   }
+
+  // const handleSubmitComment = (e) => {
+  //   e.preventDefault()
+  // }
 
   const fetchComments = async () => {
     try {
