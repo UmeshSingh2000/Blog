@@ -33,7 +33,7 @@ export default function RootLayout({
       <head>
         {/* Update the AdSense meta tag with the new client ID if needed */}
         <meta name="theme-color" content="#FFE52A" />
-        <meta name="google-adsense-account" content="ca-pub-3694311444107571" />
+        <meta name="google-adsense-account" content="ca-pub-7004317414119715" />
         <script
           dangerouslySetInnerHTML={{
             __html: `
@@ -61,23 +61,18 @@ export default function RootLayout({
         <Analytics />
 
         {/* Google Analytics Script */}
-        <Script
-          async
-          src="https://www.googletagmanager.com/gtag/js?id=G-RHQB1PGJLF"
-        />
-        <Script id="google-analytics">
-          {`
-            window.dataLayer = window.dataLayer || [];
-            function gtag(){dataLayer.push(arguments);}
-            gtag('js', new Date());
-            gtag('config', 'G-RHQB1PGJLF');
-          `}
-        </Script>
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-8ZBZ9NPC80"></script>
+        <script>
+          {`window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
 
+  gtag('config', 'G-8ZBZ9NPC80');`}
+        </script>
         {/* Updated Google AdSense script with new client ID */}
         <Script
           async
-          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3694311444107571"
+          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7004317414119715"
           crossOrigin="anonymous"
         />
       </body>
