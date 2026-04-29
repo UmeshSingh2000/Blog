@@ -50,8 +50,11 @@ export default function RootLayout({
         `
           }}
         />
-        <Script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7004317414119715"
-          crossorigin="anonymous"/>
+         <Script
+          async
+          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7004317414119715"
+          crossOrigin="anonymous"
+        />
         <ins
           className="adsbygoogle"
           style={{ display: "block" }}
@@ -89,6 +92,7 @@ export default function RootLayout({
 
   gtag('config', 'G-8ZBZ9NPC80');`}
         </script>
+        {/* Updated Google AdSense script with new client ID */}
       </body>
     </html>
   );
