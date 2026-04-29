@@ -34,6 +34,7 @@ export default function RootLayout({
         {/* Update the AdSense meta tag with the new client ID if needed */}
         <meta name="theme-color" content="#FFE52A" />
         <meta name="google-adsense-account" content="ca-pub-7004317414119715" />
+        <meta name="google-site-verification" content="9EMwGM8wTa_vxLYM8SgKziJtsT4UOxYqK-Whr6-PcLg" />
         <script
           dangerouslySetInnerHTML={{
             __html: `
