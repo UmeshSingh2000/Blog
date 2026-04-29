@@ -35,6 +35,9 @@ export default function RootLayout({
         <meta name="theme-color" content="#FFE52A" />
         <meta name="google-adsense-account" content="ca-pub-7004317414119715" />
         <meta name="google-site-verification" content="9EMwGM8wTa_vxLYM8SgKziJtsT4UOxYqK-Whr6-PcLg" />
+        <script async custom-element="amp-auto-ads"
+          src="https://cdn.ampproject.org/v0/amp-auto-ads-0.1.js">
+        </script>
         <script
           dangerouslySetInnerHTML={{
             __html: `
@@ -60,6 +63,9 @@ export default function RootLayout({
 
 
         <Analytics />
+        <amp-auto-ads type="adsense"
+          data-ad-client="ca-pub-7004317414119715">
+        </amp-auto-ads>
 
         {/* Google Analytics Script */}
         <script async src="https://www.googletagmanager.com/gtag/js?id=G-8ZBZ9NPC80"></script>
